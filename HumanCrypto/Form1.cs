@@ -104,28 +104,71 @@ namespace HumanCrypto {
         /// <param name="offset"></param>
         /// <returns></returns>
         private GraphicsPath GetSvgPath(string svg, Size offset) {
-            List<Point> points = new List<Point>();
-            Regex matchNumberPairs = new Regex("([a-zA-Z])(-*\\d+)(?:\\.\\d+)*,(-*\\d+)(?:\\.\\d+)*", RegexOptions.ECMAScript);
-            Match m = matchNumberPairs.Match(svg);
+            GraphicsPath result = null;
+            List<Regex> matchCommands = new List<Regex>();
 
-            Point absolutePosition = new Point(0, 0);
-            while (m.Success) {
-                Point interprettedPoint = new Point(Convert.ToInt32(m.Groups[2].Value), Convert.ToInt32(m.Groups[3].Value));
-                if (Char.IsLower(m.Groups[1].Value[0])) {
-                    interprettedPoint.X += absolutePosition.X;
-                    interprettedPoint.Y += absolutePosition.Y;
+            matchCommands.Add(new Regex("([mMlL]{1})(-*\\d+)(?:\\.\\d+)*,(-*\\d+)(?:\\.\\d+)*", RegexOptions.ECMAScript));
+            matchCommands.Add(new Regex("([cC]{1})(-*\\d+)(?:\\.\\d+)*,(-*\\d+)(?:\\.\\d+)*\\s+(-*\\d+)(?:\\.\\d+)*,(-*\\d+)(?:\\.\\d+)*\\s+(-*\\d+)(?:\\.\\d+)*,(-*\\d+)(?:\\.\\d+)*", RegexOptions.ECMAScript));
 
-                    absolutePosition = interprettedPoint;
-                } else {
-                    absolutePosition = interprettedPoint;
+            Point prevPoint = new Point(0, 0);
+            int startingMatchPosition = 0;
+            for (int i = 0; i < matchCommands.Count; i++) {
+                Match m = matchCommands[i].Match(svg, startingMatchPosition);
+
+                // Reset the index of the command-regex to be tried
+                if (m.Success) i = 0;
+                else continue;
+
+                while (m.Success) {
+                    Point lastPoint = new Point(0, 0);
+                    string drawCommand = m.Groups[1].Value.ToLower();
+
+                    if ("ml".Contains(drawCommand)) {
+                        lastPoint = new Point(Convert.ToInt32(m.Groups[2].Value), Convert.ToInt32(m.Groups[3].Value));
+
+                        if (result == null) {
+                            result = new GraphicsPath();
+                        } else {
+                            if (Char.IsLower(m.Groups[1].Value[0])) {
+                                lastPoint.X += prevPoint.X;
+                                lastPoint.Y += prevPoint.Y;
+                            }
+
+                            result.AddLine(prevPoint + offset, lastPoint + offset);
+                        }
+                    } else if ("c".Contains(drawCommand)) {
+                        Point controlPoint1 = new Point(Convert.ToInt32(m.Groups[2].Value), Convert.ToInt32(m.Groups[3].Value));
+                        Point controlPoint2 = new Point(Convert.ToInt32(m.Groups[4].Value), Convert.ToInt32(m.Groups[5].Value));
+                        lastPoint = new Point(Convert.ToInt32(m.Groups[6].Value), Convert.ToInt32(m.Groups[7].Value));
+
+                        if (Char.IsLower(m.Groups[1].Value[0])) {
+                            controlPoint1.X += prevPoint.X;
+                            controlPoint1.Y += prevPoint.Y;
+
+                            controlPoint2.X += prevPoint.X;
+                            controlPoint2.Y += prevPoint.Y;
+
+                            lastPoint.X += prevPoint.X;
+                            lastPoint.Y += prevPoint.Y;
+                        }
+
+                        result.AddBezier(prevPoint + offset, controlPoint1 + offset, controlPoint2 + offset, lastPoint + offset);
+                    } else {
+                        throw new Exception("Unrecognized draw command");
+                    }
+
+                    // Store the previous point
+                    prevPoint = lastPoint;
+
+                    startingMatchPosition = m.Index + m.Length;
+
+                    m = m.NextMatch();
                 }
 
-                points.Add(interprettedPoint + offset);
-                m = m.NextMatch();
+                
             }
 
-            GraphicsPath result = new GraphicsPath();
-            result.AddPolygon(points.ToArray());
+
             return result;
         }
 
