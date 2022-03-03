@@ -40,6 +40,7 @@ namespace HumanCrypto
             this.saveSettingsBtn = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.apiKeyTxt = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabGame.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -59,6 +60,7 @@ namespace HumanCrypto
             // 
             // tabGame
             // 
+            this.tabGame.Controls.Add(this.button1);
             this.tabGame.Controls.Add(this.pictureBox1);
             this.tabGame.Location = new System.Drawing.Point(4, 22);
             this.tabGame.Name = "tabGame";
@@ -152,6 +154,16 @@ namespace HumanCrypto
             this.apiKeyTxt.Size = new System.Drawing.Size(378, 20);
             this.apiKeyTxt.TabIndex = 0;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(917, 239);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(108, 36);
+            this.button1.TabIndex = 1;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -183,6 +195,7 @@ namespace HumanCrypto
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox networkChainTxt;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Button button1;
     }
 }
 

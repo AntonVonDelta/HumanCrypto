@@ -26,7 +26,7 @@ namespace HumanCrypto {
             InitWalletAccount();
 
             // Init genome
-            genomeProcessing = new GenomeProcessing(new byte[] { 0, 255, 0, 0 });
+            genomeProcessing = new GenomeProcessing(new byte[] { 4, 4, 4, 4 });
 
             // Add event to all settings-bound controls
             List<Control> settingsBoundedControls = new List<Control>() { apiKeyTxt, privateKeyTxt, networkChainTxt };
@@ -36,12 +36,8 @@ namespace HumanCrypto {
         }
 
         private async void Form1_Load(object sender, EventArgs e) {
-            var latestBlockNumber = await web3.Eth.Blocks.GetBlockNumber.SendRequestAsync();
-            Console.WriteLine($"Latest Block Number is: {latestBlockNumber}");
-
-
-
-
+            //var latestBlockNumber = await web3.Eth.Blocks.GetBlockNumber.SendRequestAsync();
+            //Console.WriteLine($"Latest Block Number is: {latestBlockNumber}");
         }
 
 
@@ -55,33 +51,49 @@ namespace HumanCrypto {
             XDocument doc = XDocument.Load("HumanParts\\data.xml");
             Queue<Point> attachmentPoints = new Queue<Point>();
 
-            attachmentPoints.Enqueue(new Point(250, 250));
 
             // Process face parts in order
             foreach (XElement el in doc.Root.Element("order").Elements()) {
-                Point nextAttachPoint = attachmentPoints.Dequeue();
-                int partId = genomeProcessing.GetNextPartId();
+                // If no previous attachement point was defined then define one now
+                if (attachmentPoints.Count() == 0) {
+                    attachmentPoints.Enqueue(new Point(250, 250));
+                }
 
+                Point nextAttachPoint = attachmentPoints.Dequeue();
+
+                // Skip body part because it was not defined in xml
+                if (doc.Root.Elements("parts").Elements(el.Name).Count() == 0) {
+                    continue;
+                }
+                int partId = genomeProcessing.GetNextPartId() % doc.Root.Elements("parts").Elements(el.Name).Count();
+
+                // Get part of the body corresponding to current element and id
                 XElement partType = (from partEl in doc.Root.Elements("parts").Elements(el.Name)
                                      where (int)partEl.Attribute("id") == partId
-                                     select partEl).First();
+                                     select partEl).FirstOrDefault();
+
 
                 Size figureCenterPoint = new Size((int)partType.Attribute("centerx"), (int)partType.Attribute("centery"));
                 Size offsetPoint = (Size)(nextAttachPoint - figureCenterPoint);
 
                 foreach (XElement svgEl in partType.Elements("svg")) {
                     GraphicsPath path = GetSvgPath((string)svgEl.Attribute("data"), offsetPoint);
+                    Color partColor = genomeProcessing.GetColor();
 
-                    g.FillPath(Brushes.Blue, path);
+                    g.FillPath(new SolidBrush(partColor), path);
+                    g.DrawPath(Pens.Black, path);
+
                 }
 
 
                 foreach (XElement svgEl in partType.Elements("point")) {
                     // Here the next attachment point is actually "bounded" to the center of the figure
                     // So it should move as the center moves
-                    Point newAttachPoint = new Point((int)partType.Attribute("c"), (int)partType.Attribute("y"));
+                    Point newAttachPoint = new Point((int)svgEl.Attribute("x"), (int)svgEl.Attribute("y"));
                     attachmentPoints.Enqueue(newAttachPoint + offsetPoint);
                 }
+
+                genomeProcessing.AdvanceGene();
             }
         }
 
@@ -93,7 +105,7 @@ namespace HumanCrypto {
         /// <returns></returns>
         private GraphicsPath GetSvgPath(string svg, Size offset) {
             List<Point> points = new List<Point>();
-            Regex matchNumberPairs = new Regex("([a-zA-Z])(-*\\d+),(-*\\d+)", RegexOptions.ECMAScript);
+            Regex matchNumberPairs = new Regex("([a-zA-Z])(-*\\d+)(?:\\.\\d+)*,(-*\\d+)(?:\\.\\d+)*", RegexOptions.ECMAScript);
             Match m = matchNumberPairs.Match(svg);
 
             Point absolutePosition = new Point(0, 0);
@@ -118,6 +130,10 @@ namespace HumanCrypto {
         }
 
 
+        private void button1_Click(object sender, EventArgs e) {
+            genomeProcessing.RandomizeAndReset();
+            pictureBox1.Invalidate();
+        }
 
 
 
@@ -154,6 +170,7 @@ namespace HumanCrypto {
 
 
         #endregion
+
 
     }
 
