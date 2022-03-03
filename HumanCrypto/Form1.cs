@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
@@ -25,7 +26,7 @@ namespace HumanCrypto {
             InitWalletAccount();
 
             // Init genome
-            genomeProcessing = new GenomeProcessing(new byte[] {0,255,0,0 });
+            genomeProcessing = new GenomeProcessing(new byte[] { 0, 255, 0, 0 });
 
             // Add event to all settings-bound controls
             List<Control> settingsBoundedControls = new List<Control>() { apiKeyTxt, privateKeyTxt, networkChainTxt };
@@ -39,8 +40,8 @@ namespace HumanCrypto {
             Console.WriteLine($"Latest Block Number is: {latestBlockNumber}");
 
 
-            
-            
+
+
         }
 
 
@@ -54,7 +55,7 @@ namespace HumanCrypto {
 
             var doc = XDocument.Load("HumanParts\\data.xml");
 
-            foreach(XElement el in doc.Root.Element("order").Elements()) {
+            foreach (XElement el in doc.Root.Element("order").Elements()) {
                 int partId = genomeProcessing.GetNextPartId();
 
                 var partType = (from partEl in doc.Root.Elements("parts").Elements(el.Name)
@@ -62,51 +63,113 @@ namespace HumanCrypto {
                                 select partEl).First();
                 Console.WriteLine(partType.Name);
 
+                foreach (XElement svgEl in partType.Elements("svg")) {
+                    GraphicsPath path = GetSvgPath((string)svgEl.Attribute("data"));
+
+                    g.FillPath(Brushes.Blue, path);
+
+                }
 
 
             }
-
-
-            var path = new GraphicsPath();
-            path.AddLine(100, 100, 400, 100);
-            path.AddLine(400, 100, 400, 400);
-            path.AddLine(400, 400, 100, 400);
-            path.CloseFigure();
-            Region reg1 = new Region(path);
-
-            var path2 = new GraphicsPath();
-            int centerx = 0;
-            int centery = 0;
-            path2.AddLine(centerx+150, centery+150, centerx+350, centery+150);
-            path2.AddLine(centerx+350, centery+150, centerx+350, centery+350);
-            path2.AddLine(centerx+350, centery+350, centerx+150, centery+350);
-            path2.CloseFigure();
-            Region reg2 = new Region(path2);
-
-            g.FillPath(Brushes.Blue, path);
-            g.FillRegion(Brushes.Red, reg2);
         }
 
-        private GraphicsPath[] GetBitmapContours(string bmpfilename) {
+        private GraphicsPath GetSvgPath(string svg) {
+            List<Point> points = new List<Point>();
+            Regex matchNumberPairs = new Regex("([a-zA-Z])(-*\\d+),(-*\\d+)", RegexOptions.ECMAScript);
+            Match m = matchNumberPairs.Match(svg);
+
+            Point absolutePosition = new Point(0, 0);
+            while (m.Success) {
+                Point interprettedPoint = new Point(Convert.ToInt32(m.Groups[2].Value), Convert.ToInt32(m.Groups[3].Value));
+                if (Char.IsLower(m.Groups[1].Value[0])) {
+                    interprettedPoint.X += absolutePosition.X;
+                    interprettedPoint.Y += absolutePosition.Y;
+
+                    absolutePosition = interprettedPoint;
+                } else {
+                    absolutePosition = interprettedPoint;
+                }
+
+                points.Add(interprettedPoint);
+                m = m.NextMatch();
+            }
+
+            GraphicsPath result = new GraphicsPath();
+            result.AddPolygon(points.ToArray());
+            return result;
+        }
+
+        private List<GraphicsPath> GetBitmapContours(string bmpfilename) {
+            List<GraphicsPath> result = new List<GraphicsPath>();
             Bitmap bmp = new Bitmap(bmpfilename);
-            Queue<Point> unvisitedPoints=new Queue<Point>();
+            Point startingPoint = new Point();
+            Queue<Point> unvisitedPoints = new Queue<Point>();
             List<Point> visitedPoints = new List<Point>();
 
             bool found = false;
-            for(int i = 0; i < bmp.Height && !found; i++) {
-                for(int j = 0; j < bmp.Width && !found; j++) {
-                    Color pixelColor=bmp.GetPixel(j, i);
-                    if (pixelColor.ToArgb() != 0) {
-                        Console.WriteLine($"Pixel value {pixelColor.ToArgb()}");
+            for (int i = 0; i < bmp.Height && !found; i++) {
+                for (int j = 0; j < bmp.Width && !found; j++) {
+                    Color pixelColor = bmp.GetPixel(j, i);
+                    if (pixelColor.ToArgb() == Color.Black.ToArgb()) {
+                        startingPoint = new Point(j, i);
                         found = true;
                     }
                 }
             }
 
-            return null;
+            if (!found) {
+                throw new Exception("No figure found");
+            }
+
+            // Only add to the queue one of the connected points
+            List<Point> neighbourPoints = GetNeighbourPoints(bmp, startingPoint, Color.Black);
+            if (neighbourPoints.Count != 2) {
+                throw new Exception("Too many neighbours");
+            }
+            visitedPoints.Add(startingPoint);
+
+            visitedPoints.Add(neighbourPoints[0]);
+            unvisitedPoints.Enqueue(neighbourPoints[0]);
+            result.Add(new GraphicsPath());
+
+            while (unvisitedPoints.Count != 0) {
+                Point currentPoint = unvisitedPoints.Dequeue();
+
+                foreach (Point newPoint in GetNeighbourPoints(bmp, currentPoint, Color.Black)) {
+                    if (visitedPoints.Contains(newPoint)) continue;
+
+                    Color pixelColor = bmp.GetPixel(newPoint.X, newPoint.Y);
+
+                    if (pixelColor.ToArgb() != Color.White.ToArgb()) {
+                        unvisitedPoints.Enqueue(newPoint);
+                        visitedPoints.Add(newPoint);
+                    }
+                }
+            }
+
+            result[0].AddPolygon(visitedPoints.ToArray());
+
+            return result;
         }
 
+        private List<Point> GetNeighbourPoints(Bitmap bmp, Point point, Color color) {
+            List<Point> result = new List<Point>();
 
+            for (int i = -1; i <= 1; i++) {
+                for (int j = -1; j <= 1; j++) {
+                    Point newPoint = new Point(point.X + j, point.Y + i);
+
+                    if (i == j && i == 0) continue;
+                    if (newPoint.X < 0 || newPoint.X > bmp.Width) continue;
+                    if (newPoint.Y < 0 || newPoint.Y > bmp.Height) continue;
+                    if (bmp.GetPixel(newPoint.X, newPoint.Y).ToArgb() == color.ToArgb()) {
+                        result.Add(newPoint);
+                    }
+                }
+            }
+            return result;
+        }
         #region SettingsTab
         // Variable which signals that controls are updated and so should not raise the Changed events or
         // ignore their effect
@@ -131,7 +194,7 @@ namespace HumanCrypto {
         private void saveSettingsBtn_Click(object sender, EventArgs e) {
             Properties.Secret.Default.APIKey = apiKeyTxt.Text;
             Properties.Secret.Default.PrivateKey = privateKeyTxt.Text;
-            Properties.Secret.Default.ChainId =Convert.ToInt32(networkChainTxt.Text);
+            Properties.Secret.Default.ChainId = Convert.ToInt32(networkChainTxt.Text);
 
             Properties.Secret.Default.Save();
             saveSettingsBtn.Enabled = false;
