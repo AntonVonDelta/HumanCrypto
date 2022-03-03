@@ -31,6 +31,7 @@ namespace HumanCrypto
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabGame = new System.Windows.Forms.TabPage();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabSettings = new System.Windows.Forms.TabPage();
             this.label3 = new System.Windows.Forms.Label();
             this.networkChainTxt = new System.Windows.Forms.TextBox();
@@ -40,6 +41,8 @@ namespace HumanCrypto
             this.label1 = new System.Windows.Forms.Label();
             this.apiKeyTxt = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
+            this.tabGame.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabSettings.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -56,12 +59,22 @@ namespace HumanCrypto
             // 
             // tabGame
             // 
+            this.tabGame.Controls.Add(this.pictureBox1);
             this.tabGame.Location = new System.Drawing.Point(4, 22);
             this.tabGame.Name = "tabGame";
             this.tabGame.Size = new System.Drawing.Size(1051, 590);
             this.tabGame.TabIndex = 0;
             this.tabGame.Text = "Game";
             this.tabGame.UseVisualStyleBackColor = true;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(13, 8);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(860, 572);
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
             // tabSettings
             // 
@@ -149,6 +162,8 @@ namespace HumanCrypto
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tabControl1.ResumeLayout(false);
+            this.tabGame.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tabSettings.ResumeLayout(false);
             this.tabSettings.PerformLayout();
             this.ResumeLayout(false);
@@ -167,6 +182,7 @@ namespace HumanCrypto
         private System.Windows.Forms.TextBox privateKeyTxt;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox networkChainTxt;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
 
