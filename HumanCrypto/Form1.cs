@@ -19,6 +19,16 @@ namespace HumanCrypto {
         Account web3Account;
         GenomeProcessing genomeProcessing;
 
+        struct PartInfo {
+            public string partName;
+            public Point position;
+            public PartInfo(string partName, Point position) {
+                this.partName = partName;
+                this.position = position;
+            }
+        }
+
+
         public Form1() {
             InitializeComponent();
 
@@ -49,53 +59,51 @@ namespace HumanCrypto {
         private void panel1_Paint(object sender, PaintEventArgs e) {
             Graphics g = e.Graphics;
             XDocument doc = XDocument.Load("HumanParts\\data.xml");
-            Queue<Point> attachmentPoints = new Queue<Point>();
+            Queue<PartInfo> attachmentPoints = new Queue<PartInfo>();
 
             genomeProcessing.Reset();
 
 
             // Process face parts in order
             foreach (XElement el in doc.Root.Element("order").Elements()) {
-                // If no previous attachement point was defined then define one now
-                if (attachmentPoints.Count() == 0) {
-                    attachmentPoints.Enqueue(new Point(250, 250));
+                attachmentPoints.Enqueue(new PartInfo(el.Name.ToString(), new Point((int)el.Attribute("x"), (int)el.Attribute("y"))));
+
+                while (attachmentPoints.Count != 0) {
+                    PartInfo nextAttachPart = attachmentPoints.Dequeue();
+                    int partId = genomeProcessing.GetNextPartId() % doc.Root.Elements("parts").Elements(nextAttachPart.partName).Count();
+
+                    // Skip body part because it was not defined in xml
+                    if (doc.Root.Elements("parts").Elements(nextAttachPart.partName).Count() == 0) {
+                        throw new Exception($"Referenced body part not found {nextAttachPart.partName}");
+                    }
+
+                    // Get part of the body corresponding to current element and id
+                    XElement partType = (from partEl in doc.Root.Elements("parts").Elements(nextAttachPart.partName)
+                                         where (int)partEl.Attribute("id") == partId
+                                         select partEl).FirstOrDefault();
+
+
+                    Size figureCenterPoint = new Size((int)partType.Attribute("centerx"), (int)partType.Attribute("centery"));
+                    Size offsetPoint = (Size)(nextAttachPart.position - figureCenterPoint);
+
+                    foreach (XElement svgEl in partType.Elements("svg")) {
+                        GraphicsPath path = GetSvgPath((string)svgEl.Attribute("data"), offsetPoint);
+                        Color partColor = genomeProcessing.GetColor();
+
+                        g.FillPath(new SolidBrush(partColor), path);
+                        g.DrawPath(Pens.Black, path);
+                    }
+
+
+                    foreach (XElement partEl in partType.Elements("components").Elements()) {
+                        // Here the next attachment point is actually "bounded" to the center of the figure
+                        // So it should move as the center moves
+                        Point newAttachPoint = new Point((int)partEl.Attribute("x"), (int)partEl.Attribute("y"));
+                        attachmentPoints.Enqueue(new PartInfo(partEl.Name.ToString() ,newAttachPoint + offsetPoint));
+                    }
+
+                    genomeProcessing.AdvanceGene();
                 }
-
-                Point nextAttachPoint = attachmentPoints.Dequeue();
-
-                // Skip body part because it was not defined in xml
-                if (doc.Root.Elements("parts").Elements(el.Name).Count() == 0) {
-                    continue;
-                }
-                int partId = genomeProcessing.GetNextPartId() % doc.Root.Elements("parts").Elements(el.Name).Count();
-
-                // Get part of the body corresponding to current element and id
-                XElement partType = (from partEl in doc.Root.Elements("parts").Elements(el.Name)
-                                     where (int)partEl.Attribute("id") == partId
-                                     select partEl).FirstOrDefault();
-
-
-                Size figureCenterPoint = new Size((int)partType.Attribute("centerx"), (int)partType.Attribute("centery"));
-                Size offsetPoint = (Size)(nextAttachPoint - figureCenterPoint);
-
-                foreach (XElement svgEl in partType.Elements("svg")) {
-                    GraphicsPath path = GetSvgPath((string)svgEl.Attribute("data"), offsetPoint);
-                    Color partColor = genomeProcessing.GetColor();
-
-                    g.FillPath(new SolidBrush(partColor), path);
-                    g.DrawPath(Pens.Black, path);
-
-                }
-
-
-                foreach (XElement svgEl in partType.Elements("components")) {
-                    // Here the next attachment point is actually "bounded" to the center of the figure
-                    // So it should move as the center moves
-                    Point newAttachPoint = new Point((int)svgEl.Attribute("x"), (int)svgEl.Attribute("y"));
-                    attachmentPoints.Enqueue(newAttachPoint + offsetPoint);
-                }
-
-                genomeProcessing.AdvanceGene();
             }
         }
 
