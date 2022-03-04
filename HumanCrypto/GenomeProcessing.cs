@@ -23,13 +23,15 @@ namespace HumanCrypto {
             }
 
             genome = new byte[genomeAccumulatedSizes.Last()];
-            RandomizeAndReset();
+            Randomize();
         }
 
-        public void RandomizeAndReset() {
-            new Random().NextBytes(genome);
+        public void Reset() {
             byteIndex = 0;
             geneIndex = 0;
+        }
+        public void Randomize() {
+            new Random().NextBytes(genome);
         }
 
         public void ParseGenome(byte[] genome) {

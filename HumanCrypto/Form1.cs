@@ -26,7 +26,7 @@ namespace HumanCrypto {
             InitWalletAccount();
 
             // Init genome
-            genomeProcessing = new GenomeProcessing(new byte[] { 4, 4, 4, 4 });
+            genomeProcessing = new GenomeProcessing(new byte[] { 4, 4, 4, 4, 4, 4, 4, 4 });
 
             // Add event to all settings-bound controls
             List<Control> settingsBoundedControls = new List<Control>() { apiKeyTxt, privateKeyTxt, networkChainTxt };
@@ -50,6 +50,8 @@ namespace HumanCrypto {
             Graphics g = e.Graphics;
             XDocument doc = XDocument.Load("HumanParts\\data.xml");
             Queue<Point> attachmentPoints = new Queue<Point>();
+
+            genomeProcessing.Reset();
 
 
             // Process face parts in order
@@ -86,7 +88,7 @@ namespace HumanCrypto {
                 }
 
 
-                foreach (XElement svgEl in partType.Elements("point")) {
+                foreach (XElement svgEl in partType.Elements("components")) {
                     // Here the next attachment point is actually "bounded" to the center of the figure
                     // So it should move as the center moves
                     Point newAttachPoint = new Point((int)svgEl.Attribute("x"), (int)svgEl.Attribute("y"));
@@ -107,74 +109,71 @@ namespace HumanCrypto {
             GraphicsPath result = null;
             List<Regex> matchCommands = new List<Regex>();
 
-            matchCommands.Add(new Regex("([mMlL]{1})(-*\\d+)(?:\\.\\d+)*,(-*\\d+)(?:\\.\\d+)*", RegexOptions.ECMAScript));
-            matchCommands.Add(new Regex("([cC]{1})(-*\\d+)(?:\\.\\d+)*,(-*\\d+)(?:\\.\\d+)*\\s+(-*\\d+)(?:\\.\\d+)*,(-*\\d+)(?:\\.\\d+)*\\s+(-*\\d+)(?:\\.\\d+)*,(-*\\d+)(?:\\.\\d+)*", RegexOptions.ECMAScript));
+            matchCommands.Add(new Regex("\\G([mMlL]{1})(-*\\d+)(?:\\.\\d+)*,(-*\\d+)(?:\\.\\d+)*", RegexOptions.ECMAScript));
+            matchCommands.Add(new Regex("\\G([cC]{1})(-*\\d+)(?:\\.\\d+)*,(-*\\d+)(?:\\.\\d+)*\\s+(-*\\d+)(?:\\.\\d+)*,(-*\\d+)(?:\\.\\d+)*\\s+(-*\\d+)(?:\\.\\d+)*,(-*\\d+)(?:\\.\\d+)*", RegexOptions.ECMAScript));
 
             Point prevPoint = new Point(0, 0);
             int startingMatchPosition = 0;
-            for (int i = 0; i < matchCommands.Count; i++) {
+            int i = 0;
+            while (i < matchCommands.Count) {
                 Match m = matchCommands[i].Match(svg, startingMatchPosition);
 
                 // Reset the index of the command-regex to be tried
-                if (m.Success) i = 0;
-                else continue;
+                if (!m.Success) {
+                    i++;
+                    continue;
+                }
 
-                while (m.Success) {
-                    Point lastPoint = new Point(0, 0);
-                    string drawCommand = m.Groups[1].Value.ToLower();
+                Point lastPoint = new Point(0, 0);
+                string drawCommand = m.Groups[1].Value.ToLower();
 
-                    if ("ml".Contains(drawCommand)) {
-                        lastPoint = new Point(Convert.ToInt32(m.Groups[2].Value), Convert.ToInt32(m.Groups[3].Value));
+                if ("ml".Contains(drawCommand)) {
+                    lastPoint = new Point(Convert.ToInt32(m.Groups[2].Value), Convert.ToInt32(m.Groups[3].Value));
 
-                        if (result == null) {
-                            result = new GraphicsPath();
-                        } else {
-                            if (Char.IsLower(m.Groups[1].Value[0])) {
-                                lastPoint.X += prevPoint.X;
-                                lastPoint.Y += prevPoint.Y;
-                            }
-
-                            result.AddLine(prevPoint + offset, lastPoint + offset);
-                        }
-                    } else if ("c".Contains(drawCommand)) {
-                        Point controlPoint1 = new Point(Convert.ToInt32(m.Groups[2].Value), Convert.ToInt32(m.Groups[3].Value));
-                        Point controlPoint2 = new Point(Convert.ToInt32(m.Groups[4].Value), Convert.ToInt32(m.Groups[5].Value));
-                        lastPoint = new Point(Convert.ToInt32(m.Groups[6].Value), Convert.ToInt32(m.Groups[7].Value));
-
+                    if (result == null) {
+                        result = new GraphicsPath();
+                    } else {
                         if (Char.IsLower(m.Groups[1].Value[0])) {
-                            controlPoint1.X += prevPoint.X;
-                            controlPoint1.Y += prevPoint.Y;
-
-                            controlPoint2.X += prevPoint.X;
-                            controlPoint2.Y += prevPoint.Y;
-
                             lastPoint.X += prevPoint.X;
                             lastPoint.Y += prevPoint.Y;
                         }
 
-                        result.AddBezier(prevPoint + offset, controlPoint1 + offset, controlPoint2 + offset, lastPoint + offset);
-                    } else {
-                        throw new Exception("Unrecognized draw command");
+                        result.AddLine(prevPoint + offset, lastPoint + offset);
+                    }
+                } else if ("c".Contains(drawCommand)) {
+                    Point controlPoint1 = new Point(Convert.ToInt32(m.Groups[2].Value), Convert.ToInt32(m.Groups[3].Value));
+                    Point controlPoint2 = new Point(Convert.ToInt32(m.Groups[4].Value), Convert.ToInt32(m.Groups[5].Value));
+                    lastPoint = new Point(Convert.ToInt32(m.Groups[6].Value), Convert.ToInt32(m.Groups[7].Value));
+
+                    if (Char.IsLower(m.Groups[1].Value[0])) {
+                        controlPoint1.X += prevPoint.X;
+                        controlPoint1.Y += prevPoint.Y;
+
+                        controlPoint2.X += prevPoint.X;
+                        controlPoint2.Y += prevPoint.Y;
+
+                        lastPoint.X += prevPoint.X;
+                        lastPoint.Y += prevPoint.Y;
                     }
 
-                    // Store the previous point
-                    prevPoint = lastPoint;
-
-                    startingMatchPosition = m.Index + m.Length;
-
-                    m = m.NextMatch();
+                    result.AddBezier(prevPoint + offset, controlPoint1 + offset, controlPoint2 + offset, lastPoint + offset);
+                } else {
+                    throw new Exception("Unrecognized draw command");
                 }
 
-                
+                // Store the previous point
+                prevPoint = lastPoint;
+
+                startingMatchPosition = m.Index + m.Length;
             }
 
-
+            result.CloseFigure();
             return result;
         }
 
 
         private void button1_Click(object sender, EventArgs e) {
-            genomeProcessing.RandomizeAndReset();
+            genomeProcessing.Randomize();
             pictureBox1.Invalidate();
         }
 
