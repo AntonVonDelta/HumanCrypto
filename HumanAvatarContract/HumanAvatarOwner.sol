@@ -4,16 +4,24 @@ pragma solidity ^0.8.12;
 contract HumanAvatarOwner {
     address owner;
 
-    Human avatars[];
-
+    struct Offer{
+        bool valid;
+        uint256 futureExpirationTime;
+        uint256 avatarId;
+        uint256 amount;
+    }
     struct Human{
-        uint32 mom;
-        uint32 dad;
+        uint32 momId;
+        uint32 dadId;
 
-        address owner;
+        address avatarOwner;
         uint16 generation;
     }
 
+    Human[] avatars;
+    mapping(address => Offer[]) public offersMadeByClient;
+    mapping(uint256 => Offer[]) public offersForAvatar;
+    
     modifier onlyOwner(){
         require(msg.sender == owner);
         _;
@@ -23,29 +31,24 @@ contract HumanAvatarOwner {
         owner=msg.sender;
     }
 
+    function makeAnOffer(uint256 avatarId,uint256 amount) external{
+        offersMadeByClient[msg.sender].push(Offer({
+            valid:true,
+            futureExpirationTime:block.timestamp+ (1 days),
+            avatarId:avatarId,
+            amount:amount
+        }));
+    }
+
+
     function createPrimeAvatar() external onlyOwner{
         avatars.push(Human({
-            mom:0,
-            dad:0,
-
-            owner: owner,
+            momId:0,
+            dadId:0,
+            avatarOwner: owner,
             generation:0
         }));
     }
 
-    function getAvatar(uint amount, address target) public
-    {
-        // Only allowed to the owner
-        if(msg.sender!=_owner) return;
 
-        // Do not request more money than available
-        if(amount>address(this).balance) return;
-
-        (bool success, ) = target.call{value:amount}("");
-        require(success, "Transfer failed.");
-    }
-
-    function () public payable {
-        revert (); 
-    }   
 }
