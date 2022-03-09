@@ -21,7 +21,7 @@ contract HumanAvatarOwner {
     Human[] avatars;
     mapping(address => Offer[]) public offersMadeByClient;
     mapping(uint256 => Offer[]) public offersForAvatar;
-    
+
     modifier onlyOwner(){
         require(msg.sender == owner);
         _;
@@ -32,12 +32,18 @@ contract HumanAvatarOwner {
     }
 
     function makeAnOffer(uint256 avatarId,uint256 amount) external{
-        offersMadeByClient[msg.sender].push(Offer({
+        require(avatarId>=avatars.length,"Avatar not found");
+        require(amount!=0,"No zero amount offer allowed");
+
+        Offer memory newOffer=Offer({
             valid:true,
             futureExpirationTime:block.timestamp+ (1 days),
             avatarId:avatarId,
             amount:amount
-        }));
+        });
+
+        offersMadeByClient[msg.sender].push(newOffer);
+        offersForAvatar[avatarId].push(newOffer);
     }
 
 

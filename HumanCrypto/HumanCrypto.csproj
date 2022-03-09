@@ -144,5 +144,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HumanAvatarContract\HumanAvatarContract.Contracts.csproj">
+      <Project>{723382e9-4001-47f6-be80-e85227decb2b}</Project>
+      <Name>HumanAvatarContract.Contracts</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

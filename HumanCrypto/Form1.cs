@@ -12,11 +12,12 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using HumanAvatarContract.Contracts.HumanAvatarOwner;
+using HumanAvatarContract.Contracts.HumanAvatarOwner.ContractDefinition;
 
 namespace HumanCrypto {
     public partial class Form1 : Form {
         Web3 web3;
-        Account web3Account;
         GenomeProcessing genomeProcessing;
 
         struct PartInfo {
@@ -32,8 +33,7 @@ namespace HumanCrypto {
         public Form1() {
             InitializeComponent();
 
-            web3 = new Web3("https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161");
-            InitWalletAccount();
+            web3 = new Web3(new Account(Properties.Secret.Default.PrivateKey, Properties.Secret.Default.ChainId),"https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161");
 
             // Init genome
             genomeProcessing = new GenomeProcessing(new byte[] { 4, 4, 4, 4, 4, 4, 4, 4 });
@@ -51,9 +51,6 @@ namespace HumanCrypto {
         }
 
 
-        private void InitWalletAccount() {
-            web3Account = new Account(Properties.Secret.Default.PrivateKey, Properties.Secret.Default.ChainId);
-        }
 
 
         private void panel1_Paint(object sender, PaintEventArgs e) {
@@ -185,7 +182,11 @@ namespace HumanCrypto {
             pictureBox1.Invalidate();
         }
 
+        private async void button2_Click(object sender, EventArgs e) {
+            HumanAvatarOwnerService service = new HumanAvatarOwnerService(web3, "0x2f6e6b4e1cfc1a652973e6f49c8662d9db8dd4f1");
 
+            await service.CreatePrimeAvatarRequestAndWaitForReceiptAsync();
+        }
 
         #region SettingsTab
         // Variable which signals that controls are updated and so should not raise the Changed events or
@@ -219,9 +220,10 @@ namespace HumanCrypto {
 
 
 
+
         #endregion
 
-
+        
     }
 
 }
