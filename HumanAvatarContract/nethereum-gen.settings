@@ -2,6 +2,7 @@
     "projectName": "HumanAvatarContract",
     "namespace": "HumanAvatarContract.Contracts",
     "lang": 0,
-    "autoCodeGen": true,
-    "projectPath": "/"
+    "solidity.soliumRules": {
+        "linebreak-style": "windows"
+    }
 }
