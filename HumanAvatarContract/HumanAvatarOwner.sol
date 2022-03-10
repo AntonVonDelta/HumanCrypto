@@ -16,7 +16,7 @@ contract HumanAvatarOwner {
         address avatarOwner;
         uint16 generation;
 
-        uint256 genome;
+        uint8[] genome;
     }
 
     address owner;
@@ -24,6 +24,8 @@ contract HumanAvatarOwner {
     Human[] avatars;
     mapping(address => Offer[]) public offersMadeByClient;
     mapping(uint256 => Offer[]) public offersForAvatar;
+    uint8[] genomeGeneStructure=[4, 4, 4, 4, 4, 4, 4, 4 ];
+
 
     modifier onlyOwner(){
         require(msg.sender == owner);
@@ -56,7 +58,7 @@ contract HumanAvatarOwner {
             dadId:0,
             avatarOwner: owner,
             generation:0,
-            genome: random()
+            genome: randomGenome()
         }));
     }
 
@@ -64,5 +66,11 @@ contract HumanAvatarOwner {
     function random() private returns (uint) {
         return uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, randomNonce++)));
     }
-
+    function randomGenome() private returns (uint8[] memory){
+        uint8[] memory genome;
+        for(uint256 i=0; i<genome.length; i++){
+            genome[i]=uint8(random()%256);
+        }
+        return genome;
+    }
 }

@@ -19,7 +19,7 @@ namespace HumanCrypto {
             genomeAccumulatedSizes[0] = genomeSignature[0];
 
             for (int i = 1; i < genomeSignature.Count(); i++) {
-                genomeAccumulatedSizes[i] = genomeAccumulatedSizes[i - 1] + genomeSignature[i];
+                genomeAccumulatedSizes[i] = genomeAccumulatedSizes[i - 1] + genomeSignature[i-1];
             }
 
             genome = new byte[genomeAccumulatedSizes.Last()];
