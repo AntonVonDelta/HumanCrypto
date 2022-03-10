@@ -29,6 +29,7 @@ namespace HumanCrypto
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabGame = new System.Windows.Forms.TabPage();
             this.button1 = new System.Windows.Forms.Button();
@@ -42,6 +43,9 @@ namespace HumanCrypto
             this.label1 = new System.Windows.Forms.Label();
             this.apiKeyTxt = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.contractMessageTxt = new System.Windows.Forms.TextBox();
+            this.notifyControl = new System.Windows.Forms.NotifyIcon(this.components);
             this.tabControl1.SuspendLayout();
             this.tabGame.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -92,6 +96,8 @@ namespace HumanCrypto
             // 
             // tabSettings
             // 
+            this.tabSettings.Controls.Add(this.contractMessageTxt);
+            this.tabSettings.Controls.Add(this.button3);
             this.tabSettings.Controls.Add(this.label3);
             this.tabSettings.Controls.Add(this.networkChainTxt);
             this.tabSettings.Controls.Add(this.label2);
@@ -177,6 +183,28 @@ namespace HumanCrypto
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(8, 164);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(108, 36);
+            this.button3.TabIndex = 7;
+            this.button3.Text = "Deploy contract";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // contractMessageTxt
+            // 
+            this.contractMessageTxt.Location = new System.Drawing.Point(133, 173);
+            this.contractMessageTxt.Name = "contractMessageTxt";
+            this.contractMessageTxt.Size = new System.Drawing.Size(378, 20);
+            this.contractMessageTxt.TabIndex = 8;
+            // 
+            // notifyControl
+            // 
+            this.notifyControl.Text = "Notification";
+            this.notifyControl.Visible = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -210,6 +238,9 @@ namespace HumanCrypto
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.TextBox contractMessageTxt;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.NotifyIcon notifyControl;
     }
 }
 

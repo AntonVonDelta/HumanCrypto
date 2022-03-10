@@ -187,6 +187,18 @@ namespace HumanCrypto {
 
             await service.CreatePrimeAvatarRequestAndWaitForReceiptAsync();
         }
+        private async void button3_Click(object sender, EventArgs e) {
+            var deploy = await HumanAvatarOwnerService.DeployContractAndWaitForReceiptAsync(web3, new HumanAvatarOwnerDeployment());
+            
+            if (deploy.Status.Value==0) {
+                contractMessageTxt.Text = "Contract failed";
+                notifyControl.ShowBalloonTip(2000, "HumanCrypto", "Contract failed", ToolTipIcon.Error);
+                return;
+            }
+
+            notifyControl.ShowBalloonTip(2000, "HumanCrypto", "New contract deployed", ToolTipIcon.None);
+            contractMessageTxt.Text = deploy.ContractAddress;
+        }
 
         #region SettingsTab
         // Variable which signals that controls are updated and so should not raise the Changed events or
@@ -221,9 +233,8 @@ namespace HumanCrypto {
 
 
 
-        #endregion
 
-        
+        #endregion
     }
 
 }

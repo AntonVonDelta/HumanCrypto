@@ -2,7 +2,6 @@
 pragma solidity ^0.8.12;
 
 contract HumanAvatarOwner {
-    address owner;
 
     struct Offer{
         bool valid;
@@ -16,8 +15,12 @@ contract HumanAvatarOwner {
 
         address avatarOwner;
         uint16 generation;
+
+        uint256 genome;
     }
 
+    address owner;
+    uint randomNonce=0;
     Human[] avatars;
     mapping(address => Offer[]) public offersMadeByClient;
     mapping(uint256 => Offer[]) public offersForAvatar;
@@ -33,7 +36,7 @@ contract HumanAvatarOwner {
 
     function makeAnOffer(uint256 avatarId,uint256 amount) external{
         require(avatarId>=avatars.length,"Avatar not found");
-        require(amount!=0,"No zero amount offer allowed");
+        require(amount==0,"No zero amount offer allowed");
 
         Offer memory newOffer=Offer({
             valid:true,
@@ -52,9 +55,14 @@ contract HumanAvatarOwner {
             momId:0,
             dadId:0,
             avatarOwner: owner,
-            generation:0
+            generation:0,
+            genome: random()
         }));
     }
 
+
+    function random() private returns (uint) {
+        return uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, randomNonce++)));
+    }
 
 }
