@@ -14,6 +14,8 @@ using System.Windows.Forms;
 using System.Xml.Linq;
 using HumanAvatarContract.Contracts.HumanAvatarOwner;
 using HumanAvatarContract.Contracts.HumanAvatarOwner.ContractDefinition;
+using System.Threading;
+using Nethereum.RPC.Eth.DTOs;
 
 namespace HumanCrypto {
     public partial class Form1 : Form {
@@ -39,15 +41,15 @@ namespace HumanCrypto {
             genomeProcessing = new GenomeProcessing(new byte[] { 4, 4, 4, 4, 4, 4, 4, 4 });
 
             // Add event to all settings-bound controls
-            List<Control> settingsBoundedControls = new List<Control>() { apiKeyTxt, privateKeyTxt, networkChainTxt };
+            List<Control> settingsBoundedControls = new List<Control>() { apiKeyTxt, privateKeyTxt, networkChainTxt,contractKeyTxt };
             foreach (Control control in settingsBoundedControls) {
                 control.TextChanged += genericControl_TextChanged;
             }
         }
 
-        private async void Form1_Load(object sender, EventArgs e) {
-            //var latestBlockNumber = await web3.Eth.Blocks.GetBlockNumber.SendRequestAsync();
-            //Console.WriteLine($"Latest Block Number is: {latestBlockNumber}");
+        private void Form1_Load(object sender, EventArgs e) {
+            // Set icon for notification control otherwise it is not displayed
+            notifyControl.Icon = this.Icon;
         }
 
 
@@ -187,18 +189,7 @@ namespace HumanCrypto {
 
             await service.CreatePrimeAvatarRequestAndWaitForReceiptAsync();
         }
-        private async void button3_Click(object sender, EventArgs e) {
-            var deploy = await HumanAvatarOwnerService.DeployContractAndWaitForReceiptAsync(web3, new HumanAvatarOwnerDeployment());
-            
-            if (deploy.Status.Value==0) {
-                contractMessageTxt.Text = "Contract failed";
-                notifyControl.ShowBalloonTip(2000, "HumanCrypto", "Contract failed", ToolTipIcon.Error);
-                return;
-            }
 
-            notifyControl.ShowBalloonTip(2000, "HumanCrypto", "New contract deployed", ToolTipIcon.None);
-            contractMessageTxt.Text = deploy.ContractAddress;
-        }
 
         #region SettingsTab
         // Variable which signals that controls are updated and so should not raise the Changed events or
@@ -213,10 +204,11 @@ namespace HumanCrypto {
             apiKeyTxt.Text = Properties.Secret.Default.APIKey;
             privateKeyTxt.Text = Properties.Secret.Default.PrivateKey;
             networkChainTxt.Text = Properties.Secret.Default.ChainId.ToString();
+            contractKeyTxt.Text = Properties.Secret.Default.ContractKey;
             updatingControls = false;
         }
 
-        private void genericControl_TextChanged(object sender, EventArgs e) {
+        private void genericControl_TextChanged(object sender, EventArgs e){
             if (updatingControls) return;
             saveSettingsBtn.Enabled = true;
         }
@@ -225,15 +217,34 @@ namespace HumanCrypto {
             Properties.Secret.Default.APIKey = apiKeyTxt.Text;
             Properties.Secret.Default.PrivateKey = privateKeyTxt.Text;
             Properties.Secret.Default.ChainId = Convert.ToInt32(networkChainTxt.Text);
+            Properties.Secret.Default.ContractKey = contractKeyTxt.Text;
 
             Properties.Secret.Default.Save();
             saveSettingsBtn.Enabled = false;
         }
 
+        private async void button3_Click(object sender, EventArgs e) {
+            var deployParams = new HumanAvatarOwnerDeployment {
+                MaxPriorityFeePerGas= 500000000
+            };
+            CancellationTokenSource source = new CancellationTokenSource(20000);
+            TransactionReceipt deploy = null;
 
+            try {
+                deploy = await HumanAvatarOwnerService.DeployContractAndWaitForReceiptAsync(web3, deployParams, source);
+            }catch(TaskCanceledException ex) {
+                notifyControl.ShowBalloonTip(2000, "HumanCrypto", "Contract deploy timedout", ToolTipIcon.Error);
+                return;
+            }
 
+            if (deploy.Status.Value == 0) {
+                notifyControl.ShowBalloonTip(2000, "HumanCrypto", "Contract failed", ToolTipIcon.Error);
+                return;
+            }
 
-
+            notifyControl.ShowBalloonTip(2000, "HumanCrypto", "New contract deployed", ToolTipIcon.None);
+            contractKeyTxt.Text = deploy.ContractAddress;
+        }
         #endregion
     }
 

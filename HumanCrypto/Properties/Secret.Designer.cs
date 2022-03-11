@@ -58,5 +58,17 @@ namespace HumanCrypto.Properties {
                 this["ChainId"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ContractKey {
+            get {
+                return ((string)(this["ContractKey"]));
+            }
+            set {
+                this["ContractKey"] = value;
+            }
+        }
     }
 }
