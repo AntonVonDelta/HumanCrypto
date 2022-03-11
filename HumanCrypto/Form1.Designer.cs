@@ -36,6 +36,9 @@ namespace HumanCrypto
             this.button1 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabAllAvatars = new System.Windows.Forms.TabPage();
+            this.prevAvatarBtn = new System.Windows.Forms.Button();
+            this.nextAvatarBtn = new System.Windows.Forms.Button();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.tabSettings = new System.Windows.Forms.TabPage();
             this.label5 = new System.Windows.Forms.Label();
@@ -55,6 +58,7 @@ namespace HumanCrypto
             this.tabGame.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabAllAvatars.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.tabSettings.SuspendLayout();
             this.SuspendLayout();
@@ -68,7 +72,7 @@ namespace HumanCrypto
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1059, 616);
+            this.tabControl1.Size = new System.Drawing.Size(1265, 734);
             this.tabControl1.TabIndex = 0;
             // 
             // tabGame
@@ -78,7 +82,7 @@ namespace HumanCrypto
             this.tabGame.Controls.Add(this.pictureBox1);
             this.tabGame.Location = new System.Drawing.Point(4, 22);
             this.tabGame.Name = "tabGame";
-            this.tabGame.Size = new System.Drawing.Size(1051, 590);
+            this.tabGame.Size = new System.Drawing.Size(1257, 708);
             this.tabGame.TabIndex = 0;
             this.tabGame.Text = "Game";
             this.tabGame.UseVisualStyleBackColor = true;
@@ -114,23 +118,56 @@ namespace HumanCrypto
             // 
             // tabAllAvatars
             // 
+            this.tabAllAvatars.Controls.Add(this.prevAvatarBtn);
+            this.tabAllAvatars.Controls.Add(this.nextAvatarBtn);
+            this.tabAllAvatars.Controls.Add(this.pictureBox3);
             this.tabAllAvatars.Controls.Add(this.pictureBox2);
             this.tabAllAvatars.Location = new System.Drawing.Point(4, 22);
             this.tabAllAvatars.Name = "tabAllAvatars";
             this.tabAllAvatars.Padding = new System.Windows.Forms.Padding(3);
-            this.tabAllAvatars.Size = new System.Drawing.Size(1051, 590);
+            this.tabAllAvatars.Size = new System.Drawing.Size(1257, 708);
             this.tabAllAvatars.TabIndex = 2;
             this.tabAllAvatars.Text = "All Avatars";
             this.tabAllAvatars.UseVisualStyleBackColor = true;
             // 
+            // prevAvatarBtn
+            // 
+            this.prevAvatarBtn.Location = new System.Drawing.Point(3, 6);
+            this.prevAvatarBtn.Name = "prevAvatarBtn";
+            this.prevAvatarBtn.Size = new System.Drawing.Size(56, 23);
+            this.prevAvatarBtn.TabIndex = 3;
+            this.prevAvatarBtn.Text = "Prev";
+            this.prevAvatarBtn.UseVisualStyleBackColor = true;
+            this.prevAvatarBtn.Click += new System.EventHandler(this.prevAvatarBtn_Click);
+            // 
+            // nextAvatarBtn
+            // 
+            this.nextAvatarBtn.Location = new System.Drawing.Point(607, 6);
+            this.nextAvatarBtn.Name = "nextAvatarBtn";
+            this.nextAvatarBtn.Size = new System.Drawing.Size(56, 23);
+            this.nextAvatarBtn.TabIndex = 2;
+            this.nextAvatarBtn.Text = "Next";
+            this.nextAvatarBtn.UseVisualStyleBackColor = true;
+            this.nextAvatarBtn.Click += new System.EventHandler(this.nextAvatarBtn_Click);
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.Dock = System.Windows.Forms.DockStyle.Right;
+            this.pictureBox3.Location = new System.Drawing.Point(965, 3);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(289, 702);
+            this.pictureBox3.TabIndex = 1;
+            this.pictureBox3.TabStop = false;
+            // 
             // pictureBox2
             // 
-            this.pictureBox2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBox2.Dock = System.Windows.Forms.DockStyle.Left;
             this.pictureBox2.Location = new System.Drawing.Point(3, 3);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(1045, 584);
+            this.pictureBox2.Size = new System.Drawing.Size(660, 702);
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
+            this.pictureBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox2_Paint);
             // 
             // tabSettings
             // 
@@ -148,7 +185,7 @@ namespace HumanCrypto
             this.tabSettings.Controls.Add(this.apiKeyTxt);
             this.tabSettings.Location = new System.Drawing.Point(4, 22);
             this.tabSettings.Name = "tabSettings";
-            this.tabSettings.Size = new System.Drawing.Size(1051, 590);
+            this.tabSettings.Size = new System.Drawing.Size(1257, 708);
             this.tabSettings.TabIndex = 1;
             this.tabSettings.Text = "Settings";
             this.tabSettings.UseVisualStyleBackColor = true;
@@ -267,7 +304,7 @@ namespace HumanCrypto
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1059, 616);
+            this.ClientSize = new System.Drawing.Size(1265, 734);
             this.Controls.Add(this.tabControl1);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -276,6 +313,7 @@ namespace HumanCrypto
             this.tabGame.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tabAllAvatars.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.tabSettings.ResumeLayout(false);
             this.tabSettings.PerformLayout();
@@ -306,6 +344,9 @@ namespace HumanCrypto
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox priorityFeeTxt;
+        private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.Button prevAvatarBtn;
+        private System.Windows.Forms.Button nextAvatarBtn;
     }
 }
 
