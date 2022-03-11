@@ -2,10 +2,8 @@
 pragma solidity ^0.8.12;
 
 contract HumanAvatarOwner {
-
     struct Offer{
-        bool valid;
-        uint256 futureExpirationTime;
+        bool active;
         uint256 avatarId;
         uint256 amount;
     }
@@ -15,17 +13,15 @@ contract HumanAvatarOwner {
 
         address avatarOwner;
         uint16 generation;
-
-        uint8[] genome;
+        uint256 genome;
     }
 
     address owner;
     uint randomNonce=0;
-    Human[] public avatars;
-    mapping(address => Offer[]) public offersMadeByClient;
-    mapping(uint256 => Offer[]) public offersForAvatar;
-    uint8[] genomeGeneStructure=[4, 4, 4, 4, 4, 4, 4, 4 ];
 
+    Human[] public avatars;
+    mapping(uint256 => Offer) public avatarOffer;               // Only the owner can post an ofer for the avatar
+    uint8[] genomeGeneStructure=[4, 4, 4, 4, 4, 4, 4, 4 ];
 
     modifier onlyOwner(){
         require(msg.sender == owner);
@@ -36,21 +32,42 @@ contract HumanAvatarOwner {
         owner=msg.sender;
     }
 
-    function makeAnOffer(uint256 avatarId,uint256 amount) external{
-        require(avatarId>=avatars.length,"Avatar not found");
-        require(amount==0,"No zero amount offer allowed");
+    function createOffer(uint256 avatarId,uint256 amount) external{
+        require(avatarId<avatars.length,"Avatar not found");
+        require(amount!=0,"No zero amount offer allowed");
+        require(avatars[avatarId].avatarOwner==msg.sender, "You are not owner of avatar");
 
         Offer memory newOffer=Offer({
-            valid:true,
-            futureExpirationTime:block.timestamp+ (1 days),
+            active:true,
             avatarId:avatarId,
             amount:amount
         });
 
-        offersMadeByClient[msg.sender].push(newOffer);
-        offersForAvatar[avatarId].push(newOffer);
+        avatarOffer[avatarId]=newOffer;
+    }
+    function cancelOffer(uint256 avatarId) external{
+        require(avatarId<avatars.length,"Avatar not found");
+        require(avatars[avatarId].avatarOwner==msg.sender, "You are not owner of avatar");
+
+        avatarOffer[avatarId].active=false;
     }
 
+    function acceptOffer(uint256 avatarId) external payable{
+        require(avatarId<avatars.length,"Avatar not found");
+        require(avatars[avatarId].avatarOwner!=msg.sender, "You cannot accept your own offer");
+        require(avatarOffer[avatarId].active, "No active offer for this avatar");
+        require(msg.value >= avatarOffer[avatarId].amount, "Not enough coins for the offer");
+
+        address payable prevOwner=payable(avatars[avatarId].avatarOwner);
+        avatarOffer[avatarId].active=false;
+        avatars[avatarId].avatarOwner=msg.sender;
+
+
+        uint256 refund=msg.value-avatarOffer[avatarId].amount;
+
+        prevOwner.transfer(avatarOffer[avatarId].amount);
+        payable(msg.sender).transfer(refund);
+    }
 
     function createPrimeAvatar() external onlyOwner{
         avatars.push(Human({
@@ -58,7 +75,7 @@ contract HumanAvatarOwner {
             dadId:0,
             avatarOwner: owner,
             generation:0,
-            genome: randomGenome()
+            genome:random()
         }));
     }
 
@@ -66,9 +83,10 @@ contract HumanAvatarOwner {
     function random() private returns (uint) {
         return uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, randomNonce++)));
     }
-    function randomGenome() private returns (uint8[] memory){
+    function randomGenome(uint8 size) private returns (uint8[] memory){
         uint8[] memory genome;
-        for(uint256 i=0; i<genome.length; i++){
+
+        for(uint8 i=0; i<size; i++){
             genome[i]=uint8(random()%256);
         }
         return genome;

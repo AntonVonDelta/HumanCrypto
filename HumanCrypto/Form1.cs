@@ -79,8 +79,8 @@ namespace HumanCrypto {
                 errorMessage = ex.Message;
             }
 
-            if (receipt==null || receipt.Failed()) {
-                notifyControl.ShowBalloonTip(5000, "Contract function call", errorMessage,ToolTipIcon.Error);
+            if (receipt == null || receipt.Failed()) {
+                notifyControl.ShowBalloonTip(5000, "Contract function call", errorMessage, ToolTipIcon.Error);
             } else {
                 notifyControl.ShowBalloonTip(5000, "Contract function call", "Transaction succeded", ToolTipIcon.None);
             }
@@ -121,40 +121,53 @@ namespace HumanCrypto {
 
         private async void deployContractBtn_Click(object sender, EventArgs e) {
             CancellationTokenSource source = new CancellationTokenSource(60000);
-            TransactionReceipt deploy = null;
+            TransactionReceipt receipt = null;
             string errorMessage = "Failed";
 
             try {
                 var deployParams = new HumanAvatarOwnerDeployment {
                     MaxPriorityFeePerGas = Web3.Convert.ToWei(Properties.Secret.Default.PriorityFeeGwei, Nethereum.Util.UnitConversion.EthUnit.Gwei)
                 };
-                deploy = await HumanAvatarOwnerService.DeployContractAndWaitForReceiptAsync(web3, deployParams, source);
+                receipt = await HumanAvatarOwnerService.DeployContractAndWaitForReceiptAsync(web3, deployParams, source);
             } catch (Exception ex) {
                 errorMessage = ex.Message;
             }
 
-            if (deploy==null || deploy.Failed()) {
+            if (receipt == null || receipt.Failed()) {
                 notifyControl.ShowBalloonTip(5000, "Contract deployment", errorMessage, ToolTipIcon.Error);
-                return;
+            } else {
+                notifyControl.ShowBalloonTip(5000, "Contract deployment", "New contract deployed", ToolTipIcon.None);
+                contractKeyTxt.Text = receipt.ContractAddress;
             }
-
-            notifyControl.ShowBalloonTip(5000, "Contract deployment", "New contract deployed", ToolTipIcon.None);
-            contractKeyTxt.Text = deploy.ContractAddress;
         }
         #endregion
 
         #region AllAvatars
         private async void tabAllAvatars_Enter(object sender, EventArgs e) {
             HumanAvatarOwnerService service = new HumanAvatarOwnerService(web3, Properties.Secret.Default.ContractKey);
+            AvatarsOutputDTO result = null;
 
-            var transactionFunction = new AvatarsFunction {
-                MaxPriorityFeePerGas = Web3.Convert.ToWei(Properties.Secret.Default.PriorityFeeGwei, Nethereum.Util.UnitConversion.EthUnit.Kwei),
-                ReturnValue1 = 0
-            };
-            var result=await service.AvatarsQueryAsync(transactionFunction);
+            string errorMessage = "Failed";
 
-            notifyControl.Text = "Got avatar data";
-            notifyControl.ShowBalloonTip(5000);
+            try {
+                var transactionFunction = new AvatarsFunction {
+                    MaxPriorityFeePerGas = Web3.Convert.ToWei(Properties.Secret.Default.PriorityFeeGwei, Nethereum.Util.UnitConversion.EthUnit.Kwei),
+                    ReturnValue1 = 0
+                };
+                result = await service.AvatarsQueryAsync(transactionFunction);
+            } catch (Exception ex) {
+                errorMessage = ex.Message;
+            }
+
+            if (result == null) {
+                notifyControl.ShowBalloonTip(5000, "Avatar fetch", errorMessage, ToolTipIcon.Error);
+                return;
+            }
+            notifyControl.ShowBalloonTip(5000, "Avatar fetch", "Got avatar data", ToolTipIcon.None);
+
+            genomeProcessing.ParseGenome(result.Genome.ToByteArray());
+            PicassoConstruction picasso = new PicassoConstruction(genomeProcessing);
+            pictureBox2.Image=picasso.GetBitmap();
         }
         #endregion
     }

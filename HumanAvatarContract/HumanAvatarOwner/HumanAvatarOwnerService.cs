@@ -42,6 +42,45 @@ namespace HumanAvatarContract.Contracts.HumanAvatarOwner
             ContractHandler = web3.Eth.GetContractHandler(contractAddress);
         }
 
+        public Task<string> AcceptOfferRequestAsync(AcceptOfferFunction acceptOfferFunction)
+        {
+             return ContractHandler.SendRequestAsync(acceptOfferFunction);
+        }
+
+        public Task<TransactionReceipt> AcceptOfferRequestAndWaitForReceiptAsync(AcceptOfferFunction acceptOfferFunction, CancellationTokenSource cancellationToken = null)
+        {
+             return ContractHandler.SendRequestAndWaitForReceiptAsync(acceptOfferFunction, cancellationToken);
+        }
+
+        public Task<string> AcceptOfferRequestAsync(BigInteger avatarId)
+        {
+            var acceptOfferFunction = new AcceptOfferFunction();
+                acceptOfferFunction.AvatarId = avatarId;
+            
+             return ContractHandler.SendRequestAsync(acceptOfferFunction);
+        }
+
+        public Task<TransactionReceipt> AcceptOfferRequestAndWaitForReceiptAsync(BigInteger avatarId, CancellationTokenSource cancellationToken = null)
+        {
+            var acceptOfferFunction = new AcceptOfferFunction();
+                acceptOfferFunction.AvatarId = avatarId;
+            
+             return ContractHandler.SendRequestAndWaitForReceiptAsync(acceptOfferFunction, cancellationToken);
+        }
+
+        public Task<AvatarOfferOutputDTO> AvatarOfferQueryAsync(AvatarOfferFunction avatarOfferFunction, BlockParameter blockParameter = null)
+        {
+            return ContractHandler.QueryDeserializingToObjectAsync<AvatarOfferFunction, AvatarOfferOutputDTO>(avatarOfferFunction, blockParameter);
+        }
+
+        public Task<AvatarOfferOutputDTO> AvatarOfferQueryAsync(BigInteger returnValue1, BlockParameter blockParameter = null)
+        {
+            var avatarOfferFunction = new AvatarOfferFunction();
+                avatarOfferFunction.ReturnValue1 = returnValue1;
+            
+            return ContractHandler.QueryDeserializingToObjectAsync<AvatarOfferFunction, AvatarOfferOutputDTO>(avatarOfferFunction, blockParameter);
+        }
+
         public Task<AvatarsOutputDTO> AvatarsQueryAsync(AvatarsFunction avatarsFunction, BlockParameter blockParameter = null)
         {
             return ContractHandler.QueryDeserializingToObjectAsync<AvatarsFunction, AvatarsOutputDTO>(avatarsFunction, blockParameter);
@@ -53,6 +92,60 @@ namespace HumanAvatarContract.Contracts.HumanAvatarOwner
                 avatarsFunction.ReturnValue1 = returnValue1;
             
             return ContractHandler.QueryDeserializingToObjectAsync<AvatarsFunction, AvatarsOutputDTO>(avatarsFunction, blockParameter);
+        }
+
+        public Task<string> CancelOfferRequestAsync(CancelOfferFunction cancelOfferFunction)
+        {
+             return ContractHandler.SendRequestAsync(cancelOfferFunction);
+        }
+
+        public Task<TransactionReceipt> CancelOfferRequestAndWaitForReceiptAsync(CancelOfferFunction cancelOfferFunction, CancellationTokenSource cancellationToken = null)
+        {
+             return ContractHandler.SendRequestAndWaitForReceiptAsync(cancelOfferFunction, cancellationToken);
+        }
+
+        public Task<string> CancelOfferRequestAsync(BigInteger avatarId)
+        {
+            var cancelOfferFunction = new CancelOfferFunction();
+                cancelOfferFunction.AvatarId = avatarId;
+            
+             return ContractHandler.SendRequestAsync(cancelOfferFunction);
+        }
+
+        public Task<TransactionReceipt> CancelOfferRequestAndWaitForReceiptAsync(BigInteger avatarId, CancellationTokenSource cancellationToken = null)
+        {
+            var cancelOfferFunction = new CancelOfferFunction();
+                cancelOfferFunction.AvatarId = avatarId;
+            
+             return ContractHandler.SendRequestAndWaitForReceiptAsync(cancelOfferFunction, cancellationToken);
+        }
+
+        public Task<string> CreateOfferRequestAsync(CreateOfferFunction createOfferFunction)
+        {
+             return ContractHandler.SendRequestAsync(createOfferFunction);
+        }
+
+        public Task<TransactionReceipt> CreateOfferRequestAndWaitForReceiptAsync(CreateOfferFunction createOfferFunction, CancellationTokenSource cancellationToken = null)
+        {
+             return ContractHandler.SendRequestAndWaitForReceiptAsync(createOfferFunction, cancellationToken);
+        }
+
+        public Task<string> CreateOfferRequestAsync(BigInteger avatarId, BigInteger amount)
+        {
+            var createOfferFunction = new CreateOfferFunction();
+                createOfferFunction.AvatarId = avatarId;
+                createOfferFunction.Amount = amount;
+            
+             return ContractHandler.SendRequestAsync(createOfferFunction);
+        }
+
+        public Task<TransactionReceipt> CreateOfferRequestAndWaitForReceiptAsync(BigInteger avatarId, BigInteger amount, CancellationTokenSource cancellationToken = null)
+        {
+            var createOfferFunction = new CreateOfferFunction();
+                createOfferFunction.AvatarId = avatarId;
+                createOfferFunction.Amount = amount;
+            
+             return ContractHandler.SendRequestAndWaitForReceiptAsync(createOfferFunction, cancellationToken);
         }
 
         public Task<string> CreatePrimeAvatarRequestAsync(CreatePrimeAvatarFunction createPrimeAvatarFunction)
@@ -73,62 +166,6 @@ namespace HumanAvatarContract.Contracts.HumanAvatarOwner
         public Task<TransactionReceipt> CreatePrimeAvatarRequestAndWaitForReceiptAsync(CancellationTokenSource cancellationToken = null)
         {
              return ContractHandler.SendRequestAndWaitForReceiptAsync<CreatePrimeAvatarFunction>(null, cancellationToken);
-        }
-
-        public Task<string> MakeAnOfferRequestAsync(MakeAnOfferFunction makeAnOfferFunction)
-        {
-             return ContractHandler.SendRequestAsync(makeAnOfferFunction);
-        }
-
-        public Task<TransactionReceipt> MakeAnOfferRequestAndWaitForReceiptAsync(MakeAnOfferFunction makeAnOfferFunction, CancellationTokenSource cancellationToken = null)
-        {
-             return ContractHandler.SendRequestAndWaitForReceiptAsync(makeAnOfferFunction, cancellationToken);
-        }
-
-        public Task<string> MakeAnOfferRequestAsync(BigInteger avatarId, BigInteger amount)
-        {
-            var makeAnOfferFunction = new MakeAnOfferFunction();
-                makeAnOfferFunction.AvatarId = avatarId;
-                makeAnOfferFunction.Amount = amount;
-            
-             return ContractHandler.SendRequestAsync(makeAnOfferFunction);
-        }
-
-        public Task<TransactionReceipt> MakeAnOfferRequestAndWaitForReceiptAsync(BigInteger avatarId, BigInteger amount, CancellationTokenSource cancellationToken = null)
-        {
-            var makeAnOfferFunction = new MakeAnOfferFunction();
-                makeAnOfferFunction.AvatarId = avatarId;
-                makeAnOfferFunction.Amount = amount;
-            
-             return ContractHandler.SendRequestAndWaitForReceiptAsync(makeAnOfferFunction, cancellationToken);
-        }
-
-        public Task<OffersForAvatarOutputDTO> OffersForAvatarQueryAsync(OffersForAvatarFunction offersForAvatarFunction, BlockParameter blockParameter = null)
-        {
-            return ContractHandler.QueryDeserializingToObjectAsync<OffersForAvatarFunction, OffersForAvatarOutputDTO>(offersForAvatarFunction, blockParameter);
-        }
-
-        public Task<OffersForAvatarOutputDTO> OffersForAvatarQueryAsync(BigInteger returnValue1, BigInteger returnValue2, BlockParameter blockParameter = null)
-        {
-            var offersForAvatarFunction = new OffersForAvatarFunction();
-                offersForAvatarFunction.ReturnValue1 = returnValue1;
-                offersForAvatarFunction.ReturnValue2 = returnValue2;
-            
-            return ContractHandler.QueryDeserializingToObjectAsync<OffersForAvatarFunction, OffersForAvatarOutputDTO>(offersForAvatarFunction, blockParameter);
-        }
-
-        public Task<OffersMadeByClientOutputDTO> OffersMadeByClientQueryAsync(OffersMadeByClientFunction offersMadeByClientFunction, BlockParameter blockParameter = null)
-        {
-            return ContractHandler.QueryDeserializingToObjectAsync<OffersMadeByClientFunction, OffersMadeByClientOutputDTO>(offersMadeByClientFunction, blockParameter);
-        }
-
-        public Task<OffersMadeByClientOutputDTO> OffersMadeByClientQueryAsync(string returnValue1, BigInteger returnValue2, BlockParameter blockParameter = null)
-        {
-            var offersMadeByClientFunction = new OffersMadeByClientFunction();
-                offersMadeByClientFunction.ReturnValue1 = returnValue1;
-                offersMadeByClientFunction.ReturnValue2 = returnValue2;
-            
-            return ContractHandler.QueryDeserializingToObjectAsync<OffersMadeByClientFunction, OffersMadeByClientOutputDTO>(offersMadeByClientFunction, blockParameter);
         }
     }
 }
