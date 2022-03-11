@@ -191,12 +191,12 @@ namespace HumanCrypto {
             pictureBox3.Invalidate();
         }
         private async void pictureBox3_Paint(object sender, PaintEventArgs e) {
-            int iconsPerRow = 3;
-            int padding = 5;
+            int iconsPerRow = 2;
+            int padding = 20;
             Size resizedImageSize = new Size { Width = (pictureBox3.Width - 2 * padding) / iconsPerRow, Height = (pictureBox3.Width - 2 * padding) / iconsPerRow };
             int iconsPerColumn = (pictureBox3.Height - 2 * padding) / resizedImageSize.Height;
 
-            List<Bitmap> availableAvatars = await cachedImages.GetOwnAvatars(page1 * iconsPerRow * iconsPerColumn, iconsPerRow * iconsPerColumn);
+            List<Bitmap> availableAvatars = await cachedImages.GetOwnAvatars(page2 * iconsPerRow * iconsPerColumn, iconsPerRow * iconsPerColumn);
 
             using (Graphics g = pictureBox3.CreateGraphics()) {
                 for (int i = 0; i < availableAvatars.Count; i++) {
