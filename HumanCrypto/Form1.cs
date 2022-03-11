@@ -21,6 +21,16 @@ namespace HumanCrypto {
     public partial class Form1 : Form {
         Web3 web3;
 
+        int currentIndex = 0;
+        int iconsPerRow = 3;
+        int padding = 50;
+        Size resizedImageSize;
+        int maxAvatarsDisplayed = 3;
+        CachedImages cachedImages;
+        List<Bitmap> availableAvatars = new List<Bitmap>();
+
+
+
         private GenomeProcessing GetGenome() {
             return new GenomeProcessing(new byte[] { 4, 4, 4, 4, 4, 4, 4, 4 });
         }
@@ -30,6 +40,7 @@ namespace HumanCrypto {
             InitializeComponent();
 
             web3 = new Web3(new Account(Properties.Secret.Default.PrivateKey, Properties.Secret.Default.ChainId), "https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161");
+            cachedImages = new CachedImages(web3, GetGenome());
 
             // Add event to all settings-bound controls
             List<Control> settingsBoundedControls = new List<Control>() { apiKeyTxt, privateKeyTxt, networkChainTxt, contractKeyTxt, priorityFeeTxt };
@@ -47,18 +58,15 @@ namespace HumanCrypto {
             // Set icon for notification control otherwise it is not displayed
             notifyControl.Icon = this.Icon;
         }
-
         private void pictureBox1_Paint(object sender, PaintEventArgs e) {
             GenomeProcessing genomeProcessing = GetGenome();
             PicassoConstruction picasso = new PicassoConstruction(genomeProcessing);
 
-            e.Graphics.DrawImage(picasso.GetBitmap(),new Point { X = 0, Y = 0 });
+            e.Graphics.DrawImage(picasso.GetBitmap(), new Point { X = 0, Y = 0 });
         }
-
         private void button1_Click(object sender, EventArgs e) {
             pictureBox1.Invalidate();
         }
-
         private async void button2_Click(object sender, EventArgs e) {
             CancellationTokenSource source = new CancellationTokenSource(60000);
             HumanAvatarOwnerService service = new HumanAvatarOwnerService(web3, Properties.Secret.Default.ContractKey);
@@ -98,12 +106,10 @@ namespace HumanCrypto {
             priorityFeeTxt.Text = Properties.Secret.Default.PriorityFeeGwei.ToString();
             updatingControls = false;
         }
-
         private void genericControl_TextChanged(object sender, EventArgs e) {
             if (updatingControls) return;
             saveSettingsBtn.Enabled = true;
         }
-
         private void saveSettingsBtn_Click(object sender, EventArgs e) {
             Properties.Secret.Default.APIKey = apiKeyTxt.Text;
             Properties.Secret.Default.PrivateKey = privateKeyTxt.Text;
@@ -113,7 +119,6 @@ namespace HumanCrypto {
             Properties.Secret.Default.Save();
             saveSettingsBtn.Enabled = false;
         }
-
         private async void deployContractBtn_Click(object sender, EventArgs e) {
             CancellationTokenSource source = new CancellationTokenSource(60000);
             TransactionReceipt receipt = null;
@@ -137,77 +142,47 @@ namespace HumanCrypto {
         }
         #endregion
 
-        #region AllAvatars
-        int currentIndex = 0;
-        int maxAvatarsDisplayed = 3;
-        int iconsPerRow = 3;
-        List<Bitmap> availableAvatars = new List<Bitmap>();
 
-        private async void tabAllAvatars_Enter(object sender, EventArgs e) {
+        #region AllAvatars
+
+        private void tabAllAvatars_Enter(object sender, EventArgs e) {
             currentIndex = 0;
-            availableAvatars = await LoadAvatarsAsync(currentIndex, maxAvatarsDisplayed);
+            resizedImageSize = new Size { Width = (pictureBox2.Width - 2 * padding) / iconsPerRow, Height = (pictureBox2.Width - 2 * padding) / iconsPerRow };
+            maxAvatarsDisplayed = (pictureBox2.Height - 2 * padding) / resizedImageSize.Height;
+
+            pictureBox2.Invalidate();
         }
-        private async void nextAvatarBtn_Click(object sender, EventArgs e) {
+        private void nextAvatarBtn_Click(object sender, EventArgs e) {
             if (availableAvatars.Count == 0) return;
+
             currentIndex += maxAvatarsDisplayed;
-            availableAvatars = await LoadAvatarsAsync(currentIndex, maxAvatarsDisplayed);
+            pictureBox2.Invalidate();
         }
-        private async void prevAvatarBtn_Click(object sender, EventArgs e) {
+        private void prevAvatarBtn_Click(object sender, EventArgs e) {
             if (currentIndex - maxAvatarsDisplayed < 0) return;
 
             currentIndex -= maxAvatarsDisplayed;
-            availableAvatars = await LoadAvatarsAsync(currentIndex, maxAvatarsDisplayed);
+            pictureBox2.Invalidate();
         }
         private void pictureBox2_Paint(object sender, PaintEventArgs e) {
             Graphics g = e.Graphics;
 
             if (availableAvatars.Count == 0) return;
-            int bmpWidth = pictureBox2.Width / iconsPerRow;
-            int bmpHeight = bmpWidth;
 
-            for (int i=0;i<availableAvatars.Count;i++) {
+            for (int i = 0; i < availableAvatars.Count; i++) {
                 Bitmap bmp = availableAvatars[i];
-                Point pos = new Point { X = (i % iconsPerRow)* bmpWidth, Y = (i / iconsPerRow) * bmpHeight };
-                Size size = new Size { Width = bmpWidth, Height = bmpHeight };
+                Point pos = new Point { X = (i % iconsPerRow) * resizedImageSize.Width, Y = (i / iconsPerRow) * resizedImageSize.Height };
 
-                g.DrawImage(bmp, new Rectangle(pos, size));
+                if (i % iconsPerRow == 0) pos.X += padding;
+                if (i / iconsPerRow == 0) pos.Y += padding;
+
+
+                g.DrawImage(bmp, new Rectangle(pos, resizedImageSize));
             }
         }
-
-
-        private async Task<List<Bitmap>> LoadAvatarsAsync(int startingIndex, int count) {
-            List<Bitmap> results = new List<Bitmap>();
-            HumanAvatarOwnerService service = new HumanAvatarOwnerService(web3, Properties.Secret.Default.ContractKey);
-
-            for (int i = 0; i < count; i++) {
-                AvatarsOutputDTO result = null;
-
-                try {
-                    var transactionFunction = new AvatarsFunction {
-                        MaxFeePerGas = 0,           // This should not consume any gas
-                        ReturnValue1 = startingIndex+i
-                    };
-                    result = await service.AvatarsQueryAsync(transactionFunction);
-                } catch (Exception ex) {
-                }
-                if (result == null) {
-                    break;
-                }
-
-                GenomeProcessing genomeProcessing = GetGenome();
-                genomeProcessing.ParseGenome(result.Genome.ToByteArray());
-
-                PicassoConstruction picasso = new PicassoConstruction(genomeProcessing);
-                results.Add(picasso.GetBitmap());
-            }
-
-            return results;
-        }
-
-
 
         #endregion
-        
+
     }
 
 }
