@@ -21,6 +21,7 @@ contract HumanAvatarOwner {
 
     Human[] public avatars;
     mapping(uint256 => Offer) public avatarOffer;               // Only the owner can post an ofer for the avatar
+    mapping(address => uint256[]) public avatarIdsOfAddress;
     uint8[] genomeGeneStructure=[4, 4, 4, 4, 4, 4, 4, 4 ];
 
     modifier onlyOwner(){
@@ -62,7 +63,11 @@ contract HumanAvatarOwner {
         avatarOffer[avatarId].active=false;
         avatars[avatarId].avatarOwner=msg.sender;
 
+        // Also modify the mappings
+        removeAvatarIdFromMapping(prevOwner,avatarId);
+        avatarIdsOfAddress[msg.sender].push(avatarId);
 
+   
         uint256 refund=msg.value-avatarOffer[avatarId].amount;
 
         prevOwner.transfer(avatarOffer[avatarId].amount);
@@ -77,8 +82,21 @@ contract HumanAvatarOwner {
             generation:0,
             genome:random()
         }));
+        avatarIdsOfAddress[owner].push(avatars.length-1);
     }
 
+
+    function removeAvatarIdFromMapping(address addr,uint256 avatarId) private{
+        bool shift=false;
+        for(uint i=0;i<avatarIdsOfAddress[addr].length-1;i++){
+            if(avatarIdsOfAddress[addr][i]==avatarId){
+                shift=true;
+            }
+
+            if(shift) avatarIdsOfAddress[addr][i]=avatarIdsOfAddress[addr][i+1];
+        }
+        avatarIdsOfAddress[addr].pop();
+    }
 
     function random() private returns (uint) {
         return uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, randomNonce++)));

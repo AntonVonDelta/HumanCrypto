@@ -68,6 +68,21 @@ namespace HumanAvatarContract.Contracts.HumanAvatarOwner
              return ContractHandler.SendRequestAndWaitForReceiptAsync(acceptOfferFunction, cancellationToken);
         }
 
+        public Task<BigInteger> AvatarIdsOfAddressQueryAsync(AvatarIdsOfAddressFunction avatarIdsOfAddressFunction, BlockParameter blockParameter = null)
+        {
+            return ContractHandler.QueryAsync<AvatarIdsOfAddressFunction, BigInteger>(avatarIdsOfAddressFunction, blockParameter);
+        }
+
+        
+        public Task<BigInteger> AvatarIdsOfAddressQueryAsync(string returnValue1, BigInteger returnValue2, BlockParameter blockParameter = null)
+        {
+            var avatarIdsOfAddressFunction = new AvatarIdsOfAddressFunction();
+                avatarIdsOfAddressFunction.ReturnValue1 = returnValue1;
+                avatarIdsOfAddressFunction.ReturnValue2 = returnValue2;
+            
+            return ContractHandler.QueryAsync<AvatarIdsOfAddressFunction, BigInteger>(avatarIdsOfAddressFunction, blockParameter);
+        }
+
         public Task<AvatarOfferOutputDTO> AvatarOfferQueryAsync(AvatarOfferFunction avatarOfferFunction, BlockParameter blockParameter = null)
         {
             return ContractHandler.QueryDeserializingToObjectAsync<AvatarOfferFunction, AvatarOfferOutputDTO>(avatarOfferFunction, blockParameter);

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace HumanCrypto {
     class CachedImages {
         Web3 web3;
-        List<Bitmap> cache = new List<Bitmap>();
+        Dictionary<int, Bitmap> cache = new Dictionary<int, Bitmap>();
         GenomeProcessing genomeProcessing;
 
         /// <summary>
@@ -28,14 +28,14 @@ namespace HumanCrypto {
         /// Returns a list of requested avatars using cache or on-the-spot-made transaction
         /// </summary>
         /// <returns></returns>
-        public async Task<List<Bitmap>> GetAvatars(int startingIndex, int count) {
+        public async Task<List<Bitmap>> GetAllAvatars(int startingIndex, int count) {
             HumanAvatarOwnerService service= new HumanAvatarOwnerService(web3, Properties.Secret.Default.ContractKey);
             List<Bitmap> results = new List<Bitmap>();
 
             for (int i = 0; i < count; i++) {
                 int bmpIndex = i + startingIndex;
 
-                if (cache.Count > bmpIndex) {
+                if (cache.ContainsKey(bmpIndex)) {
                     results.Add(cache[bmpIndex]);
                     continue;
                 }
@@ -62,7 +62,47 @@ namespace HumanCrypto {
                 results.Add(generatedBmp);
 
                 // Add new image to cache
-                cache.Add(generatedBmp);
+                cache[bmpIndex]=generatedBmp;
+            }
+
+            return results;
+        }
+
+        public async Task<List<Bitmap>> GetOwnAvatars(int startingIndex, int count) {
+            HumanAvatarOwnerService service = new HumanAvatarOwnerService(web3, Properties.Secret.Default.ContractKey);
+            List<Bitmap> results = new List<Bitmap>();
+
+            for (int i = 0; i < count; i++) {
+                int bmpIndex = i + startingIndex;
+
+                if (cache.ContainsKey(bmpIndex)) {
+                    results.Add(cache[bmpIndex]);
+                    continue;
+                }
+
+                // We need to generate the image on the spot
+                AvatarsOutputDTO outputResult = null;
+
+                try {
+                    var transactionFunction = new AvatarsFunction {
+                        MaxFeePerGas = 0,           // This should not consume any gas
+                        ReturnValue1 = startingIndex + i
+                    };
+                    outputResult = await service.AvatarsQueryAsync(transactionFunction);
+                } catch (Exception ex) {
+                }
+                if (outputResult == null) {
+                    break;
+                }
+
+                genomeProcessing.ParseGenome(outputResult.Genome.ToByteArray());
+
+                PicassoConstruction picasso = new PicassoConstruction(genomeProcessing);
+                Bitmap generatedBmp = picasso.GetBitmap();
+                results.Add(generatedBmp);
+
+                // Add new image to cache
+                cache[bmpIndex] = generatedBmp;
             }
 
             return results;

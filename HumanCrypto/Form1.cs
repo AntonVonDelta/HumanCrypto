@@ -152,21 +152,23 @@ namespace HumanCrypto {
             pictureBox2.Invalidate();
         }
         private async void pictureBox2_Paint(object sender, PaintEventArgs e) {
-            Graphics g = e.Graphics;
             int iconsPerRow = 3;
             int padding = 20;
             Size resizedImageSize = new Size { Width = (pictureBox2.Width - 2 * padding) / iconsPerRow, Height = (pictureBox2.Width - 2 * padding) / iconsPerRow };
             int iconsPerColumn = (pictureBox2.Height - 2 * padding) / resizedImageSize.Height;
 
-            List<Bitmap> availableAvatars = await cachedImages.GetAvatars(page * iconsPerRow * iconsPerColumn, iconsPerRow * iconsPerColumn);
-            for (int i = 0; i < availableAvatars.Count; i++) {
-                Bitmap bmp = availableAvatars[i];
-                Point pos = new Point { X = (i % iconsPerRow) * resizedImageSize.Width, Y = (i / iconsPerRow) * resizedImageSize.Height };
+            List<Bitmap> availableAvatars = await cachedImages.GetAllAvatars(page * iconsPerRow * iconsPerColumn, iconsPerRow * iconsPerColumn);
+            
+            using(Graphics g = pictureBox2.CreateGraphics()) {
+                for (int i = 0; i < availableAvatars.Count; i++) {
+                    Bitmap bmp = availableAvatars[i];
+                    Point pos = new Point { X = (i % iconsPerRow) * resizedImageSize.Width, Y = (i / iconsPerRow) * resizedImageSize.Height };
 
-                pos.X += padding;
-                pos.Y += padding;
+                    pos.X += padding;
+                    pos.Y += padding;
 
-                g.DrawImage(bmp, new Rectangle(pos, resizedImageSize));
+                    g.DrawImage(bmp, new Rectangle(pos, resizedImageSize));
+                }
             }
         }
 
