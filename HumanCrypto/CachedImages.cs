@@ -28,7 +28,7 @@ namespace HumanCrypto {
         /// Returns a list of requested avatars using cache or on-the-spot-made transaction
         /// </summary>
         /// <returns></returns>
-        private async Task<List<Bitmap>> GetAvatars(int startingIndex, int count) {
+        public async Task<List<Bitmap>> GetAvatars(int startingIndex, int count) {
             HumanAvatarOwnerService service= new HumanAvatarOwnerService(web3, Properties.Secret.Default.ContractKey);
             List<Bitmap> results = new List<Bitmap>();
 

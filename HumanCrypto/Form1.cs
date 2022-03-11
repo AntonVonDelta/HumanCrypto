@@ -21,19 +21,10 @@ namespace HumanCrypto {
     public partial class Form1 : Form {
         Web3 web3;
 
-        int currentIndex = 0;
-        int iconsPerRow = 3;
-        int padding = 50;
-        Size resizedImageSize;
-        int maxAvatarsDisplayed = 3;
+        int page = 0;
         CachedImages cachedImages;
-        List<Bitmap> availableAvatars = new List<Bitmap>();
 
 
-
-        private GenomeProcessing GetGenome() {
-            return new GenomeProcessing(new byte[] { 4, 4, 4, 4, 4, 4, 4, 4 });
-        }
 
 
         public Form1() {
@@ -146,42 +137,45 @@ namespace HumanCrypto {
         #region AllAvatars
 
         private void tabAllAvatars_Enter(object sender, EventArgs e) {
-            currentIndex = 0;
-            resizedImageSize = new Size { Width = (pictureBox2.Width - 2 * padding) / iconsPerRow, Height = (pictureBox2.Width - 2 * padding) / iconsPerRow };
-            maxAvatarsDisplayed = (pictureBox2.Height - 2 * padding) / resizedImageSize.Height;
+            page = 0;
 
             pictureBox2.Invalidate();
         }
         private void nextAvatarBtn_Click(object sender, EventArgs e) {
-            if (availableAvatars.Count == 0) return;
-
-            currentIndex += maxAvatarsDisplayed;
+            page += 1;
             pictureBox2.Invalidate();
         }
         private void prevAvatarBtn_Click(object sender, EventArgs e) {
-            if (currentIndex - maxAvatarsDisplayed < 0) return;
+            if (page - 1 < 0) return;
 
-            currentIndex -= maxAvatarsDisplayed;
+            page -= 1;
             pictureBox2.Invalidate();
         }
-        private void pictureBox2_Paint(object sender, PaintEventArgs e) {
+        private async void pictureBox2_Paint(object sender, PaintEventArgs e) {
             Graphics g = e.Graphics;
+            int iconsPerRow = 3;
+            int padding = 20;
+            Size resizedImageSize = new Size { Width = (pictureBox2.Width - 2 * padding) / iconsPerRow, Height = (pictureBox2.Width - 2 * padding) / iconsPerRow };
+            int iconsPerColumn = (pictureBox2.Height - 2 * padding) / resizedImageSize.Height;
 
-            if (availableAvatars.Count == 0) return;
-
+            List<Bitmap> availableAvatars = await cachedImages.GetAvatars(page * iconsPerRow * iconsPerColumn, iconsPerRow * iconsPerColumn);
             for (int i = 0; i < availableAvatars.Count; i++) {
                 Bitmap bmp = availableAvatars[i];
                 Point pos = new Point { X = (i % iconsPerRow) * resizedImageSize.Width, Y = (i / iconsPerRow) * resizedImageSize.Height };
 
-                if (i % iconsPerRow == 0) pos.X += padding;
-                if (i / iconsPerRow == 0) pos.Y += padding;
-
+                pos.X += padding;
+                pos.Y += padding;
 
                 g.DrawImage(bmp, new Rectangle(pos, resizedImageSize));
             }
         }
 
         #endregion
+
+
+        private GenomeProcessing GetGenome() {
+            return new GenomeProcessing(new byte[] { 4, 4, 4, 4, 4, 4, 4, 4 });
+        }
 
     }
 
