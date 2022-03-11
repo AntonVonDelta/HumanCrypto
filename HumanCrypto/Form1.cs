@@ -151,8 +151,8 @@ namespace HumanCrypto {
 
             try {
                 var transactionFunction = new AvatarsFunction {
-                    MaxPriorityFeePerGas = Web3.Convert.ToWei(Properties.Secret.Default.PriorityFeeGwei, Nethereum.Util.UnitConversion.EthUnit.Kwei),
-                    ReturnValue1 = 0
+                    MaxFeePerGas = 0,           // This should not consume any gas
+                    ReturnValue1=1
                 };
                 result = await service.AvatarsQueryAsync(transactionFunction);
             } catch (Exception ex) {
@@ -165,11 +165,12 @@ namespace HumanCrypto {
             }
             notifyControl.ShowBalloonTip(5000, "Avatar fetch", "Got avatar data", ToolTipIcon.None);
 
-            genomeProcessing.ParseGenome(result.Genome.);
+            genomeProcessing.ParseGenome(result.Genome.ToByteArray());
             PicassoConstruction picasso = new PicassoConstruction(genomeProcessing);
             pictureBox2.Image=picasso.GetBitmap();
         }
         #endregion
+
     }
 
 }

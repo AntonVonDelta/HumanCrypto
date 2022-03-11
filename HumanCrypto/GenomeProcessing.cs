@@ -34,11 +34,16 @@ namespace HumanCrypto {
             new Random().NextBytes(genome);
         }
 
+        /// <summary>
+        /// Loads a new genome and resets the internal indexes for a new read
+        /// </summary>
+        /// <param name="newGenome"></param>
         public void ParseGenome(byte[] newGenome) {
             for(int i = 0; i < genome.Length; i++) {
                 if (i < newGenome.Length) genome[i] = newGenome[i];
                 else genome[i] = 0;
             }
+            Reset();
         }
 
         public void LoadGene(int geneIndex) {
