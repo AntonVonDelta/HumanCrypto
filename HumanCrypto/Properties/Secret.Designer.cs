@@ -70,5 +70,17 @@ namespace HumanCrypto.Properties {
                 this["ContractKey"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.1")]
+        public double PriorityFeeGwei {
+            get {
+                return ((double)(this["PriorityFeeGwei"]));
+            }
+            set {
+                this["PriorityFeeGwei"] = value;
+            }
+        }
     }
 }

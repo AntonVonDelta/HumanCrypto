@@ -21,7 +21,7 @@ contract HumanAvatarOwner {
 
     address owner;
     uint randomNonce=0;
-    Human[] avatars;
+    Human[] public avatars;
     mapping(address => Offer[]) public offersMadeByClient;
     mapping(uint256 => Offer[]) public offersForAvatar;
     uint8[] genomeGeneStructure=[4, 4, 4, 4, 4, 4, 4, 4 ];

@@ -22,22 +22,24 @@ namespace HumanCrypto {
         Web3 web3;
         GenomeProcessing genomeProcessing;
 
-        
+
 
 
         public Form1() {
             InitializeComponent();
 
-            web3 = new Web3(new Account(Properties.Secret.Default.PrivateKey, Properties.Secret.Default.ChainId),"https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161");
+            web3 = new Web3(new Account(Properties.Secret.Default.PrivateKey, Properties.Secret.Default.ChainId), "https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161");
 
             // Init genome
             genomeProcessing = new GenomeProcessing(new byte[] { 4, 4, 4, 4, 4, 4, 4, 4 });
 
             // Add event to all settings-bound controls
-            List<Control> settingsBoundedControls = new List<Control>() { apiKeyTxt, privateKeyTxt, networkChainTxt,contractKeyTxt };
+            List<Control> settingsBoundedControls = new List<Control>() { apiKeyTxt, privateKeyTxt, networkChainTxt, contractKeyTxt };
             foreach (Control control in settingsBoundedControls) {
                 control.TextChanged += genericControl_TextChanged;
             }
+
+            tabAllAvatars.Enter += tabAllAvatars_Enter;
         }
 
         private void Form1_Load(object sender, EventArgs e) {
@@ -48,14 +50,14 @@ namespace HumanCrypto {
 
 
 
-        private void panel1_Paint(object sender, PaintEventArgs e) {
+        private void pictureBox1_Paint(object sender, PaintEventArgs e) {
             genomeProcessing.Reset();
 
             PicassoConstruction picasso = new PicassoConstruction(genomeProcessing);
             e.Graphics.DrawImage(picasso.GetBitmap(), new Rectangle(0, 0, 500, 500));
         }
 
-       
+
 
         private void button1_Click(object sender, EventArgs e) {
             genomeProcessing.Randomize();
@@ -63,9 +65,20 @@ namespace HumanCrypto {
         }
 
         private async void button2_Click(object sender, EventArgs e) {
-            HumanAvatarOwnerService service = new HumanAvatarOwnerService(web3, "0x2f6e6b4e1cfc1a652973e6f49c8662d9db8dd4f1");
+            HumanAvatarOwnerService service = new HumanAvatarOwnerService(web3, Properties.Secret.Default.ContractKey);
+            string errorMessage = "Transaction failed";
+            TransactionReceipt receipt = null;
 
-            await service.CreatePrimeAvatarRequestAndWaitForReceiptAsync();
+            try {
+                receipt = await service.CreatePrimeAvatarRequestAndWaitForReceiptAsync();
+            } catch (Exception ex) {
+                errorMessage = ex.Message;
+            }
+
+            if (receipt.Failed()) {
+                notifyControl.Text = errorMessage;
+                notifyControl.ShowBalloonTip(5000);
+            }
         }
 
 
@@ -77,7 +90,6 @@ namespace HumanCrypto {
         private void tabSettings_Enter(object sender, EventArgs e) {
             saveSettingsBtn.Enabled = false;
 
-
             updatingControls = true;
             apiKeyTxt.Text = Properties.Secret.Default.APIKey;
             privateKeyTxt.Text = Properties.Secret.Default.PrivateKey;
@@ -86,7 +98,7 @@ namespace HumanCrypto {
             updatingControls = false;
         }
 
-        private void genericControl_TextChanged(object sender, EventArgs e){
+        private void genericControl_TextChanged(object sender, EventArgs e) {
             if (updatingControls) return;
             saveSettingsBtn.Enabled = true;
         }
@@ -103,14 +115,14 @@ namespace HumanCrypto {
 
         private async void button3_Click(object sender, EventArgs e) {
             var deployParams = new HumanAvatarOwnerDeployment {
-                MaxPriorityFeePerGas= 500000000
+                MaxPriorityFeePerGas = 100000000
             };
             CancellationTokenSource source = new CancellationTokenSource(20000);
             TransactionReceipt deploy = null;
 
             try {
                 deploy = await HumanAvatarOwnerService.DeployContractAndWaitForReceiptAsync(web3, deployParams, source);
-            }catch(TaskCanceledException ex) {
+            } catch (TaskCanceledException ex) {
                 notifyControl.ShowBalloonTip(2000, "HumanCrypto", "Contract deploy timedout", ToolTipIcon.Error);
                 return;
             }
@@ -122,6 +134,15 @@ namespace HumanCrypto {
 
             notifyControl.ShowBalloonTip(2000, "HumanCrypto", "New contract deployed", ToolTipIcon.None);
             contractKeyTxt.Text = deploy.ContractAddress;
+        }
+        #endregion
+
+        #region AllAvatars
+        private void tabAllAvatars_Enter(object sender, EventArgs e) {
+            HumanAvatarOwnerService service = new HumanAvatarOwnerService(web3, Properties.Secret.Default.ContractKey);
+
+            var transactionFunction = new AvatarsFunction { }
+            service.AvatarsQueryAsync()
         }
         #endregion
     }

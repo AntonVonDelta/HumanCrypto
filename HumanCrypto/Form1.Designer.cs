@@ -32,9 +32,15 @@ namespace HumanCrypto
             this.components = new System.ComponentModel.Container();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabGame = new System.Windows.Forms.TabPage();
+            this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.tabAllAvatars = new System.Windows.Forms.TabPage();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.tabSettings = new System.Windows.Forms.TabPage();
+            this.label4 = new System.Windows.Forms.Label();
+            this.contractKeyTxt = new System.Windows.Forms.TextBox();
+            this.button3 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.networkChainTxt = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -42,19 +48,15 @@ namespace HumanCrypto
             this.saveSettingsBtn = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.apiKeyTxt = new System.Windows.Forms.TextBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.contractKeyTxt = new System.Windows.Forms.TextBox();
             this.notifyControl = new System.Windows.Forms.NotifyIcon(this.components);
-            this.tabAllAvatars = new System.Windows.Forms.TabPage();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabGame.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.tabSettings.SuspendLayout();
             this.tabAllAvatars.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            this.tabSettings.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -81,6 +83,16 @@ namespace HumanCrypto
             this.tabGame.Text = "Game";
             this.tabGame.UseVisualStyleBackColor = true;
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(917, 300);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(108, 36);
+            this.button2.TabIndex = 2;
+            this.button2.Text = "Call contract";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(917, 239);
@@ -98,10 +110,32 @@ namespace HumanCrypto
             this.pictureBox1.Size = new System.Drawing.Size(860, 572);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
-            this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+            this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
+            // 
+            // tabAllAvatars
+            // 
+            this.tabAllAvatars.Controls.Add(this.pictureBox2);
+            this.tabAllAvatars.Location = new System.Drawing.Point(4, 22);
+            this.tabAllAvatars.Name = "tabAllAvatars";
+            this.tabAllAvatars.Padding = new System.Windows.Forms.Padding(3);
+            this.tabAllAvatars.Size = new System.Drawing.Size(1051, 590);
+            this.tabAllAvatars.TabIndex = 2;
+            this.tabAllAvatars.Text = "All Avatars";
+            this.tabAllAvatars.UseVisualStyleBackColor = true;
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBox2.Location = new System.Drawing.Point(3, 3);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(1045, 584);
+            this.pictureBox2.TabIndex = 0;
+            this.pictureBox2.TabStop = false;
             // 
             // tabSettings
             // 
+            this.tabSettings.Controls.Add(this.label5);
+            this.tabSettings.Controls.Add(this.textBox1);
             this.tabSettings.Controls.Add(this.label4);
             this.tabSettings.Controls.Add(this.contractKeyTxt);
             this.tabSettings.Controls.Add(this.button3);
@@ -119,6 +153,32 @@ namespace HumanCrypto
             this.tabSettings.Text = "Settings";
             this.tabSettings.UseVisualStyleBackColor = true;
             this.tabSettings.Enter += new System.EventHandler(this.tabSettings_Enter);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(8, 110);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(68, 13);
+            this.label4.TabIndex = 10;
+            this.label4.Text = "Contract Key";
+            // 
+            // contractKeyTxt
+            // 
+            this.contractKeyTxt.Location = new System.Drawing.Point(133, 110);
+            this.contractKeyTxt.Name = "contractKeyTxt";
+            this.contractKeyTxt.Size = new System.Drawing.Size(378, 20);
+            this.contractKeyTxt.TabIndex = 8;
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(517, 110);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(88, 20);
+            this.button3.TabIndex = 7;
+            this.button3.Text = "Deploy contract";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // label3
             // 
@@ -180,69 +240,28 @@ namespace HumanCrypto
             this.apiKeyTxt.Size = new System.Drawing.Size(378, 20);
             this.apiKeyTxt.TabIndex = 0;
             // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(917, 300);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(108, 36);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "Call contract";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(517, 110);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(88, 20);
-            this.button3.TabIndex = 7;
-            this.button3.Text = "Deploy contract";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
-            // contractKeyTxt
-            // 
-            this.contractKeyTxt.Location = new System.Drawing.Point(133, 110);
-            this.contractKeyTxt.Name = "contractKeyTxt";
-            this.contractKeyTxt.Size = new System.Drawing.Size(378, 20);
-            this.contractKeyTxt.TabIndex = 8;
-            // 
             // notifyControl
             // 
             this.notifyControl.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.notifyControl.BalloonTipText = "s";
-            this.notifyControl.BalloonTipTitle = "s";
+            this.notifyControl.BalloonTipTitle = "HumanCrypto";
             this.notifyControl.Text = "Notification";
             this.notifyControl.Visible = true;
             // 
-            // tabAllAvatars
+            // label5
             // 
-            this.tabAllAvatars.Controls.Add(this.pictureBox2);
-            this.tabAllAvatars.Location = new System.Drawing.Point(4, 22);
-            this.tabAllAvatars.Name = "tabAllAvatars";
-            this.tabAllAvatars.Padding = new System.Windows.Forms.Padding(3);
-            this.tabAllAvatars.Size = new System.Drawing.Size(1051, 590);
-            this.tabAllAvatars.TabIndex = 2;
-            this.tabAllAvatars.Text = "All Avatars";
-            this.tabAllAvatars.UseVisualStyleBackColor = true;
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(8, 139);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(91, 13);
+            this.label5.TabIndex = 12;
+            this.label5.Text = "Network Chain ID";
             // 
-            // pictureBox2
+            // textBox1
             // 
-            this.pictureBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBox2.Location = new System.Drawing.Point(3, 3);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(1045, 584);
-            this.pictureBox2.TabIndex = 0;
-            this.pictureBox2.TabStop = false;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(8, 110);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(68, 13);
-            this.label4.TabIndex = 10;
-            this.label4.Text = "Contract Key";
+            this.textBox1.Location = new System.Drawing.Point(133, 136);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(378, 20);
+            this.textBox1.TabIndex = 11;
             // 
             // Form1
             // 
@@ -256,10 +275,10 @@ namespace HumanCrypto
             this.tabControl1.ResumeLayout(false);
             this.tabGame.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.tabSettings.ResumeLayout(false);
-            this.tabSettings.PerformLayout();
             this.tabAllAvatars.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            this.tabSettings.ResumeLayout(false);
+            this.tabSettings.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -285,6 +304,8 @@ namespace HumanCrypto
         private System.Windows.Forms.TabPage tabAllAvatars;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
 

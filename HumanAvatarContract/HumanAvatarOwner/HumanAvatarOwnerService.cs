@@ -42,6 +42,19 @@ namespace HumanAvatarContract.Contracts.HumanAvatarOwner
             ContractHandler = web3.Eth.GetContractHandler(contractAddress);
         }
 
+        public Task<AvatarsOutputDTO> AvatarsQueryAsync(AvatarsFunction avatarsFunction, BlockParameter blockParameter = null)
+        {
+            return ContractHandler.QueryDeserializingToObjectAsync<AvatarsFunction, AvatarsOutputDTO>(avatarsFunction, blockParameter);
+        }
+
+        public Task<AvatarsOutputDTO> AvatarsQueryAsync(BigInteger returnValue1, BlockParameter blockParameter = null)
+        {
+            var avatarsFunction = new AvatarsFunction();
+                avatarsFunction.ReturnValue1 = returnValue1;
+            
+            return ContractHandler.QueryDeserializingToObjectAsync<AvatarsFunction, AvatarsOutputDTO>(avatarsFunction, blockParameter);
+        }
+
         public Task<string> CreatePrimeAvatarRequestAsync(CreatePrimeAvatarFunction createPrimeAvatarFunction)
         {
              return ContractHandler.SendRequestAsync(createPrimeAvatarFunction);
