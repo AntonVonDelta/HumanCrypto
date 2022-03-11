@@ -26,7 +26,7 @@ namespace HumanCrypto {
         }
 
         public Bitmap GetBitmap() {
-            Bitmap bmp = new Bitmap(500,500);
+            Bitmap bmp = new Bitmap(550,550);
             
             using(Graphics g = Graphics.FromImage(bmp)) {
                 XDocument doc = XDocument.Load("HumanParts\\data.xml");

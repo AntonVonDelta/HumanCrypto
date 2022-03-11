@@ -34,10 +34,11 @@ namespace HumanCrypto {
             new Random().NextBytes(genome);
         }
 
-        public void ParseGenome(byte[] genome) {
-            if (genome.Count() != this.genome.Count()) throw new Exception("Invalid genome");
-
-            this.genome = genome;
+        public void ParseGenome(byte[] newGenome) {
+            for(int i = 0; i < genome.Length; i++) {
+                if (i < newGenome.Length) genome[i] = newGenome[i];
+                else genome[i] = 0;
+            }
         }
 
         public void LoadGene(int geneIndex) {

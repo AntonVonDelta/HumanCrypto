@@ -165,7 +165,7 @@ namespace HumanCrypto {
             }
             notifyControl.ShowBalloonTip(5000, "Avatar fetch", "Got avatar data", ToolTipIcon.None);
 
-            genomeProcessing.ParseGenome(result.Genome.ToByteArray());
+            genomeProcessing.ParseGenome(result.Genome.);
             PicassoConstruction picasso = new PicassoConstruction(genomeProcessing);
             pictureBox2.Image=picasso.GetBitmap();
         }
