@@ -38,6 +38,8 @@ namespace HumanCrypto
             this.tabAllAvatars = new System.Windows.Forms.TabPage();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.tabSettings = new System.Windows.Forms.TabPage();
+            this.label5 = new System.Windows.Forms.Label();
+            this.priorityFeeTxt = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.contractKeyTxt = new System.Windows.Forms.TextBox();
             this.button3 = new System.Windows.Forms.Button();
@@ -49,8 +51,6 @@ namespace HumanCrypto
             this.label1 = new System.Windows.Forms.Label();
             this.apiKeyTxt = new System.Windows.Forms.TextBox();
             this.notifyControl = new System.Windows.Forms.NotifyIcon(this.components);
-            this.label5 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabGame.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -135,7 +135,7 @@ namespace HumanCrypto
             // tabSettings
             // 
             this.tabSettings.Controls.Add(this.label5);
-            this.tabSettings.Controls.Add(this.textBox1);
+            this.tabSettings.Controls.Add(this.priorityFeeTxt);
             this.tabSettings.Controls.Add(this.label4);
             this.tabSettings.Controls.Add(this.contractKeyTxt);
             this.tabSettings.Controls.Add(this.button3);
@@ -153,6 +153,22 @@ namespace HumanCrypto
             this.tabSettings.Text = "Settings";
             this.tabSettings.UseVisualStyleBackColor = true;
             this.tabSettings.Enter += new System.EventHandler(this.tabSettings_Enter);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(8, 139);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(109, 13);
+            this.label5.TabIndex = 12;
+            this.label5.Text = "MaxPriorityFee (Gwei)";
+            // 
+            // priorityFeeTxt
+            // 
+            this.priorityFeeTxt.Location = new System.Drawing.Point(133, 136);
+            this.priorityFeeTxt.Name = "priorityFeeTxt";
+            this.priorityFeeTxt.Size = new System.Drawing.Size(378, 20);
+            this.priorityFeeTxt.TabIndex = 11;
             // 
             // label4
             // 
@@ -247,22 +263,6 @@ namespace HumanCrypto
             this.notifyControl.Text = "Notification";
             this.notifyControl.Visible = true;
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(8, 139);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(91, 13);
-            this.label5.TabIndex = 12;
-            this.label5.Text = "Network Chain ID";
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(133, 136);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(378, 20);
-            this.textBox1.TabIndex = 11;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -305,7 +305,7 @@ namespace HumanCrypto
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox priorityFeeTxt;
     }
 }
 

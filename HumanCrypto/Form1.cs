@@ -34,7 +34,7 @@ namespace HumanCrypto {
             genomeProcessing = new GenomeProcessing(new byte[] { 4, 4, 4, 4, 4, 4, 4, 4 });
 
             // Add event to all settings-bound controls
-            List<Control> settingsBoundedControls = new List<Control>() { apiKeyTxt, privateKeyTxt, networkChainTxt, contractKeyTxt };
+            List<Control> settingsBoundedControls = new List<Control>() { apiKeyTxt, privateKeyTxt, networkChainTxt, contractKeyTxt, priorityFeeTxt };
             foreach (Control control in settingsBoundedControls) {
                 control.TextChanged += genericControl_TextChanged;
             }
@@ -66,8 +66,8 @@ namespace HumanCrypto {
 
         private async void button2_Click(object sender, EventArgs e) {
             HumanAvatarOwnerService service = new HumanAvatarOwnerService(web3, Properties.Secret.Default.ContractKey);
-            string errorMessage = "Transaction failed";
             TransactionReceipt receipt = null;
+            string errorMessage = "Transaction failed";
 
             try {
                 receipt = await service.CreatePrimeAvatarRequestAndWaitForReceiptAsync();
@@ -95,6 +95,7 @@ namespace HumanCrypto {
             privateKeyTxt.Text = Properties.Secret.Default.PrivateKey;
             networkChainTxt.Text = Properties.Secret.Default.ChainId.ToString();
             contractKeyTxt.Text = Properties.Secret.Default.ContractKey;
+            priorityFeeTxt.Text = Properties.Secret.Default.PriorityFeeGwei.ToString();
             updatingControls = false;
         }
 
@@ -106,43 +107,49 @@ namespace HumanCrypto {
         private void saveSettingsBtn_Click(object sender, EventArgs e) {
             Properties.Secret.Default.APIKey = apiKeyTxt.Text;
             Properties.Secret.Default.PrivateKey = privateKeyTxt.Text;
-            Properties.Secret.Default.ChainId = Convert.ToInt32(networkChainTxt.Text);
+            Properties.Secret.Default.ChainId = Int32.Parse(networkChainTxt.Text);
             Properties.Secret.Default.ContractKey = contractKeyTxt.Text;
-
+            Properties.Secret.Default.PriorityFeeGwei = Double.Parse(priorityFeeTxt.Text);
             Properties.Secret.Default.Save();
             saveSettingsBtn.Enabled = false;
         }
 
         private async void button3_Click(object sender, EventArgs e) {
-            var deployParams = new HumanAvatarOwnerDeployment {
-                MaxPriorityFeePerGas = 100000000
+            HumanAvatarOwnerDeployment deployParams = new HumanAvatarOwnerDeployment {
+                MaxPriorityFeePerGas = Web3.Convert.ToWei(Properties.Secret.Default.PriorityFeeGwei,Nethereum.Util.UnitConversion.EthUnit.Kwei)
             };
             CancellationTokenSource source = new CancellationTokenSource(20000);
             TransactionReceipt deploy = null;
+            string errorMessage = "Failed";
 
             try {
                 deploy = await HumanAvatarOwnerService.DeployContractAndWaitForReceiptAsync(web3, deployParams, source);
             } catch (TaskCanceledException ex) {
-                notifyControl.ShowBalloonTip(2000, "HumanCrypto", "Contract deploy timedout", ToolTipIcon.Error);
+                errorMessage = ex.Message;
+            }
+
+            if (deploy.Failed()) {
+                notifyControl.ShowBalloonTip(2000, "Contract deployment", errorMessage, ToolTipIcon.Error);
                 return;
             }
 
-            if (deploy.Status.Value == 0) {
-                notifyControl.ShowBalloonTip(2000, "HumanCrypto", "Contract failed", ToolTipIcon.Error);
-                return;
-            }
-
-            notifyControl.ShowBalloonTip(2000, "HumanCrypto", "New contract deployed", ToolTipIcon.None);
+            notifyControl.ShowBalloonTip(2000, "Contract deployment", "New contract deployed", ToolTipIcon.None);
             contractKeyTxt.Text = deploy.ContractAddress;
         }
         #endregion
 
         #region AllAvatars
-        private void tabAllAvatars_Enter(object sender, EventArgs e) {
+        private async void tabAllAvatars_Enter(object sender, EventArgs e) {
             HumanAvatarOwnerService service = new HumanAvatarOwnerService(web3, Properties.Secret.Default.ContractKey);
 
-            var transactionFunction = new AvatarsFunction { }
-            service.AvatarsQueryAsync()
+            var transactionFunction = new AvatarsFunction {
+                MaxPriorityFeePerGas = Web3.Convert.ToWei(Properties.Secret.Default.PriorityFeeGwei, Nethereum.Util.UnitConversion.EthUnit.Kwei),
+                ReturnValue1 = 0
+            };
+            var result=await service.AvatarsQueryAsync(transactionFunction);
+
+            notifyControl.Text = "Got avatar data";
+            notifyControl.ShowBalloonTip(5000);
         }
         #endregion
     }
