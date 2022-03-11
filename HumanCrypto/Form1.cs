@@ -21,7 +21,8 @@ namespace HumanCrypto {
     public partial class Form1 : Form {
         Web3 web3;
 
-        int page = 0;
+        int page1 = 0;
+        int page2 = 0;
         CachedImages cachedImages;
 
 
@@ -129,6 +130,9 @@ namespace HumanCrypto {
             } else {
                 notifyControl.ShowBalloonTip(5000, "Contract deployment", "New contract deployed", ToolTipIcon.None);
                 contractKeyTxt.Text = receipt.ContractAddress;
+                Properties.Secret.Default.ContractKey = contractKeyTxt.Text;
+                Properties.Secret.Default.Save();
+                saveSettingsBtn.Enabled = false;
             }
         }
         #endregion
@@ -137,18 +141,20 @@ namespace HumanCrypto {
         #region AllAvatars
 
         private void tabAllAvatars_Enter(object sender, EventArgs e) {
-            page = 0;
+            page1 = 0;
+            page2 = 0;
 
             pictureBox2.Invalidate();
+            pictureBox3.Invalidate();
         }
         private void nextAvatarBtn_Click(object sender, EventArgs e) {
-            page += 1;
+            page1 += 1;
             pictureBox2.Invalidate();
         }
         private void prevAvatarBtn_Click(object sender, EventArgs e) {
-            if (page - 1 < 0) return;
+            if (page1 - 1 < 0) return;
 
-            page -= 1;
+            page1 -= 1;
             pictureBox2.Invalidate();
         }
         private async void pictureBox2_Paint(object sender, PaintEventArgs e) {
@@ -157,7 +163,7 @@ namespace HumanCrypto {
             Size resizedImageSize = new Size { Width = (pictureBox2.Width - 2 * padding) / iconsPerRow, Height = (pictureBox2.Width - 2 * padding) / iconsPerRow };
             int iconsPerColumn = (pictureBox2.Height - 2 * padding) / resizedImageSize.Height;
 
-            List<Bitmap> availableAvatars = await cachedImages.GetAllAvatars(page * iconsPerRow * iconsPerColumn, iconsPerRow * iconsPerColumn);
+            List<Bitmap> availableAvatars = await cachedImages.GetAllAvatars(page1 * iconsPerRow * iconsPerColumn, iconsPerRow * iconsPerColumn);
             
             using(Graphics g = pictureBox2.CreateGraphics()) {
                 for (int i = 0; i < availableAvatars.Count; i++) {
@@ -172,6 +178,38 @@ namespace HumanCrypto {
             }
         }
 
+
+
+        private void nextOwnAvatarBtn_Click(object sender, EventArgs e) {
+            page2 += 1;
+            pictureBox3.Invalidate();
+        }
+        private void prevOwnAvatarBtn_Click(object sender, EventArgs e) {
+            if (page2 - 1 < 0) return;
+
+            page2 -= 1;
+            pictureBox3.Invalidate();
+        }
+        private async void pictureBox3_Paint(object sender, PaintEventArgs e) {
+            int iconsPerRow = 3;
+            int padding = 5;
+            Size resizedImageSize = new Size { Width = (pictureBox3.Width - 2 * padding) / iconsPerRow, Height = (pictureBox3.Width - 2 * padding) / iconsPerRow };
+            int iconsPerColumn = (pictureBox3.Height - 2 * padding) / resizedImageSize.Height;
+
+            List<Bitmap> availableAvatars = await cachedImages.GetOwnAvatars(page1 * iconsPerRow * iconsPerColumn, iconsPerRow * iconsPerColumn);
+
+            using (Graphics g = pictureBox3.CreateGraphics()) {
+                for (int i = 0; i < availableAvatars.Count; i++) {
+                    Bitmap bmp = availableAvatars[i];
+                    Point pos = new Point { X = (i % iconsPerRow) * resizedImageSize.Width, Y = (i / iconsPerRow) * resizedImageSize.Height };
+
+                    pos.X += padding;
+                    pos.Y += padding;
+
+                    g.DrawImage(bmp, new Rectangle(pos, resizedImageSize));
+                }
+            }
+        }
         #endregion
 
 
@@ -179,6 +217,7 @@ namespace HumanCrypto {
             return new GenomeProcessing(new byte[] { 4, 4, 4, 4, 4, 4, 4, 4 });
         }
 
+        
     }
 
 }

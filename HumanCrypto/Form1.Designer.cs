@@ -36,6 +36,8 @@ namespace HumanCrypto
             this.button1 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabAllAvatars = new System.Windows.Forms.TabPage();
+            this.prevOwnAvatarBtn = new System.Windows.Forms.Button();
+            this.nextOwnAvatarBtn = new System.Windows.Forms.Button();
             this.prevAvatarBtn = new System.Windows.Forms.Button();
             this.nextAvatarBtn = new System.Windows.Forms.Button();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
@@ -118,6 +120,8 @@ namespace HumanCrypto
             // 
             // tabAllAvatars
             // 
+            this.tabAllAvatars.Controls.Add(this.prevOwnAvatarBtn);
+            this.tabAllAvatars.Controls.Add(this.nextOwnAvatarBtn);
             this.tabAllAvatars.Controls.Add(this.prevAvatarBtn);
             this.tabAllAvatars.Controls.Add(this.nextAvatarBtn);
             this.tabAllAvatars.Controls.Add(this.pictureBox3);
@@ -129,6 +133,26 @@ namespace HumanCrypto
             this.tabAllAvatars.TabIndex = 2;
             this.tabAllAvatars.Text = "All Avatars";
             this.tabAllAvatars.UseVisualStyleBackColor = true;
+            // 
+            // prevOwnAvatarBtn
+            // 
+            this.prevOwnAvatarBtn.Location = new System.Drawing.Point(1038, 6);
+            this.prevOwnAvatarBtn.Name = "prevOwnAvatarBtn";
+            this.prevOwnAvatarBtn.Size = new System.Drawing.Size(56, 23);
+            this.prevOwnAvatarBtn.TabIndex = 5;
+            this.prevOwnAvatarBtn.Text = "Prev";
+            this.prevOwnAvatarBtn.UseVisualStyleBackColor = true;
+            this.prevOwnAvatarBtn.Click += new System.EventHandler(this.prevOwnAvatarBtn_Click);
+            // 
+            // nextOwnAvatarBtn
+            // 
+            this.nextOwnAvatarBtn.Location = new System.Drawing.Point(1100, 6);
+            this.nextOwnAvatarBtn.Name = "nextOwnAvatarBtn";
+            this.nextOwnAvatarBtn.Size = new System.Drawing.Size(56, 23);
+            this.nextOwnAvatarBtn.TabIndex = 4;
+            this.nextOwnAvatarBtn.Text = "Next";
+            this.nextOwnAvatarBtn.UseVisualStyleBackColor = true;
+            this.nextOwnAvatarBtn.Click += new System.EventHandler(this.nextOwnAvatarBtn_Click);
             // 
             // prevAvatarBtn
             // 
@@ -158,6 +182,7 @@ namespace HumanCrypto
             this.pictureBox3.Size = new System.Drawing.Size(289, 702);
             this.pictureBox3.TabIndex = 1;
             this.pictureBox3.TabStop = false;
+            this.pictureBox3.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox3_Paint);
             // 
             // pictureBox2
             // 
@@ -347,6 +372,8 @@ namespace HumanCrypto
         private System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.Button prevAvatarBtn;
         private System.Windows.Forms.Button nextAvatarBtn;
+        private System.Windows.Forms.Button prevOwnAvatarBtn;
+        private System.Windows.Forms.Button nextOwnAvatarBtn;
     }
 }
 

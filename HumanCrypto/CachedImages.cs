@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -46,7 +47,7 @@ namespace HumanCrypto {
                 try {
                     var transactionFunction = new AvatarsFunction {
                         MaxFeePerGas = 0,           // This should not consume any gas
-                        ReturnValue1 = startingIndex + i
+                        ReturnValue1 = bmpIndex
                     };
                     outputResult = await service.AvatarsQueryAsync(transactionFunction);
                 } catch (Exception ex) {
@@ -81,21 +82,28 @@ namespace HumanCrypto {
                 }
 
                 // We need to generate the image on the spot
-                AvatarsOutputDTO outputResult = null;
-
+                BigInteger outputResult = -1;
+                AvatarsOutputDTO avatarResult = null;
                 try {
-                    var transactionFunction = new AvatarsFunction {
+                    var transactionFunction1 = new AvatarIdsOfAddressFunction {
                         MaxFeePerGas = 0,           // This should not consume any gas
-                        ReturnValue1 = startingIndex + i
+                        ReturnValue1 = web3.TransactionManager.Account.Address,
+                        ReturnValue2= bmpIndex
                     };
-                    outputResult = await service.AvatarsQueryAsync(transactionFunction);
+                    outputResult = await service.AvatarIdsOfAddressQueryAsync(transactionFunction1);
+
+                    var transactionFunction2 = new AvatarsFunction {
+                        MaxFeePerGas = 0,           // This should not consume any gas
+                        ReturnValue1 = bmpIndex
+                    };
+                    avatarResult = await service.AvatarsQueryAsync(transactionFunction2);
                 } catch (Exception ex) {
                 }
-                if (outputResult == null) {
+                if (avatarResult == null) {
                     break;
                 }
 
-                genomeProcessing.ParseGenome(outputResult.Genome.ToByteArray());
+                genomeProcessing.ParseGenome(avatarResult.Genome.ToByteArray());
 
                 PicassoConstruction picasso = new PicassoConstruction(genomeProcessing);
                 Bitmap generatedBmp = picasso.GetBitmap();
