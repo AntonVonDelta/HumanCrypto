@@ -65,6 +65,7 @@ namespace HumanCrypto {
         }
 
         private async void button2_Click(object sender, EventArgs e) {
+            CancellationTokenSource source = new CancellationTokenSource(60000);
             HumanAvatarOwnerService service = new HumanAvatarOwnerService(web3, Properties.Secret.Default.ContractKey);
             TransactionReceipt receipt = null;
             string errorMessage = "Transaction failed";
@@ -73,15 +74,15 @@ namespace HumanCrypto {
                 var transactionFunction = new CreatePrimeAvatarFunction {
                     MaxPriorityFeePerGas = Web3.Convert.ToWei(Properties.Secret.Default.PriorityFeeGwei, Nethereum.Util.UnitConversion.EthUnit.Kwei)
                 };
-                receipt = await service.CreatePrimeAvatarRequestAndWaitForReceiptAsync(transactionFunction);
+                receipt = await service.CreatePrimeAvatarRequestAndWaitForReceiptAsync(transactionFunction, source);
             } catch (Exception ex) {
                 errorMessage = ex.Message;
             }
 
-            if (receipt.Failed()) {
-                notifyControl.ShowBalloonTip(5000,"", errorMessage,ToolTipIcon.Error);
+            if (receipt==null || receipt.Failed()) {
+                notifyControl.ShowBalloonTip(5000, "Contract function call", errorMessage,ToolTipIcon.Error);
             } else {
-                notifyControl.ShowBalloonTip(5000, "", "Transaction succeded", ToolTipIcon.None);
+                notifyControl.ShowBalloonTip(5000, "Contract function call", "Transaction succeded", ToolTipIcon.None);
             }
         }
 
@@ -119,20 +120,20 @@ namespace HumanCrypto {
         }
 
         private async void deployContractBtn_Click(object sender, EventArgs e) {
-            HumanAvatarOwnerDeployment deployParams = new HumanAvatarOwnerDeployment {
-                MaxPriorityFeePerGas = Web3.Convert.ToWei(Properties.Secret.Default.PriorityFeeGwei,Nethereum.Util.UnitConversion.EthUnit.Gwei)
-            };
             CancellationTokenSource source = new CancellationTokenSource(60000);
             TransactionReceipt deploy = null;
             string errorMessage = "Failed";
 
             try {
+                var deployParams = new HumanAvatarOwnerDeployment {
+                    MaxPriorityFeePerGas = Web3.Convert.ToWei(Properties.Secret.Default.PriorityFeeGwei, Nethereum.Util.UnitConversion.EthUnit.Gwei)
+                };
                 deploy = await HumanAvatarOwnerService.DeployContractAndWaitForReceiptAsync(web3, deployParams, source);
             } catch (Exception ex) {
                 errorMessage = ex.Message;
             }
 
-            if (deploy.Failed(true)) {
+            if (deploy==null || deploy.Failed()) {
                 notifyControl.ShowBalloonTip(5000, "Contract deployment", errorMessage, ToolTipIcon.Error);
                 return;
             }
