@@ -42,7 +42,7 @@ namespace HumanCrypto
             this.priorityFeeTxt = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.contractKeyTxt = new System.Windows.Forms.TextBox();
-            this.button3 = new System.Windows.Forms.Button();
+            this.deployContractBtn = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.networkChainTxt = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -138,7 +138,7 @@ namespace HumanCrypto
             this.tabSettings.Controls.Add(this.priorityFeeTxt);
             this.tabSettings.Controls.Add(this.label4);
             this.tabSettings.Controls.Add(this.contractKeyTxt);
-            this.tabSettings.Controls.Add(this.button3);
+            this.tabSettings.Controls.Add(this.deployContractBtn);
             this.tabSettings.Controls.Add(this.label3);
             this.tabSettings.Controls.Add(this.networkChainTxt);
             this.tabSettings.Controls.Add(this.label2);
@@ -186,15 +186,15 @@ namespace HumanCrypto
             this.contractKeyTxt.Size = new System.Drawing.Size(378, 20);
             this.contractKeyTxt.TabIndex = 8;
             // 
-            // button3
+            // deployContractBtn
             // 
-            this.button3.Location = new System.Drawing.Point(517, 110);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(88, 20);
-            this.button3.TabIndex = 7;
-            this.button3.Text = "Deploy contract";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.deployContractBtn.Location = new System.Drawing.Point(517, 110);
+            this.deployContractBtn.Name = "deployContractBtn";
+            this.deployContractBtn.Size = new System.Drawing.Size(88, 20);
+            this.deployContractBtn.TabIndex = 7;
+            this.deployContractBtn.Text = "Deploy contract";
+            this.deployContractBtn.UseVisualStyleBackColor = true;
+            this.deployContractBtn.Click += new System.EventHandler(this.deployContractBtn_Click);
             // 
             // label3
             // 
@@ -299,7 +299,7 @@ namespace HumanCrypto
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TextBox contractKeyTxt;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button deployContractBtn;
         private System.Windows.Forms.NotifyIcon notifyControl;
         private System.Windows.Forms.TabPage tabAllAvatars;
         private System.Windows.Forms.PictureBox pictureBox2;

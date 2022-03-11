@@ -70,14 +70,18 @@ namespace HumanCrypto {
             string errorMessage = "Transaction failed";
 
             try {
-                receipt = await service.CreatePrimeAvatarRequestAndWaitForReceiptAsync();
+                var transactionFunction = new CreatePrimeAvatarFunction {
+                    MaxPriorityFeePerGas = Web3.Convert.ToWei(Properties.Secret.Default.PriorityFeeGwei, Nethereum.Util.UnitConversion.EthUnit.Kwei)
+                };
+                receipt = await service.CreatePrimeAvatarRequestAndWaitForReceiptAsync(transactionFunction);
             } catch (Exception ex) {
                 errorMessage = ex.Message;
             }
 
             if (receipt.Failed()) {
-                notifyControl.Text = errorMessage;
-                notifyControl.ShowBalloonTip(5000);
+                notifyControl.ShowBalloonTip(5000,"", errorMessage,ToolTipIcon.Error);
+            } else {
+                notifyControl.ShowBalloonTip(5000, "", "Transaction succeded", ToolTipIcon.None);
             }
         }
 
@@ -114,26 +118,26 @@ namespace HumanCrypto {
             saveSettingsBtn.Enabled = false;
         }
 
-        private async void button3_Click(object sender, EventArgs e) {
+        private async void deployContractBtn_Click(object sender, EventArgs e) {
             HumanAvatarOwnerDeployment deployParams = new HumanAvatarOwnerDeployment {
-                MaxPriorityFeePerGas = Web3.Convert.ToWei(Properties.Secret.Default.PriorityFeeGwei,Nethereum.Util.UnitConversion.EthUnit.Kwei)
+                MaxPriorityFeePerGas = Web3.Convert.ToWei(Properties.Secret.Default.PriorityFeeGwei,Nethereum.Util.UnitConversion.EthUnit.Gwei)
             };
-            CancellationTokenSource source = new CancellationTokenSource(20000);
+            CancellationTokenSource source = new CancellationTokenSource(60000);
             TransactionReceipt deploy = null;
             string errorMessage = "Failed";
 
             try {
                 deploy = await HumanAvatarOwnerService.DeployContractAndWaitForReceiptAsync(web3, deployParams, source);
-            } catch (TaskCanceledException ex) {
+            } catch (Exception ex) {
                 errorMessage = ex.Message;
             }
 
-            if (deploy.Failed()) {
-                notifyControl.ShowBalloonTip(2000, "Contract deployment", errorMessage, ToolTipIcon.Error);
+            if (deploy.Failed(true)) {
+                notifyControl.ShowBalloonTip(5000, "Contract deployment", errorMessage, ToolTipIcon.Error);
                 return;
             }
 
-            notifyControl.ShowBalloonTip(2000, "Contract deployment", "New contract deployed", ToolTipIcon.None);
+            notifyControl.ShowBalloonTip(5000, "Contract deployment", "New contract deployed", ToolTipIcon.None);
             contractKeyTxt.Text = deploy.ContractAddress;
         }
         #endregion
