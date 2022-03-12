@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace HumanCrypto {
     class CachedImages {
-        Web3 web3;
+        Wallet wallet;
         Dictionary<int, Bitmap> cache = new Dictionary<int, Bitmap>();
         GenomeProcessing genomeProcessing;
 
@@ -20,8 +20,8 @@ namespace HumanCrypto {
         /// </summary>
         /// <param name="service"></param>
         /// <param name="genomeProcessing">An empty genome which only stores the structure of the genes</param>
-        public CachedImages(Web3 web3, GenomeProcessing genomeProcessing) {
-            this.web3 = web3;
+        public CachedImages(GenomeProcessing genomeProcessing) {
+            wallet = Wallet.GetInstance();
             this.genomeProcessing = genomeProcessing;
         }
 
@@ -30,7 +30,7 @@ namespace HumanCrypto {
         /// </summary>
         /// <returns></returns>
         public async Task<List<Bitmap>> GetAllAvatars(int startingIndex, int count) {
-            HumanAvatarOwnerService service = new HumanAvatarOwnerService(web3, Properties.Secret.Default.ContractKey);
+            HumanAvatarOwnerService service = new HumanAvatarOwnerService(wallet.GetWeb3(), Properties.Secret.Default.ContractKey);
             List<Bitmap> results = new List<Bitmap>();
             BigInteger avatarsCount = await service.GetAvatarsCountQueryAsync();
 
@@ -62,7 +62,7 @@ namespace HumanCrypto {
         }
 
         public async Task<List<Bitmap>> GetOwnAvatars(int startingIndex, int count) {
-            HumanAvatarOwnerService service = new HumanAvatarOwnerService(web3, Properties.Secret.Default.ContractKey);
+            HumanAvatarOwnerService service = new HumanAvatarOwnerService(wallet.GetWeb3(), Properties.Secret.Default.ContractKey);
             List<Bitmap> results = new List<Bitmap>();
             BigInteger avatarsCount = await service.GetAvatarIdsOfAddressCountQueryAsync();
 
@@ -78,7 +78,7 @@ namespace HumanCrypto {
                 }
 
                 var transactionFunction1 = new AvatarIdsOfAddressFunction {
-                    ReturnValue1 = web3.TransactionManager.Account.Address,
+                    ReturnValue1 = wallet.GetWeb3().TransactionManager.Account.Address,
                     ReturnValue2 = bmpIndex
                 };
                 BigInteger outputResult = await service.AvatarIdsOfAddressQueryAsync(transactionFunction1);

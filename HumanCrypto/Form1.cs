@@ -19,20 +19,19 @@ using Nethereum.RPC.Eth.DTOs;
 
 namespace HumanCrypto {
     public partial class Form1 : Form {
-        Web3 web3;
+        Wallet wallet;
 
         int page1 = 0;
         int page2 = 0;
         CachedImages cachedImages;
 
 
-
-
         public Form1() {
             InitializeComponent();
 
-            web3 = new Web3(new Account(Properties.Secret.Default.PrivateKey, Properties.Secret.Default.ChainId), "https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161");
-            cachedImages = new CachedImages(web3, GetGenome());
+            wallet = Wallet.GetInstance();
+            wallet.SetWalletData(Properties.Secret.Default.PrivateKey);
+            cachedImages = new CachedImages(GetGenome());
 
             // Add event to all settings-bound controls
             List<Control> settingsBoundedControls = new List<Control>() { apiKeyTxt, privateKeyTxt, networkChainTxt, contractKeyTxt, priorityFeeTxt };
@@ -61,7 +60,7 @@ namespace HumanCrypto {
         }
         private async void button2_Click(object sender, EventArgs e) {
             CancellationTokenSource source = new CancellationTokenSource(60000);
-            HumanAvatarOwnerService service = new HumanAvatarOwnerService(web3, Properties.Secret.Default.ContractKey);
+            HumanAvatarOwnerService service = new HumanAvatarOwnerService(wallet.GetWeb3(), Properties.Secret.Default.ContractKey);
             TransactionReceipt receipt = null;
             string errorMessage = "Transaction failed";
 
@@ -120,7 +119,7 @@ namespace HumanCrypto {
                 var deployParams = new HumanAvatarOwnerDeployment {
                     MaxPriorityFeePerGas = Web3.Convert.ToWei(Properties.Secret.Default.PriorityFeeGwei, Nethereum.Util.UnitConversion.EthUnit.Gwei)
                 };
-                receipt = await HumanAvatarOwnerService.DeployContractAndWaitForReceiptAsync(web3, deployParams, source);
+                receipt = await HumanAvatarOwnerService.DeployContractAndWaitForReceiptAsync(wallet.GetWeb3(), deployParams, source);
             } catch (Exception ex) {
                 errorMessage = ex.Message;
             }
@@ -214,7 +213,7 @@ namespace HumanCrypto {
 
 
         private GenomeProcessing GetGenome() {
-            return new GenomeProcessing(new byte[] { 4, 4, 4, 4, 4, 4, 4, 4 });
+            return new GenomeProcessing();
         }
 
         

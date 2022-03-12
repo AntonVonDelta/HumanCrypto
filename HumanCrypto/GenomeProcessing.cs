@@ -7,14 +7,13 @@ using System.Threading.Tasks;
 
 namespace HumanCrypto {
     class GenomeProcessing {
-        byte[] genomeSignature;
+        byte[] genomeSignature= new byte[] { 4, 4, 4, 4, 4, 4, 4, 4 };
         int[] genomeAccumulatedSizes;
         byte[] genome;
         int geneIndex = 0;
         int byteIndex = 0;
 
-        public GenomeProcessing(byte[] genomeSignature) {
-            this.genomeSignature = genomeSignature;
+        public GenomeProcessing() {
             genomeAccumulatedSizes = new int[genomeSignature.Count()];
             genomeAccumulatedSizes[0] = genomeSignature[0];
 
