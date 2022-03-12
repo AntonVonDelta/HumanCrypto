@@ -51,11 +51,15 @@ namespace HumanCrypto
             this.label3 = new System.Windows.Forms.Label();
             this.networkChainTxt = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.privateKeyTxt = new System.Windows.Forms.TextBox();
+            this.privateKey1Txt = new System.Windows.Forms.TextBox();
             this.saveSettingsBtn = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.apiKeyTxt = new System.Windows.Forms.TextBox();
             this.notifyControl = new System.Windows.Forms.NotifyIcon(this.components);
+            this.label6 = new System.Windows.Forms.Label();
+            this.privateKey21Txt = new System.Windows.Forms.TextBox();
+            this.switchAccount1Btn = new System.Windows.Forms.Button();
+            this.switchAccount2Btn = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabGame.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -196,6 +200,10 @@ namespace HumanCrypto
             // 
             // tabSettings
             // 
+            this.tabSettings.Controls.Add(this.switchAccount2Btn);
+            this.tabSettings.Controls.Add(this.switchAccount1Btn);
+            this.tabSettings.Controls.Add(this.label6);
+            this.tabSettings.Controls.Add(this.privateKey21Txt);
             this.tabSettings.Controls.Add(this.label5);
             this.tabSettings.Controls.Add(this.priorityFeeTxt);
             this.tabSettings.Controls.Add(this.label4);
@@ -204,7 +212,7 @@ namespace HumanCrypto
             this.tabSettings.Controls.Add(this.label3);
             this.tabSettings.Controls.Add(this.networkChainTxt);
             this.tabSettings.Controls.Add(this.label2);
-            this.tabSettings.Controls.Add(this.privateKeyTxt);
+            this.tabSettings.Controls.Add(this.privateKey1Txt);
             this.tabSettings.Controls.Add(this.saveSettingsBtn);
             this.tabSettings.Controls.Add(this.label1);
             this.tabSettings.Controls.Add(this.apiKeyTxt);
@@ -219,7 +227,7 @@ namespace HumanCrypto
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(8, 139);
+            this.label5.Location = new System.Drawing.Point(8, 200);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(109, 13);
             this.label5.TabIndex = 12;
@@ -227,7 +235,7 @@ namespace HumanCrypto
             // 
             // priorityFeeTxt
             // 
-            this.priorityFeeTxt.Location = new System.Drawing.Point(133, 136);
+            this.priorityFeeTxt.Location = new System.Drawing.Point(133, 197);
             this.priorityFeeTxt.Name = "priorityFeeTxt";
             this.priorityFeeTxt.Size = new System.Drawing.Size(378, 20);
             this.priorityFeeTxt.TabIndex = 11;
@@ -235,7 +243,7 @@ namespace HumanCrypto
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(8, 110);
+            this.label4.Location = new System.Drawing.Point(8, 171);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(68, 13);
             this.label4.TabIndex = 10;
@@ -243,14 +251,14 @@ namespace HumanCrypto
             // 
             // contractKeyTxt
             // 
-            this.contractKeyTxt.Location = new System.Drawing.Point(133, 110);
+            this.contractKeyTxt.Location = new System.Drawing.Point(133, 171);
             this.contractKeyTxt.Name = "contractKeyTxt";
             this.contractKeyTxt.Size = new System.Drawing.Size(378, 20);
             this.contractKeyTxt.TabIndex = 8;
             // 
             // deployContractBtn
             // 
-            this.deployContractBtn.Location = new System.Drawing.Point(517, 110);
+            this.deployContractBtn.Location = new System.Drawing.Point(517, 171);
             this.deployContractBtn.Name = "deployContractBtn";
             this.deployContractBtn.Size = new System.Drawing.Size(88, 20);
             this.deployContractBtn.TabIndex = 7;
@@ -261,7 +269,7 @@ namespace HumanCrypto
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(8, 84);
+            this.label3.Location = new System.Drawing.Point(8, 145);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(91, 13);
             this.label3.TabIndex = 6;
@@ -269,7 +277,7 @@ namespace HumanCrypto
             // 
             // networkChainTxt
             // 
-            this.networkChainTxt.Location = new System.Drawing.Point(133, 81);
+            this.networkChainTxt.Location = new System.Drawing.Point(133, 142);
             this.networkChainTxt.Name = "networkChainTxt";
             this.networkChainTxt.Size = new System.Drawing.Size(378, 20);
             this.networkChainTxt.TabIndex = 5;
@@ -279,17 +287,17 @@ namespace HumanCrypto
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(8, 58);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(94, 13);
+            this.label2.Size = new System.Drawing.Size(103, 13);
             this.label2.TabIndex = 4;
-            this.label2.Text = "Private Wallet Key";
+            this.label2.Text = "Private Wallet Key 1";
             // 
-            // privateKeyTxt
+            // privateKey1Txt
             // 
-            this.privateKeyTxt.Location = new System.Drawing.Point(133, 55);
-            this.privateKeyTxt.Name = "privateKeyTxt";
-            this.privateKeyTxt.PasswordChar = '=';
-            this.privateKeyTxt.Size = new System.Drawing.Size(378, 20);
-            this.privateKeyTxt.TabIndex = 3;
+            this.privateKey1Txt.Location = new System.Drawing.Point(133, 55);
+            this.privateKey1Txt.Name = "privateKey1Txt";
+            this.privateKey1Txt.PasswordChar = '=';
+            this.privateKey1Txt.Size = new System.Drawing.Size(378, 20);
+            this.privateKey1Txt.TabIndex = 3;
             // 
             // saveSettingsBtn
             // 
@@ -325,6 +333,41 @@ namespace HumanCrypto
             this.notifyControl.Text = "Notification";
             this.notifyControl.Visible = true;
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(8, 84);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(103, 13);
+            this.label6.TabIndex = 14;
+            this.label6.Text = "Private Wallet Key 2";
+            // 
+            // privateKey21Txt
+            // 
+            this.privateKey21Txt.Location = new System.Drawing.Point(133, 81);
+            this.privateKey21Txt.Name = "privateKey21Txt";
+            this.privateKey21Txt.PasswordChar = '=';
+            this.privateKey21Txt.Size = new System.Drawing.Size(378, 20);
+            this.privateKey21Txt.TabIndex = 13;
+            // 
+            // switchAccount1Btn
+            // 
+            this.switchAccount1Btn.Location = new System.Drawing.Point(517, 55);
+            this.switchAccount1Btn.Name = "switchAccount1Btn";
+            this.switchAccount1Btn.Size = new System.Drawing.Size(74, 20);
+            this.switchAccount1Btn.TabIndex = 15;
+            this.switchAccount1Btn.Text = "Select";
+            this.switchAccount1Btn.UseVisualStyleBackColor = true;
+            // 
+            // switchAccount2Btn
+            // 
+            this.switchAccount2Btn.Location = new System.Drawing.Point(517, 81);
+            this.switchAccount2Btn.Name = "switchAccount2Btn";
+            this.switchAccount2Btn.Size = new System.Drawing.Size(74, 20);
+            this.switchAccount2Btn.TabIndex = 16;
+            this.switchAccount2Btn.Text = "Select";
+            this.switchAccount2Btn.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -355,7 +398,7 @@ namespace HumanCrypto
         private System.Windows.Forms.TextBox apiKeyTxt;
         private System.Windows.Forms.Button saveSettingsBtn;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox privateKeyTxt;
+        private System.Windows.Forms.TextBox privateKey1Txt;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox networkChainTxt;
         private System.Windows.Forms.PictureBox pictureBox1;
@@ -374,6 +417,10 @@ namespace HumanCrypto
         private System.Windows.Forms.Button nextAvatarBtn;
         private System.Windows.Forms.Button prevOwnAvatarBtn;
         private System.Windows.Forms.Button nextOwnAvatarBtn;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox privateKey21Txt;
+        private System.Windows.Forms.Button switchAccount2Btn;
+        private System.Windows.Forms.Button switchAccount1Btn;
     }
 }
 
