@@ -38,12 +38,12 @@ namespace HumanCrypto.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string PrivateKey {
+        public string PrivateKey1 {
             get {
-                return ((string)(this["PrivateKey"]));
+                return ((string)(this["PrivateKey1"]));
             }
             set {
-                this["PrivateKey"] = value;
+                this["PrivateKey1"] = value;
             }
         }
         
@@ -80,6 +80,18 @@ namespace HumanCrypto.Properties {
             }
             set {
                 this["PriorityFeeGwei"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string PrivateKey2 {
+            get {
+                return ((string)(this["PrivateKey2"]));
+            }
+            set {
+                this["PrivateKey2"] = value;
             }
         }
     }

@@ -7,22 +7,27 @@ using System.Drawing;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace HumanCrypto {
-    class CachedImages {
+    class CachedImages:IDisposable {
         Wallet wallet;
         Dictionary<int, Bitmap> cache = new Dictionary<int, Bitmap>();
-        GenomeProcessing genomeProcessing;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="service"></param>
         /// <param name="genomeProcessing">An empty genome which only stores the structure of the genes</param>
-        public CachedImages(GenomeProcessing genomeProcessing) {
-            wallet = Wallet.GetInstance();
-            this.genomeProcessing = genomeProcessing;
+        public CachedImages(Wallet wallet) {
+            this.wallet = wallet;
+        }
+
+        public void Dispose() {
+            for(int i=0;i<cache.Count; i++) {
+                cache.ElementAt(i).Value.Dispose();
+            }
         }
 
         /// <summary>
@@ -48,9 +53,10 @@ namespace HumanCrypto {
                 // We need to generate the image on the spot
                 AvatarsOutputDTO outputResult = await service.AvatarsQueryAsync(new AvatarsFunction { ReturnValue1 = bmpIndex });
 
+                GenomeProcessing genomeProcessing=new GenomeProcessing();
                 genomeProcessing.ParseGenome(outputResult.Genome.ToByteArray());
 
-                PicassoConstruction picasso = new PicassoConstruction(genomeProcessing);
+                PicassoConstruction picasso = new PicassoConstruction();
                 Bitmap generatedBmp = picasso.GetBitmap();
                 results.Add(generatedBmp);
 
@@ -88,10 +94,10 @@ namespace HumanCrypto {
                 };
                 AvatarsOutputDTO avatarResult = await service.AvatarsQueryAsync(transactionFunction2);
 
-
+                GenomeProcessing genomeProcessing = new GenomeProcessing();
                 genomeProcessing.ParseGenome(avatarResult.Genome.ToByteArray());
 
-                PicassoConstruction picasso = new PicassoConstruction(genomeProcessing);
+                PicassoConstruction picasso = new PicassoConstruction();
                 Bitmap generatedBmp = picasso.GetBitmap();
                 results.Add(generatedBmp);
 

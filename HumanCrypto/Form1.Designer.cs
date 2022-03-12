@@ -358,6 +358,7 @@ namespace HumanCrypto
             this.switchAccount1Btn.TabIndex = 15;
             this.switchAccount1Btn.Text = "Select";
             this.switchAccount1Btn.UseVisualStyleBackColor = true;
+            this.switchAccount1Btn.Click += new System.EventHandler(this.switchAccount1Btn_Click);
             // 
             // switchAccount2Btn
             // 
@@ -367,6 +368,7 @@ namespace HumanCrypto
             this.switchAccount2Btn.TabIndex = 16;
             this.switchAccount2Btn.Text = "Select";
             this.switchAccount2Btn.UseVisualStyleBackColor = true;
+            this.switchAccount2Btn.Click += new System.EventHandler(this.switchAccount2Btn_Click);
             // 
             // Form1
             // 

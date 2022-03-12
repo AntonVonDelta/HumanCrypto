@@ -19,10 +19,9 @@ namespace HumanCrypto {
             }
         }
 
-        private GenomeProcessing genomeProcessing;
+        private GenomeProcessing genomeProcessing=new GenomeProcessing();
 
-        public PicassoConstruction(GenomeProcessing genomeProcessing) {
-            this.genomeProcessing = genomeProcessing;
+        public PicassoConstruction() {
         }
 
         public Bitmap GetBitmap() {

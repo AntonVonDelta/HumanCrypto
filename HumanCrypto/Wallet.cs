@@ -9,25 +9,23 @@ using System.Threading.Tasks;
 
 namespace HumanCrypto {
     class Wallet {
-        static Wallet instance = null;
-        string activePrivateKey;
+        string activePrivateKey="";
+        List<string> allAccounts;
         Web3 web3;
         HumanAvatarOwnerService service;
 
 
-        private Wallet() { }
+        public Wallet(List<string> allAccounts) {
+            this.allAccounts = allAccounts;
+            activePrivateKey = allAccounts[0];
 
-        public static Wallet GetInstance() {
-            if (instance == null) {
-                instance = new Wallet();
-                Properties.Secret.Default.PropertyChanged += instance.Settings_PropertyChanged;
-            }
-            return instance;
+            Properties.Secret.Default.PropertyChanged += Settings_PropertyChanged;
+
+            InitServices();
         }
 
-        public void SetWalletData(string privateKey) {
-            activePrivateKey = privateKey;
-            InitServices();
+        public void LoadAccount(int id) {
+            activePrivateKey = allAccounts[id];
         }
 
         private void Settings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e) {
@@ -35,6 +33,8 @@ namespace HumanCrypto {
         }
 
         private void InitServices() {
+            if (activePrivateKey == string.Empty) return;
+
             web3 = new Web3(new Account(activePrivateKey, Properties.Secret.Default.ChainId), $"https://kovan.infura.io/v3/{Properties.Secret.Default.APIKey}");
             service = new HumanAvatarOwnerService(web3, Properties.Secret.Default.ContractKey);
         }

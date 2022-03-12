@@ -29,9 +29,8 @@ namespace HumanCrypto {
         public Form1() {
             InitializeComponent();
 
-            wallet = Wallet.GetInstance();
-            wallet.SetWalletData(Properties.Secret.Default.PrivateKey);
-            cachedImages = new CachedImages(GetGenome());
+            wallet = new Wallet(new List<string> { Properties.Secret.Default.PrivateKey1, Properties.Secret.Default.PrivateKey2 });
+            cachedImages = new CachedImages(wallet);
 
             // Add event to all settings-bound controls
             List<Control> settingsBoundedControls = new List<Control>() { apiKeyTxt, privateKey1Txt, networkChainTxt, contractKeyTxt, priorityFeeTxt };
@@ -50,8 +49,7 @@ namespace HumanCrypto {
             notifyControl.Icon = this.Icon;
         }
         private void pictureBox1_Paint(object sender, PaintEventArgs e) {
-            GenomeProcessing genomeProcessing = GetGenome();
-            PicassoConstruction picasso = new PicassoConstruction(genomeProcessing);
+            PicassoConstruction picasso = new PicassoConstruction();
 
             e.Graphics.DrawImage(picasso.GetBitmap(), new Point { X = 0, Y = 0 });
         }
@@ -80,6 +78,18 @@ namespace HumanCrypto {
             }
         }
 
+        private void switchAccount1Btn_Click(object sender, EventArgs e) {
+            cachedImages.Dispose();
+
+            wallet.LoadAccount(0);
+            cachedImages = new CachedImages(wallet);
+        }
+        private void switchAccount2Btn_Click(object sender, EventArgs e) {
+            cachedImages.Dispose();
+
+            wallet.LoadAccount(1);
+            cachedImages = new CachedImages(wallet);
+        }
 
         #region SettingsTab
         // Variable which signals that controls are updated and so should not raise the Changed events or
@@ -91,7 +101,7 @@ namespace HumanCrypto {
 
             updatingControls = true;
             apiKeyTxt.Text = Properties.Secret.Default.APIKey;
-            privateKey1Txt.Text = Properties.Secret.Default.PrivateKey;
+            privateKey1Txt.Text = Properties.Secret.Default.PrivateKey1;
             networkChainTxt.Text = Properties.Secret.Default.ChainId.ToString();
             contractKeyTxt.Text = Properties.Secret.Default.ContractKey;
             priorityFeeTxt.Text = Properties.Secret.Default.PriorityFeeGwei.ToString();
@@ -103,7 +113,7 @@ namespace HumanCrypto {
         }
         private void saveSettingsBtn_Click(object sender, EventArgs e) {
             Properties.Secret.Default.APIKey = apiKeyTxt.Text;
-            Properties.Secret.Default.PrivateKey = privateKey1Txt.Text;
+            Properties.Secret.Default.PrivateKey1 = privateKey1Txt.Text;
             Properties.Secret.Default.ChainId = Int32.Parse(networkChainTxt.Text);
             Properties.Secret.Default.ContractKey = contractKeyTxt.Text;
             Properties.Secret.Default.PriorityFeeGwei = Double.Parse(priorityFeeTxt.Text);
@@ -163,8 +173,8 @@ namespace HumanCrypto {
             int iconsPerColumn = (pictureBox2.Height - 2 * padding) / resizedImageSize.Height;
 
             List<Bitmap> availableAvatars = await cachedImages.GetAllAvatars(page1 * iconsPerRow * iconsPerColumn, iconsPerRow * iconsPerColumn);
-            
-            using(Graphics g = pictureBox2.CreateGraphics()) {
+
+            using (Graphics g = pictureBox2.CreateGraphics()) {
                 for (int i = 0; i < availableAvatars.Count; i++) {
                     Bitmap bmp = availableAvatars[i];
                     Point pos = new Point { X = (i % iconsPerRow) * resizedImageSize.Width, Y = (i / iconsPerRow) * resizedImageSize.Height };
@@ -211,12 +221,6 @@ namespace HumanCrypto {
         }
         #endregion
 
-
-        private GenomeProcessing GetGenome() {
-            return new GenomeProcessing();
-        }
-
-        
     }
 
 }
