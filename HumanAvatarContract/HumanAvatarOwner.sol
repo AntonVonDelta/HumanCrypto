@@ -29,6 +29,13 @@ contract HumanAvatarOwner {
         _;
     }
 
+    function getAvatarsCount() public view returns(uint256){
+        return avatars.length;
+    }
+    function getAvatarIdsOfAddressCount() public view returns(uint256){
+        return avatarIdsOfAddress[msg.sender].length;
+    }
+
     constructor(){
         owner=msg.sender;
     }

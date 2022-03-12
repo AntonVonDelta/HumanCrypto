@@ -30,11 +30,15 @@ namespace HumanCrypto {
         /// </summary>
         /// <returns></returns>
         public async Task<List<Bitmap>> GetAllAvatars(int startingIndex, int count) {
-            HumanAvatarOwnerService service= new HumanAvatarOwnerService(web3, Properties.Secret.Default.ContractKey);
+            HumanAvatarOwnerService service = new HumanAvatarOwnerService(web3, Properties.Secret.Default.ContractKey);
             List<Bitmap> results = new List<Bitmap>();
+            BigInteger avatarsCount = await service.GetAvatarsCountQueryAsync();
 
             for (int i = 0; i < count; i++) {
                 int bmpIndex = i + startingIndex;
+
+                // Do not go over the total number of avatars
+                if (bmpIndex >= avatarsCount) break;
 
                 if (cache.ContainsKey(bmpIndex)) {
                     results.Add(cache[bmpIndex]);
@@ -42,19 +46,7 @@ namespace HumanCrypto {
                 }
 
                 // We need to generate the image on the spot
-                AvatarsOutputDTO outputResult = null;
-
-                try {
-                    var transactionFunction = new AvatarsFunction {
-                        MaxFeePerGas = 0,           // This should not consume any gas
-                        ReturnValue1 = bmpIndex
-                    };
-                    outputResult = await service.AvatarsQueryAsync(transactionFunction);
-                } catch (Exception ex) {
-                }
-                if (outputResult == null) {
-                    break;
-                }
+                AvatarsOutputDTO outputResult = await service.AvatarsQueryAsync(new AvatarsFunction { ReturnValue1 = bmpIndex });
 
                 genomeProcessing.ParseGenome(outputResult.Genome.ToByteArray());
 
@@ -63,7 +55,7 @@ namespace HumanCrypto {
                 results.Add(generatedBmp);
 
                 // Add new image to cache
-                cache[bmpIndex]=generatedBmp;
+                cache[bmpIndex] = generatedBmp;
             }
 
             return results;
@@ -72,36 +64,30 @@ namespace HumanCrypto {
         public async Task<List<Bitmap>> GetOwnAvatars(int startingIndex, int count) {
             HumanAvatarOwnerService service = new HumanAvatarOwnerService(web3, Properties.Secret.Default.ContractKey);
             List<Bitmap> results = new List<Bitmap>();
+            BigInteger avatarsCount = await service.GetAvatarIdsOfAddressCountQueryAsync();
 
             for (int i = 0; i < count; i++) {
                 int bmpIndex = i + startingIndex;
+
+                // Do not go over the total number of avatars
+                if (bmpIndex >= avatarsCount) break;
 
                 if (cache.ContainsKey(bmpIndex)) {
                     results.Add(cache[bmpIndex]);
                     continue;
                 }
 
-                // We need to generate the image on the spot
-                BigInteger outputResult = -1;
-                AvatarsOutputDTO avatarResult = null;
-                try {
-                    var transactionFunction1 = new AvatarIdsOfAddressFunction {
-                        MaxFeePerGas = 0,           // This should not consume any gas
-                        ReturnValue1 = web3.TransactionManager.Account.Address,
-                        ReturnValue2= bmpIndex
-                    };
-                    outputResult = await service.AvatarIdsOfAddressQueryAsync(transactionFunction1);
+                var transactionFunction1 = new AvatarIdsOfAddressFunction {
+                    ReturnValue1 = web3.TransactionManager.Account.Address,
+                    ReturnValue2 = bmpIndex
+                };
+                BigInteger outputResult = await service.AvatarIdsOfAddressQueryAsync(transactionFunction1);
 
-                    var transactionFunction2 = new AvatarsFunction {
-                        MaxFeePerGas = 0,           // This should not consume any gas
-                        ReturnValue1 = bmpIndex
-                    };
-                    avatarResult = await service.AvatarsQueryAsync(transactionFunction2);
-                } catch (Exception ex) {
-                }
-                if (avatarResult == null) {
-                    break;
-                }
+                var transactionFunction2 = new AvatarsFunction {
+                    ReturnValue1 = bmpIndex
+                };
+                AvatarsOutputDTO avatarResult = await service.AvatarsQueryAsync(transactionFunction2);
+
 
                 genomeProcessing.ParseGenome(avatarResult.Genome.ToByteArray());
 

@@ -182,5 +182,27 @@ namespace HumanAvatarContract.Contracts.HumanAvatarOwner
         {
              return ContractHandler.SendRequestAndWaitForReceiptAsync<CreatePrimeAvatarFunction>(null, cancellationToken);
         }
+
+        public Task<BigInteger> GetAvatarIdsOfAddressCountQueryAsync(GetAvatarIdsOfAddressCountFunction getAvatarIdsOfAddressCountFunction, BlockParameter blockParameter = null)
+        {
+            return ContractHandler.QueryAsync<GetAvatarIdsOfAddressCountFunction, BigInteger>(getAvatarIdsOfAddressCountFunction, blockParameter);
+        }
+
+        
+        public Task<BigInteger> GetAvatarIdsOfAddressCountQueryAsync(BlockParameter blockParameter = null)
+        {
+            return ContractHandler.QueryAsync<GetAvatarIdsOfAddressCountFunction, BigInteger>(null, blockParameter);
+        }
+
+        public Task<BigInteger> GetAvatarsCountQueryAsync(GetAvatarsCountFunction getAvatarsCountFunction, BlockParameter blockParameter = null)
+        {
+            return ContractHandler.QueryAsync<GetAvatarsCountFunction, BigInteger>(getAvatarsCountFunction, blockParameter);
+        }
+
+        
+        public Task<BigInteger> GetAvatarsCountQueryAsync(BlockParameter blockParameter = null)
+        {
+            return ContractHandler.QueryAsync<GetAvatarsCountFunction, BigInteger>(null, blockParameter);
+        }
     }
 }
