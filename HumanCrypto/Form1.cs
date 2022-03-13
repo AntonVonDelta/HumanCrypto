@@ -241,10 +241,10 @@ namespace HumanCrypto {
             }
         }
         private async void pictureBox3_MouseClick(object sender, MouseEventArgs e) {
-            int iconsPerRow = 3;
+            int iconsPerRow = 2;
             int padding = 20;
-            Size resizedImageSize = new Size { Width = (pictureBox2.Width - 2 * padding) / iconsPerRow, Height = (pictureBox2.Width - 2 * padding) / iconsPerRow };
-            int iconsPerColumn = (pictureBox2.Height - 2 * padding) / resizedImageSize.Height;
+            Size resizedImageSize = new Size { Width = (pictureBox3.Width - 2 * padding) / iconsPerRow, Height = (pictureBox3.Width - 2 * padding) / iconsPerRow };
+            int iconsPerColumn = (pictureBox3.Height - 2 * padding) / resizedImageSize.Height;
 
             int itemRow = (e.Y - padding) / resizedImageSize.Height;
             int itemCol = (e.X - padding) / resizedImageSize.Width;
@@ -262,9 +262,11 @@ namespace HumanCrypto {
             AvatarOfferOutputDTO offer = await controller.GetAvatarOfferAsync(avatarId);
             if (offer.Active) {
                 offerAmountTxt.Text = offer.Amount.ToString();
-                return;
+            } else {
+                offerAmountTxt.Text = "0";
             }
 
+            selectedOwnAvatar = avatarId;
             makeOfferBtn.Enabled = true;
         }
         private async void makeOfferBtn_Click(object sender, EventArgs e) {
