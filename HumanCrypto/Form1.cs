@@ -34,7 +34,7 @@ namespace HumanCrypto {
             this.cachedImages = new CachedImages(controller);
 
             // Add event to all settings-bound controls
-            List<Control> settingsBoundedControls = new List<Control>() { apiKeyTxt, privateKey1Txt, networkChainTxt, contractKeyTxt, priorityFeeTxt };
+            List<Control> settingsBoundedControls = new List<Control>() { apiKeyTxt, privateKey1Txt,privateKey2Txt, networkChainTxt, contractKeyTxt, priorityFeeTxt };
             foreach (Control control in settingsBoundedControls) {
                 control.TextChanged += genericControl_TextChanged;
             }
@@ -81,6 +81,8 @@ namespace HumanCrypto {
             updatingControls = true;
             apiKeyTxt.Text = Properties.Secret.Default.APIKey;
             privateKey1Txt.Text = Properties.Secret.Default.PrivateKey1;
+            privateKey2Txt.Text = Properties.Secret.Default.PrivateKey2;
+
             networkChainTxt.Text = Properties.Secret.Default.ChainId.ToString();
             contractKeyTxt.Text = Properties.Secret.Default.ContractKey;
             priorityFeeTxt.Text = Properties.Secret.Default.PriorityFeeGwei.ToString();
@@ -93,6 +95,8 @@ namespace HumanCrypto {
         private void saveSettingsBtn_Click(object sender, EventArgs e) {
             Properties.Secret.Default.APIKey = apiKeyTxt.Text;
             Properties.Secret.Default.PrivateKey1 = privateKey1Txt.Text;
+            Properties.Secret.Default.PrivateKey2 = privateKey2Txt.Text;
+
             Properties.Secret.Default.ChainId = Int32.Parse(networkChainTxt.Text);
             Properties.Secret.Default.ContractKey = contractKeyTxt.Text;
             Properties.Secret.Default.PriorityFeeGwei = Double.Parse(priorityFeeTxt.Text);

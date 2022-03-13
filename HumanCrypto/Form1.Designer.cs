@@ -57,7 +57,7 @@ namespace HumanCrypto
             this.apiKeyTxt = new System.Windows.Forms.TextBox();
             this.notifyControl = new System.Windows.Forms.NotifyIcon(this.components);
             this.label6 = new System.Windows.Forms.Label();
-            this.privateKey21Txt = new System.Windows.Forms.TextBox();
+            this.privateKey2Txt = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabGame.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -199,7 +199,7 @@ namespace HumanCrypto
             // tabSettings
             // 
             this.tabSettings.Controls.Add(this.label6);
-            this.tabSettings.Controls.Add(this.privateKey21Txt);
+            this.tabSettings.Controls.Add(this.privateKey2Txt);
             this.tabSettings.Controls.Add(this.label5);
             this.tabSettings.Controls.Add(this.priorityFeeTxt);
             this.tabSettings.Controls.Add(this.label4);
@@ -338,13 +338,13 @@ namespace HumanCrypto
             this.label6.TabIndex = 14;
             this.label6.Text = "Private Wallet Key 2";
             // 
-            // privateKey21Txt
+            // privateKey2Txt
             // 
-            this.privateKey21Txt.Location = new System.Drawing.Point(133, 81);
-            this.privateKey21Txt.Name = "privateKey21Txt";
-            this.privateKey21Txt.PasswordChar = '=';
-            this.privateKey21Txt.Size = new System.Drawing.Size(378, 20);
-            this.privateKey21Txt.TabIndex = 13;
+            this.privateKey2Txt.Location = new System.Drawing.Point(133, 81);
+            this.privateKey2Txt.Name = "privateKey2Txt";
+            this.privateKey2Txt.PasswordChar = '=';
+            this.privateKey2Txt.Size = new System.Drawing.Size(378, 20);
+            this.privateKey2Txt.TabIndex = 13;
             // 
             // Form1
             // 
@@ -396,7 +396,7 @@ namespace HumanCrypto
         private System.Windows.Forms.Button prevOwnAvatarBtn;
         private System.Windows.Forms.Button nextOwnAvatarBtn;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox privateKey21Txt;
+        private System.Windows.Forms.TextBox privateKey2Txt;
     }
 }
 
