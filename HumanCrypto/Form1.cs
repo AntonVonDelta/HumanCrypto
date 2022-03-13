@@ -199,7 +199,7 @@ namespace HumanCrypto {
             acceptOfferBtn.Enabled = false;
 
             try {
-                await controller.AcceptOfferAsync(selectedAvatarOffer.AvatarId);
+                await controller.AcceptOfferAsync(selectedAvatarOffer.AvatarId,10);
             }catch(Exception ex) {
                 notifyControl.ShowBalloonTip(5000, "Offer transaction", ex.Message, ToolTipIcon.Error);
                 return;

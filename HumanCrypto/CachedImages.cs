@@ -67,13 +67,13 @@ namespace HumanCrypto {
                 // Do not go over the total number of avatars
                 if (bmpIndex >= avatarsCount) break;
 
-                if (cache.ContainsKey(bmpIndex)) {
-                    results.Add(cache[bmpIndex]);
+                BigInteger avatarId = await controller.GetAvatarIdsOfAddressAsync(bmpIndex);
+
+                if (cache.ContainsKey(((int)avatarId))) {
+                    results.Add(cache[((int)avatarId)]);
                     continue;
                 }
 
-
-                BigInteger avatarId = await controller.GetAvatarIdsOfAddressAsync(bmpIndex);
                 AvatarsOutputDTO avatarResult = await controller.AvatarsQueryAsync(avatarId);
 
                 GenomeProcessing genomeProcessing = new GenomeProcessing();

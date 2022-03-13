@@ -83,7 +83,7 @@ namespace HumanCrypto {
             return wallet.GetService().AvatarOfferQueryAsync(avatarId);
         }
 
-        public async Task AcceptOfferAsync(BigInteger avatarId) {
+        public async Task AcceptOfferAsync(BigInteger avatarId, BigInteger amountToSend) {
             CancellationTokenSource timedSource = new CancellationTokenSource(60000);
             TransactionReceipt receipt = null;
             string errorMessage = "";
@@ -91,7 +91,8 @@ namespace HumanCrypto {
             using (CancellationTokenSource source = CancellationTokenSource.CreateLinkedTokenSource(principalSource.Token, timedSource.Token)) {
                 try {
                     var transactionFunction = new CreatePrimeAvatarFunction {
-                        MaxPriorityFeePerGas = Web3.Convert.ToWei(Properties.Secret.Default.PriorityFeeGwei, Nethereum.Util.UnitConversion.EthUnit.Gwei)
+                        MaxPriorityFeePerGas = Web3.Convert.ToWei(Properties.Secret.Default.PriorityFeeGwei, Nethereum.Util.UnitConversion.EthUnit.Gwei),
+                        AmountToSend = amountToSend
                     };
                     receipt = await wallet.GetService().AcceptOfferRequestAndWaitForReceiptAsync(avatarId, source);
                 } catch (Exception ex) {
