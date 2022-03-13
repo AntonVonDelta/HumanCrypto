@@ -79,5 +79,9 @@ namespace HumanCrypto {
             if (receipt == null || receipt.Failed()) throw new Exception(errorMessage);
             return;
         }
+
+        public Task<AvatarOfferOutputDTO> GetAvatarOfferAsync(int avatarId) {
+            return wallet.GetService().AvatarOfferQueryAsync(avatarId);
+        }
     }
 }

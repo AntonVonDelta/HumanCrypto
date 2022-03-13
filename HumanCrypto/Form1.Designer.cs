@@ -375,7 +375,7 @@ namespace HumanCrypto
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 23);
             this.button4.TabIndex = 7;
-            this.button4.Text = "button4";
+            this.button4.Text = "Accept Offer";
             this.button4.UseVisualStyleBackColor = true;
             // 
             // textBox1
@@ -388,7 +388,7 @@ namespace HumanCrypto
             // priceLbl
             // 
             this.priceLbl.AutoSize = true;
-            this.priceLbl.Location = new System.Drawing.Point(668, 96);
+            this.priceLbl.Location = new System.Drawing.Point(669, 106);
             this.priceLbl.Name = "priceLbl";
             this.priceLbl.Size = new System.Drawing.Size(31, 13);
             this.priceLbl.TabIndex = 9;

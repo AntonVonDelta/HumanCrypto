@@ -16,6 +16,7 @@ using HumanAvatarContract.Contracts.HumanAvatarOwner;
 using HumanAvatarContract.Contracts.HumanAvatarOwner.ContractDefinition;
 using System.Threading;
 using Nethereum.RPC.Eth.DTOs;
+using System.Numerics;
 
 namespace HumanCrypto {
     public partial class Form1 : Form {
@@ -161,7 +162,7 @@ namespace HumanCrypto {
                 }
             }
         }
-        private void pictureBox2_MouseClick(object sender, MouseEventArgs e) {
+        private async void pictureBox2_MouseClick(object sender, MouseEventArgs e) {
             int iconsPerRow = 3;
             int padding = 20;
             Size resizedImageSize = new Size { Width = (pictureBox2.Width - 2 * padding) / iconsPerRow, Height = (pictureBox2.Width - 2 * padding) / iconsPerRow };
@@ -172,7 +173,13 @@ namespace HumanCrypto {
             int itemIndex = itemRow * iconsPerRow + itemCol;
             int absoluteItemIndex = itemIndex + page1 * iconsPerRow * iconsPerColumn;
 
+            BigInteger avatarsCount = await controller.GetAvatarsCountAsync();
+            if (absoluteItemIndex>= avatarsCount) {
+                priceLbl.Text = "No offer";
 
+            }
+
+            AvatarOfferOutputDTO offer = await controller.GetAvatarOfferAsync(absoluteItemIndex);
         }
 
 
