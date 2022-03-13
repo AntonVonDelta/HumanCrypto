@@ -50,9 +50,9 @@ namespace HumanCrypto {
             notifyControl.Icon = this.Icon;
         }
         private void pictureBox1_Paint(object sender, PaintEventArgs e) {
-            PicassoConstruction picasso = new PicassoConstruction(new GenomeProcessing());
-
-            e.Graphics.DrawImage(picasso.GetBitmap(), new Point { X = 0, Y = 0 });
+            using (PicassoConstruction picasso = new PicassoConstruction(new GenomeProcessing())) {
+                e.Graphics.DrawImage(picasso.GetBitmap(), new Point { X = 0, Y = 0 });
+            }
         }
         private void button1_Click(object sender, EventArgs e) {
             pictureBox1.Invalidate();

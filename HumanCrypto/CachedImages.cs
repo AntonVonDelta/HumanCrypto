@@ -11,7 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace HumanCrypto {
-    class CachedImages:IDisposable {
+    class CachedImages : IDisposable {
         Web3Controller controller;
         Dictionary<int, Bitmap> cache = new Dictionary<int, Bitmap>();
 
@@ -20,11 +20,6 @@ namespace HumanCrypto {
             this.controller = controller;
         }
 
-        public void Dispose() {
-            for(int i=0;i<cache.Count; i++) {
-                cache.ElementAt(i).Value.Dispose();
-            }
-        }
 
         /// <summary>
         /// Returns a list of requested avatars using cache or on-the-spot-made transaction
@@ -48,7 +43,7 @@ namespace HumanCrypto {
                 // We need to generate the image on the spot
                 AvatarsOutputDTO outputResult = await controller.AvatarsQueryAsync(bmpIndex);
 
-                GenomeProcessing genomeProcessing=new GenomeProcessing();
+                GenomeProcessing genomeProcessing = new GenomeProcessing();
                 genomeProcessing.ParseGenome(outputResult.Genome.ToByteArray());
 
                 PicassoConstruction picasso = new PicassoConstruction(genomeProcessing);
@@ -78,8 +73,8 @@ namespace HumanCrypto {
                 }
 
 
-                BigInteger outputResult = await controller.AvatarIdsOfAddressQueryAsync(bmpIndex);
-                AvatarsOutputDTO avatarResult = await controller.AvatarsQueryAsync(bmpIndex);
+                BigInteger avatarId = await controller.AvatarIdsOfAddressQueryAsync(bmpIndex);
+                AvatarsOutputDTO avatarResult = await controller.AvatarsQueryAsync(avatarId);
 
                 GenomeProcessing genomeProcessing = new GenomeProcessing();
                 genomeProcessing.ParseGenome(avatarResult.Genome.ToByteArray());
@@ -93,6 +88,12 @@ namespace HumanCrypto {
             }
 
             return results;
+        }
+
+        public void Dispose() {
+            for (int i = 0; i < cache.Count; i++) {
+                cache.ElementAt(i).Value.Dispose();
+            }
         }
     }
 }

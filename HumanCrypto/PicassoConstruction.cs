@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace HumanCrypto {
-    class PicassoConstruction {
+    class PicassoConstruction : IDisposable {
         public struct PartInfo {
             public string partName;
             public Point position;
@@ -20,12 +20,15 @@ namespace HumanCrypto {
         }
 
         private GenomeProcessing genomeProcessing;
+        private Bitmap cachedBitmap = null;
 
         public PicassoConstruction(GenomeProcessing genomeProcessing) {
             this.genomeProcessing = genomeProcessing;
         }
 
         public Bitmap GetBitmap() {
+            if (cachedBitmap != null) return cachedBitmap;
+
             Bitmap bmp = new Bitmap(550, 550);
 
             using (Graphics g = Graphics.FromImage(bmp)) {
@@ -151,5 +154,10 @@ namespace HumanCrypto {
             return result;
         }
 
+        public void Dispose() {
+            if (cachedBitmap != null) {
+                cachedBitmap.Dispose();
+            }
+        }
     }
 }
