@@ -63,6 +63,7 @@ namespace HumanCrypto {
                 await controller.CreatePrimeAvatarAsync();
             } catch (Exception ex) {
                 notifyControl.ShowBalloonTip(5000, "Contract function call", ex.Message, ToolTipIcon.Error);
+                return;
             }
 
             notifyControl.ShowBalloonTip(5000, "Contract function call", "Transaction succeded", ToolTipIcon.None);

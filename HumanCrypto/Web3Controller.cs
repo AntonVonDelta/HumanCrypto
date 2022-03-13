@@ -69,7 +69,7 @@ namespace HumanCrypto {
                     var transactionFunction = new CreatePrimeAvatarFunction {
                         MaxPriorityFeePerGas = Web3.Convert.ToWei(Properties.Secret.Default.PriorityFeeGwei, Nethereum.Util.UnitConversion.EthUnit.Gwei)
                     };
-                    receipt = await wallet.GetService().CreatePrimeAvatarRequestAndWaitForReceiptAsync(transactionFunction, source);
+                    receipt = await wallet.GetService().CreatePrimeAvatarRequestAndWaitForReceiptAsync();
                 } catch (Exception ex) {
                     errorMessage = ex.Message;
                 }

@@ -18,6 +18,8 @@ namespace HumanCrypto {
             Hide();
             Wallet wallet = new Wallet(0);
             Form1 form = new Form1(wallet);
+
+            form.FormClosed += (a, b) => Close();
             form.Show();
         }
 
@@ -25,6 +27,8 @@ namespace HumanCrypto {
             Hide();
             Wallet wallet = new Wallet(1);
             Form1 form = new Form1(wallet);
+
+            form.FormClosed += (a, b) => Close();
             form.Show();
         }
     }
