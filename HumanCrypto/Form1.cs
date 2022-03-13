@@ -20,7 +20,7 @@ using Nethereum.RPC.Eth.DTOs;
 namespace HumanCrypto {
     public partial class Form1 : Form {
         Wallet wallet;
-
+        Web3Controller controller;
         int page1 = 0;
         int page2 = 0;
         CachedImages cachedImages;
@@ -30,7 +30,8 @@ namespace HumanCrypto {
             InitializeComponent();
 
             this.wallet = wallet;
-            this.cachedImages = new CachedImages(wallet);
+            this.controller = new Web3Controller(wallet);
+            this.cachedImages = new CachedImages(controller);
 
             // Add event to all settings-bound controls
             List<Control> settingsBoundedControls = new List<Control>() { apiKeyTxt, privateKey1Txt, networkChainTxt, contractKeyTxt, priorityFeeTxt };
