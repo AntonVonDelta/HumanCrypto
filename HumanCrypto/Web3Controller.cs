@@ -77,10 +77,9 @@ namespace HumanCrypto {
             }
 
             if (receipt == null || receipt.Failed()) throw new Exception(errorMessage);
-            return;
         }
 
-        public Task<AvatarOfferOutputDTO> GetAvatarOfferAsync(int avatarId) {
+        public Task<AvatarOfferOutputDTO> GetAvatarOfferAsync(BigInteger avatarId) {
             return wallet.GetService().AvatarOfferQueryAsync(avatarId);
         }
 
@@ -94,14 +93,32 @@ namespace HumanCrypto {
                     var transactionFunction = new CreatePrimeAvatarFunction {
                         MaxPriorityFeePerGas = Web3.Convert.ToWei(Properties.Secret.Default.PriorityFeeGwei, Nethereum.Util.UnitConversion.EthUnit.Gwei)
                     };
-                    receipt = await wallet.GetService().AcceptOfferRequestAndWaitForReceiptAsync(avatarId,source);
+                    receipt = await wallet.GetService().AcceptOfferRequestAndWaitForReceiptAsync(avatarId, source);
                 } catch (Exception ex) {
                     errorMessage = ex.Message;
                 }
             }
-            
+
             if (receipt == null || receipt.Failed()) throw new Exception(errorMessage);
-            return;
+        }
+
+        public async Task MakeOfferAsync(BigInteger avatarId, BigInteger amount) {
+            CancellationTokenSource timedSource = new CancellationTokenSource(60000);
+            TransactionReceipt receipt = null;
+            string errorMessage = "";
+
+            using (CancellationTokenSource source = CancellationTokenSource.CreateLinkedTokenSource(principalSource.Token, timedSource.Token)) {
+                try {
+                    var transactionFunction = new CreatePrimeAvatarFunction {
+                        MaxPriorityFeePerGas = Web3.Convert.ToWei(Properties.Secret.Default.PriorityFeeGwei, Nethereum.Util.UnitConversion.EthUnit.Gwei)
+                    };
+                    receipt = await wallet.GetService().CreateOfferRequestAndWaitForReceiptAsync(avatarId, amount, source);
+                } catch (Exception ex) {
+                    errorMessage = ex.Message;
+                }
+            }
+
+            if (receipt == null || receipt.Failed()) throw new Exception(errorMessage);
         }
     }
 }

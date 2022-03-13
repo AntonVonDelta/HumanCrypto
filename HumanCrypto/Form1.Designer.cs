@@ -60,7 +60,7 @@ namespace HumanCrypto
             this.privateKey2Txt = new System.Windows.Forms.TextBox();
             this.makeOfferBtn = new System.Windows.Forms.Button();
             this.acceptOfferBtn = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.offerAmountTxt = new System.Windows.Forms.TextBox();
             this.priceLbl = new System.Windows.Forms.Label();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.label8 = new System.Windows.Forms.Label();
@@ -132,7 +132,7 @@ namespace HumanCrypto
             this.tabAllAvatars.Controls.Add(this.label8);
             this.tabAllAvatars.Controls.Add(this.pictureBox4);
             this.tabAllAvatars.Controls.Add(this.priceLbl);
-            this.tabAllAvatars.Controls.Add(this.textBox1);
+            this.tabAllAvatars.Controls.Add(this.offerAmountTxt);
             this.tabAllAvatars.Controls.Add(this.acceptOfferBtn);
             this.tabAllAvatars.Controls.Add(this.makeOfferBtn);
             this.tabAllAvatars.Controls.Add(this.prevOwnAvatarBtn);
@@ -198,6 +198,7 @@ namespace HumanCrypto
             this.pictureBox3.TabIndex = 1;
             this.pictureBox3.TabStop = false;
             this.pictureBox3.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox3_Paint);
+            this.pictureBox3.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox3_MouseClick);
             // 
             // pictureBox2
             // 
@@ -362,15 +363,18 @@ namespace HumanCrypto
             // 
             // makeOfferBtn
             // 
+            this.makeOfferBtn.Enabled = false;
             this.makeOfferBtn.Location = new System.Drawing.Point(868, 96);
             this.makeOfferBtn.Name = "makeOfferBtn";
             this.makeOfferBtn.Size = new System.Drawing.Size(75, 23);
             this.makeOfferBtn.TabIndex = 6;
             this.makeOfferBtn.Text = "Make offer";
             this.makeOfferBtn.UseVisualStyleBackColor = true;
+            this.makeOfferBtn.Click += new System.EventHandler(this.makeOfferBtn_Click);
             // 
             // acceptOfferBtn
             // 
+            this.acceptOfferBtn.Enabled = false;
             this.acceptOfferBtn.Location = new System.Drawing.Point(669, 126);
             this.acceptOfferBtn.Name = "acceptOfferBtn";
             this.acceptOfferBtn.Size = new System.Drawing.Size(75, 23);
@@ -379,12 +383,13 @@ namespace HumanCrypto
             this.acceptOfferBtn.UseVisualStyleBackColor = true;
             this.acceptOfferBtn.Click += new System.EventHandler(this.acceptOfferBtn_Click);
             // 
-            // textBox1
+            // offerAmountTxt
             // 
-            this.textBox1.Location = new System.Drawing.Point(870, 125);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(72, 20);
-            this.textBox1.TabIndex = 8;
+            this.offerAmountTxt.Location = new System.Drawing.Point(870, 125);
+            this.offerAmountTxt.Name = "offerAmountTxt";
+            this.offerAmountTxt.Size = new System.Drawing.Size(72, 20);
+            this.offerAmountTxt.TabIndex = 8;
+            this.offerAmountTxt.Text = "0";
             // 
             // priceLbl
             // 
@@ -466,7 +471,7 @@ namespace HumanCrypto
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox privateKey2Txt;
         private System.Windows.Forms.Label priceLbl;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox offerAmountTxt;
         private System.Windows.Forms.Button acceptOfferBtn;
         private System.Windows.Forms.Button makeOfferBtn;
         private System.Windows.Forms.Label label8;

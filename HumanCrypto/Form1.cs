@@ -27,6 +27,7 @@ namespace HumanCrypto {
         CachedImages cachedImages;
 
         AvatarOfferOutputDTO selectedAvatarOffer;
+        BigInteger selectedOwnAvatar;
 
         public Form1(Wallet wallet) {
             InitializeComponent();
@@ -239,13 +240,50 @@ namespace HumanCrypto {
                 }
             }
         }
+        private async void pictureBox3_MouseClick(object sender, MouseEventArgs e) {
+            int iconsPerRow = 3;
+            int padding = 20;
+            Size resizedImageSize = new Size { Width = (pictureBox2.Width - 2 * padding) / iconsPerRow, Height = (pictureBox2.Width - 2 * padding) / iconsPerRow };
+            int iconsPerColumn = (pictureBox2.Height - 2 * padding) / resizedImageSize.Height;
 
+            int itemRow = (e.Y - padding) / resizedImageSize.Height;
+            int itemCol = (e.X - padding) / resizedImageSize.Width;
+            int itemIndex = itemRow * iconsPerRow + itemCol;
+            int absoluteItemIndex = itemIndex + page1 * iconsPerRow * iconsPerColumn;
+
+
+            BigInteger avatarsCount = await controller.GetAvatarIdsOfAddressCountAsync();
+            if (absoluteItemIndex >= avatarsCount) {
+                makeOfferBtn.Enabled = false;
+                return;
+            }
+
+            BigInteger avatarId = await controller.GetAvatarIdsOfAddressAsync(absoluteItemIndex);
+            AvatarOfferOutputDTO offer = await controller.GetAvatarOfferAsync(avatarId);
+            if (offer.Active) {
+                offerAmountTxt.Text = offer.Amount.ToString();
+                return;
+            }
+
+            makeOfferBtn.Enabled = true;
+        }
+        private async void makeOfferBtn_Click(object sender, EventArgs e) {
+            try {
+                await controller.MakeOfferAsync(selectedOwnAvatar, BigInteger.Parse(offerAmountTxt.Text));
+
+            } catch (Exception ex) {
+                notifyControl.ShowBalloonTip(5000, "Make Offer transaction", ex.Message, ToolTipIcon.Error);
+                return;
+            }
+            notifyControl.ShowBalloonTip(5000, "Make Offer transaction", "An offer was just created", ToolTipIcon.None);
+
+        }
 
 
 
         #endregion
 
-        
+
     }
 
 }
