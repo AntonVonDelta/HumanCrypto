@@ -2,6 +2,7 @@
 using HumanAvatarContract.Contracts.HumanAvatarOwner.ContractDefinition;
 using Nethereum.RPC.Eth.DTOs;
 using Nethereum.Web3;
+using Nethereum.Web3.Accounts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
