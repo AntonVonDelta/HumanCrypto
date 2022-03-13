@@ -161,7 +161,19 @@ namespace HumanCrypto {
                 }
             }
         }
+        private void pictureBox2_MouseClick(object sender, MouseEventArgs e) {
+            int iconsPerRow = 3;
+            int padding = 20;
+            Size resizedImageSize = new Size { Width = (pictureBox2.Width - 2 * padding) / iconsPerRow, Height = (pictureBox2.Width - 2 * padding) / iconsPerRow };
+            int iconsPerColumn = (pictureBox2.Height - 2 * padding) / resizedImageSize.Height;
 
+            int itemRow = (e.Y-padding) / resizedImageSize.Height;
+            int itemCol = (e.X - padding) / resizedImageSize.Width;
+            int itemIndex = itemRow * iconsPerRow + itemCol;
+            int absoluteItemIndex = itemIndex + page1 * iconsPerRow * iconsPerColumn;
+
+
+        }
 
 
         private void nextOwnAvatarBtn_Click(object sender, EventArgs e) {
@@ -194,8 +206,12 @@ namespace HumanCrypto {
                 }
             }
         }
+
+
+
         #endregion
 
+        
     }
 
 }
