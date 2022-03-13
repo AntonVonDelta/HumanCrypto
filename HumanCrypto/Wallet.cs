@@ -8,16 +8,15 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HumanCrypto {
-    class Wallet {
+    public class Wallet {
         string activePrivateKey="";
-        List<string> allAccounts;
+        List<string> allAccounts=new List<string> {Properties.Secret.Default.PrivateKey1, Properties.Secret.Default.PrivateKey2 };
         Web3 web3;
         HumanAvatarOwnerService service;
 
 
-        public Wallet(List<string> allAccounts) {
-            this.allAccounts = allAccounts;
-            activePrivateKey = allAccounts[0];
+        public Wallet(int id) {
+            activePrivateKey = allAccounts[id];
 
             Properties.Secret.Default.PropertyChanged += Settings_PropertyChanged;
 
@@ -26,6 +25,7 @@ namespace HumanCrypto {
 
         public void LoadAccount(int id) {
             activePrivateKey = allAccounts[id];
+            InitServices();
         }
 
         private void Settings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e) {

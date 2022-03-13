@@ -58,8 +58,6 @@ namespace HumanCrypto
             this.notifyControl = new System.Windows.Forms.NotifyIcon(this.components);
             this.label6 = new System.Windows.Forms.Label();
             this.privateKey21Txt = new System.Windows.Forms.TextBox();
-            this.switchAccount1Btn = new System.Windows.Forms.Button();
-            this.switchAccount2Btn = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabGame.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -200,8 +198,6 @@ namespace HumanCrypto
             // 
             // tabSettings
             // 
-            this.tabSettings.Controls.Add(this.switchAccount2Btn);
-            this.tabSettings.Controls.Add(this.switchAccount1Btn);
             this.tabSettings.Controls.Add(this.label6);
             this.tabSettings.Controls.Add(this.privateKey21Txt);
             this.tabSettings.Controls.Add(this.label5);
@@ -350,26 +346,6 @@ namespace HumanCrypto
             this.privateKey21Txt.Size = new System.Drawing.Size(378, 20);
             this.privateKey21Txt.TabIndex = 13;
             // 
-            // switchAccount1Btn
-            // 
-            this.switchAccount1Btn.Location = new System.Drawing.Point(517, 55);
-            this.switchAccount1Btn.Name = "switchAccount1Btn";
-            this.switchAccount1Btn.Size = new System.Drawing.Size(74, 20);
-            this.switchAccount1Btn.TabIndex = 15;
-            this.switchAccount1Btn.Text = "Select";
-            this.switchAccount1Btn.UseVisualStyleBackColor = true;
-            this.switchAccount1Btn.Click += new System.EventHandler(this.switchAccount1Btn_Click);
-            // 
-            // switchAccount2Btn
-            // 
-            this.switchAccount2Btn.Location = new System.Drawing.Point(517, 81);
-            this.switchAccount2Btn.Name = "switchAccount2Btn";
-            this.switchAccount2Btn.Size = new System.Drawing.Size(74, 20);
-            this.switchAccount2Btn.TabIndex = 16;
-            this.switchAccount2Btn.Text = "Select";
-            this.switchAccount2Btn.UseVisualStyleBackColor = true;
-            this.switchAccount2Btn.Click += new System.EventHandler(this.switchAccount2Btn_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -421,8 +397,6 @@ namespace HumanCrypto
         private System.Windows.Forms.Button nextOwnAvatarBtn;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox privateKey21Txt;
-        private System.Windows.Forms.Button switchAccount2Btn;
-        private System.Windows.Forms.Button switchAccount1Btn;
     }
 }
 

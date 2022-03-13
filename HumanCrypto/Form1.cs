@@ -26,11 +26,11 @@ namespace HumanCrypto {
         CachedImages cachedImages;
 
 
-        public Form1() {
+        public Form1(Wallet wallet) {
             InitializeComponent();
 
-            wallet = new Wallet(new List<string> { Properties.Secret.Default.PrivateKey1, Properties.Secret.Default.PrivateKey2 });
-            cachedImages = new CachedImages(wallet);
+            this.wallet = wallet;
+            this.cachedImages = new CachedImages(wallet);
 
             // Add event to all settings-bound controls
             List<Control> settingsBoundedControls = new List<Control>() { apiKeyTxt, privateKey1Txt, networkChainTxt, contractKeyTxt, priorityFeeTxt };
@@ -78,18 +78,6 @@ namespace HumanCrypto {
             }
         }
 
-        private void switchAccount1Btn_Click(object sender, EventArgs e) {
-            cachedImages.Dispose();
-
-            wallet.LoadAccount(0);
-            cachedImages = new CachedImages(wallet);
-        }
-        private void switchAccount2Btn_Click(object sender, EventArgs e) {
-            cachedImages.Dispose();
-
-            wallet.LoadAccount(1);
-            cachedImages = new CachedImages(wallet);
-        }
 
         #region SettingsTab
         // Variable which signals that controls are updated and so should not raise the Changed events or
