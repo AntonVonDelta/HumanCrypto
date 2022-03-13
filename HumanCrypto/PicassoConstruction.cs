@@ -19,15 +19,16 @@ namespace HumanCrypto {
             }
         }
 
-        private GenomeProcessing genomeProcessing=new GenomeProcessing();
+        private GenomeProcessing genomeProcessing;
 
-        public PicassoConstruction() {
+        public PicassoConstruction(GenomeProcessing genomeProcessing) {
+            this.genomeProcessing = genomeProcessing;
         }
 
         public Bitmap GetBitmap() {
-            Bitmap bmp = new Bitmap(550,550);
-            
-            using(Graphics g = Graphics.FromImage(bmp)) {
+            Bitmap bmp = new Bitmap(550, 550);
+
+            using (Graphics g = Graphics.FromImage(bmp)) {
                 XDocument doc = XDocument.Load("HumanParts\\data.xml");
                 Queue<PartInfo> attachmentPoints = new Queue<PartInfo>();
 

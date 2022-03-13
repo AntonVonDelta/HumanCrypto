@@ -51,7 +51,7 @@ namespace HumanCrypto {
                 GenomeProcessing genomeProcessing=new GenomeProcessing();
                 genomeProcessing.ParseGenome(outputResult.Genome.ToByteArray());
 
-                PicassoConstruction picasso = new PicassoConstruction();
+                PicassoConstruction picasso = new PicassoConstruction(genomeProcessing);
                 Bitmap generatedBmp = picasso.GetBitmap();
                 results.Add(generatedBmp);
 
@@ -84,7 +84,7 @@ namespace HumanCrypto {
                 GenomeProcessing genomeProcessing = new GenomeProcessing();
                 genomeProcessing.ParseGenome(avatarResult.Genome.ToByteArray());
 
-                PicassoConstruction picasso = new PicassoConstruction();
+                PicassoConstruction picasso = new PicassoConstruction(genomeProcessing);
                 Bitmap generatedBmp = picasso.GetBitmap();
                 results.Add(generatedBmp);
 

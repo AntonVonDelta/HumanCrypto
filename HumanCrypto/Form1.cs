@@ -50,7 +50,7 @@ namespace HumanCrypto {
             notifyControl.Icon = this.Icon;
         }
         private void pictureBox1_Paint(object sender, PaintEventArgs e) {
-            PicassoConstruction picasso = new PicassoConstruction();
+            PicassoConstruction picasso = new PicassoConstruction(new GenomeProcessing());
 
             e.Graphics.DrawImage(picasso.GetBitmap(), new Point { X = 0, Y = 0 });
         }
@@ -112,26 +112,20 @@ namespace HumanCrypto {
         private async void deployContractBtn_Click(object sender, EventArgs e) {
             CancellationTokenSource source = new CancellationTokenSource(60000);
             TransactionReceipt receipt = null;
-            string errorMessage = "Failed";
+            string contractAddress = "Failed";
 
             try {
-                var deployParams = new HumanAvatarOwnerDeployment {
-                    MaxPriorityFeePerGas = Web3.Convert.ToWei(Properties.Secret.Default.PriorityFeeGwei, Nethereum.Util.UnitConversion.EthUnit.Gwei)
-                };
-                receipt = await HumanAvatarOwnerService.DeployContractAndWaitForReceiptAsync(wallet.GetWeb3(), deployParams, source);
+                contractAddress = await controller.DeployContract();
             } catch (Exception ex) {
-                errorMessage = ex.Message;
+                notifyControl.ShowBalloonTip(5000, "Contract deployment", ex.Message, ToolTipIcon.Error);
+                return;
             }
 
-            if (receipt == null || receipt.Failed()) {
-                notifyControl.ShowBalloonTip(5000, "Contract deployment", errorMessage, ToolTipIcon.Error);
-            } else {
-                notifyControl.ShowBalloonTip(5000, "Contract deployment", "New contract deployed", ToolTipIcon.None);
-                contractKeyTxt.Text = receipt.ContractAddress;
-                Properties.Secret.Default.ContractKey = contractKeyTxt.Text;
-                Properties.Secret.Default.Save();
-                saveSettingsBtn.Enabled = false;
-            }
+            notifyControl.ShowBalloonTip(5000, "Contract deployment", "New contract deployed", ToolTipIcon.None);
+            contractKeyTxt.Text = receipt.ContractAddress;
+            Properties.Secret.Default.ContractKey = contractKeyTxt.Text;
+            Properties.Secret.Default.Save();
+            saveSettingsBtn.Enabled = false;
         }
         #endregion
 
