@@ -270,15 +270,15 @@ namespace HumanCrypto {
             makeOfferBtn.Enabled = true;
         }
         private async void makeOfferBtn_Click(object sender, EventArgs e) {
+            makeOfferBtn.Enabled = false;
+
             try {
                 await controller.MakeOfferAsync(selectedOwnAvatar, BigInteger.Parse(offerAmountTxt.Text));
-
             } catch (Exception ex) {
                 notifyControl.ShowBalloonTip(5000, "Make Offer transaction", ex.Message, ToolTipIcon.Error);
                 return;
             }
             notifyControl.ShowBalloonTip(5000, "Make Offer transaction", "An offer was just created", ToolTipIcon.None);
-
         }
 
 
