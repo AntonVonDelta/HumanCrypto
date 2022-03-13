@@ -26,6 +26,7 @@ namespace HumanCrypto {
         int page2 = 0;
         CachedImages cachedImages;
 
+        AvatarOfferOutputDTO selectedAvatarOffer;
 
         public Form1(Wallet wallet) {
             InitializeComponent();
@@ -175,12 +176,37 @@ namespace HumanCrypto {
 
             BigInteger avatarsCount = await controller.GetAvatarsCountAsync();
             if (absoluteItemIndex>= avatarsCount) {
-                priceLbl.Text = "No offer";
-
+                priceLbl.Text = "Price: No offer";
+                acceptOfferBtn.Enabled = false;
+                return;
             }
 
             AvatarOfferOutputDTO offer = await controller.GetAvatarOfferAsync(absoluteItemIndex);
+            if (!offer.Active) {
+                priceLbl.Text = "Price: No offer";
+                acceptOfferBtn.Enabled = false;
+                return;
+            }
+
+            priceLbl.Text = $"Price: {offer.Amount} Wei";
+            acceptOfferBtn.Enabled = true;
+            selectedAvatarOffer = offer;
         }
+        private async void acceptOfferBtn_Click(object sender, EventArgs e) {
+            if (selectedAvatarOffer == null) return;
+            
+            acceptOfferBtn.Enabled = false;
+
+            try {
+                await controller.AcceptOfferAsync(selectedAvatarOffer.AvatarId);
+            }catch(Exception ex) {
+                notifyControl.ShowBalloonTip(5000, "Offer transaction", ex.Message, ToolTipIcon.Error);
+                return;
+            }
+
+            notifyControl.ShowBalloonTip(5000, "Offer transaction", "Offer was accepted", ToolTipIcon.None);
+        }
+
 
 
         private void nextOwnAvatarBtn_Click(object sender, EventArgs e) {
@@ -213,6 +239,7 @@ namespace HumanCrypto {
                 }
             }
         }
+
 
 
 

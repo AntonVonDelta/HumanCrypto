@@ -36,7 +36,7 @@ namespace HumanCrypto {
             return wallet.GetService().GetAvatarIdsOfAddressCountQueryAsync();
         }
 
-        public Task<BigInteger> AvatarIdsOfAddressQueryAsync(BigInteger index) {
+        public Task<BigInteger> GetAvatarIdsOfAddressAsync(BigInteger index) {
             return wallet.GetService().AvatarIdsOfAddressQueryAsync(Address(), index);
         }
 
@@ -82,6 +82,26 @@ namespace HumanCrypto {
 
         public Task<AvatarOfferOutputDTO> GetAvatarOfferAsync(int avatarId) {
             return wallet.GetService().AvatarOfferQueryAsync(avatarId);
+        }
+
+        public async Task AcceptOfferAsync(BigInteger avatarId) {
+            CancellationTokenSource timedSource = new CancellationTokenSource(60000);
+            TransactionReceipt receipt = null;
+            string errorMessage = "";
+
+            using (CancellationTokenSource source = CancellationTokenSource.CreateLinkedTokenSource(principalSource.Token, timedSource.Token)) {
+                try {
+                    var transactionFunction = new CreatePrimeAvatarFunction {
+                        MaxPriorityFeePerGas = Web3.Convert.ToWei(Properties.Secret.Default.PriorityFeeGwei, Nethereum.Util.UnitConversion.EthUnit.Gwei)
+                    };
+                    receipt = await wallet.GetService().AcceptOfferRequestAndWaitForReceiptAsync(avatarId,source);
+                } catch (Exception ex) {
+                    errorMessage = ex.Message;
+                }
+            }
+            
+            if (receipt == null || receipt.Failed()) throw new Exception(errorMessage);
+            return;
         }
     }
 }

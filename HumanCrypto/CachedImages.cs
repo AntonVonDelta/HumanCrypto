@@ -73,7 +73,7 @@ namespace HumanCrypto {
                 }
 
 
-                BigInteger avatarId = await controller.AvatarIdsOfAddressQueryAsync(bmpIndex);
+                BigInteger avatarId = await controller.GetAvatarIdsOfAddressAsync(bmpIndex);
                 AvatarsOutputDTO avatarResult = await controller.AvatarsQueryAsync(avatarId);
 
                 GenomeProcessing genomeProcessing = new GenomeProcessing();
