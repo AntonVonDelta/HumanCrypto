@@ -55,8 +55,28 @@ namespace HumanCrypto {
                 }
             }
 
-            if (receipt == null) throw new Exception(errorMessage);
+            if (receipt == null || receipt.Failed()) throw new Exception(errorMessage);
             return receipt.ContractAddress;
+        }
+
+        public async Task CreatePrimeAvatarAsync() {
+            CancellationTokenSource timedSource = new CancellationTokenSource(60000);
+            TransactionReceipt receipt = null;
+            string errorMessage = "";
+
+            using (CancellationTokenSource source = CancellationTokenSource.CreateLinkedTokenSource(principalSource.Token, timedSource.Token)) {
+                try {
+                    var transactionFunction = new CreatePrimeAvatarFunction {
+                        MaxPriorityFeePerGas = Web3.Convert.ToWei(Properties.Secret.Default.PriorityFeeGwei, Nethereum.Util.UnitConversion.EthUnit.Gwei)
+                    };
+                    receipt = await wallet.GetService().CreatePrimeAvatarRequestAndWaitForReceiptAsync(transactionFunction, source);
+                } catch (Exception ex) {
+                    errorMessage = ex.Message;
+                }
+            }
+
+            if (receipt == null || receipt.Failed()) throw new Exception(errorMessage);
+            return;
         }
     }
 }

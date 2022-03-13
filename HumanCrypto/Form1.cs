@@ -58,25 +58,14 @@ namespace HumanCrypto {
             pictureBox1.Invalidate();
         }
         private async void button2_Click(object sender, EventArgs e) {
-            CancellationTokenSource source = new CancellationTokenSource(60000);
-            HumanAvatarOwnerService service = new HumanAvatarOwnerService(wallet.GetWeb3(), Properties.Secret.Default.ContractKey);
-            TransactionReceipt receipt = null;
-            string errorMessage = "Transaction failed";
 
             try {
-                var transactionFunction = new CreatePrimeAvatarFunction {
-                    MaxPriorityFeePerGas = Web3.Convert.ToWei(Properties.Secret.Default.PriorityFeeGwei, Nethereum.Util.UnitConversion.EthUnit.Gwei)
-                };
-                receipt = await service.CreatePrimeAvatarRequestAndWaitForReceiptAsync(transactionFunction, source);
+                await controller.CreatePrimeAvatarAsync();
             } catch (Exception ex) {
-                errorMessage = ex.Message;
+                notifyControl.ShowBalloonTip(5000, "Contract function call", ex.Message, ToolTipIcon.Error);
             }
 
-            if (receipt == null || receipt.Failed()) {
-                notifyControl.ShowBalloonTip(5000, "Contract function call", errorMessage, ToolTipIcon.Error);
-            } else {
-                notifyControl.ShowBalloonTip(5000, "Contract function call", "Transaction succeded", ToolTipIcon.None);
-            }
+            notifyControl.ShowBalloonTip(5000, "Contract function call", "Transaction succeded", ToolTipIcon.None);
         }
 
 
@@ -110,9 +99,7 @@ namespace HumanCrypto {
             saveSettingsBtn.Enabled = false;
         }
         private async void deployContractBtn_Click(object sender, EventArgs e) {
-            CancellationTokenSource source = new CancellationTokenSource(60000);
-            TransactionReceipt receipt = null;
-            string contractAddress = "Failed";
+            string contractAddress = "";
 
             try {
                 contractAddress = await controller.DeployContract();
@@ -122,7 +109,7 @@ namespace HumanCrypto {
             }
 
             notifyControl.ShowBalloonTip(5000, "Contract deployment", "New contract deployed", ToolTipIcon.None);
-            contractKeyTxt.Text = receipt.ContractAddress;
+            contractKeyTxt.Text = contractAddress;
             Properties.Secret.Default.ContractKey = contractKeyTxt.Text;
             Properties.Secret.Default.Save();
             saveSettingsBtn.Enabled = false;
