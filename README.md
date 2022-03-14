@@ -16,6 +16,13 @@ Build using Visual Studio 2019 and Nethereum packages.
 - The `Testing` tab is only used for testing the Picasso Image generator locally.
 - The `All Avatars` tab is the main tab of the game.
 
+## Picasso Generator
+The Picasso generator uses the `data.xml` file inside the `HumanParts` folder. This is a very powerful generator as it is very customizable, uses svg for defining the shape of the components and allows extensions: any structure can be built only by editing the xml file.
+
+The structure is very simple; it's primarily used to define the structure and functions of the genome. It orders the information in components of the face then for each component there are subcomponents defined with their positions inside the parent structure. By traversing the structure the avatar can be built.
+
+Every component has a centre position defined as well as the graphics element which is a svg path. 
+
 ## Settings
 In this tab you can change all important settings
 
