@@ -43,7 +43,7 @@ namespace HumanCrypto {
         public async Task<string> DeployContract() {
             CancellationTokenSource timedSource = new CancellationTokenSource(60000);
             TransactionReceipt receipt = null;
-            string errorMessage = "";
+            string errorMessage = "Error";
 
             using (CancellationTokenSource source = CancellationTokenSource.CreateLinkedTokenSource(principalSource.Token, timedSource.Token)) {
                 try {
@@ -63,7 +63,7 @@ namespace HumanCrypto {
         public async Task CreatePrimeAvatarAsync() {
             CancellationTokenSource timedSource = new CancellationTokenSource(60000);
             TransactionReceipt receipt = null;
-            string errorMessage = "";
+            string errorMessage = "Error";
 
             using (CancellationTokenSource source = CancellationTokenSource.CreateLinkedTokenSource(principalSource.Token, timedSource.Token)) {
                 try {
@@ -86,7 +86,7 @@ namespace HumanCrypto {
         public async Task AcceptOfferAsync(BigInteger avatarId, BigInteger amountToSend) {
             CancellationTokenSource timedSource = new CancellationTokenSource(60000);
             TransactionReceipt receipt = null;
-            string errorMessage = "";
+            string errorMessage = "Error";
 
             using (CancellationTokenSource source = CancellationTokenSource.CreateLinkedTokenSource(principalSource.Token, timedSource.Token)) {
                 try {
@@ -107,7 +107,7 @@ namespace HumanCrypto {
         public async Task MakeOfferAsync(BigInteger avatarId, BigInteger amount) {
             CancellationTokenSource timedSource = new CancellationTokenSource(60000);
             TransactionReceipt receipt = null;
-            string errorMessage = "";
+            string errorMessage = "Error";
 
             using (CancellationTokenSource source = CancellationTokenSource.CreateLinkedTokenSource(principalSource.Token, timedSource.Token)) {
                 try {
@@ -128,7 +128,7 @@ namespace HumanCrypto {
         public async Task BreedBetween(BigInteger momAvatarId,BigInteger dadAvatarId) {
             CancellationTokenSource timedSource = new CancellationTokenSource(60000);
             TransactionReceipt receipt = null;
-            string errorMessage = "";
+            string errorMessage = "Error";
 
             using (CancellationTokenSource source = CancellationTokenSource.CreateLinkedTokenSource(principalSource.Token, timedSource.Token)) {
                 try {
@@ -139,6 +139,7 @@ namespace HumanCrypto {
                         DadAvatarId = dadAvatarId
                     };
                     receipt = await wallet.GetService().BreedBetweenRequestAndWaitForReceiptAsync(transactionFunction, source);
+                    await Task.Delay(5000);
                 } catch (Exception ex) {
                     errorMessage = ex.Message;
                 }
