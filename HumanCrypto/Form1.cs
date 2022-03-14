@@ -26,6 +26,10 @@ namespace HumanCrypto {
             public Rectangle drawRect;
             public bool hasOffer;
         };
+        class OwnAvatarInfo {
+            public BigInteger avatarId;
+            public AvatarOfferOutputDTO offer;
+        };
 
         Wallet wallet;
         Web3Controller controller;
@@ -34,7 +38,7 @@ namespace HumanCrypto {
         CachedImages cachedImages;
 
         AvatarInfo selectedAvatar;
-        BigInteger selectedOwnAvatar;
+        OwnAvatarInfo selectedOwnAvatar;
 
         public Form1(Wallet wallet) {
             InitializeComponent();
@@ -292,6 +296,7 @@ namespace HumanCrypto {
             int itemIndex = itemRow * iconsPerRow + itemCol;
             int absoluteItemIndex = itemIndex + page1 * iconsPerRow * iconsPerColumn;
 
+            bool pressedShift = Form.ModifierKeys == Keys.Shift;
 
             BigInteger avatarsCount = await controller.GetAvatarIdsOfAddressCountAsync();
             if (absoluteItemIndex >= avatarsCount) {
@@ -307,14 +312,19 @@ namespace HumanCrypto {
                 offerAmountTxt.Text = "0";
             }
 
-            selectedOwnAvatar = avatarId;
+            OwnAvatarInfo prevSelectedOwnAvatar = selectedOwnAvatar;
+            if (pressedShift && selectedOwnAvatar!=null) {
+
+                Console.WriteLine("asd");
+            }
+            selectedOwnAvatar = new OwnAvatarInfo { avatarId = avatarId, offer = offer };
             makeOfferBtn.Enabled = true;
         }
         private async void makeOfferBtn_Click(object sender, EventArgs e) {
             makeOfferBtn.Enabled = false;
 
             try {
-                await controller.MakeOfferAsync(selectedOwnAvatar, BigInteger.Parse(offerAmountTxt.Text));
+                await controller.MakeOfferAsync(selectedOwnAvatar.avatarId, BigInteger.Parse(offerAmountTxt.Text));
             } catch (Exception ex) {
                 notifyControl.ShowBalloonTip(5000, "Make Offer transaction", ex.Message, ToolTipIcon.Error);
                 return;
