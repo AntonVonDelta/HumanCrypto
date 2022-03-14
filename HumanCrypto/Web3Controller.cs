@@ -134,6 +134,7 @@ namespace HumanCrypto {
                 try {
                     var transactionFunction = new BreedBetweenFunction {
                         MaxPriorityFeePerGas = Web3.Convert.ToWei(Properties.Secret.Default.PriorityFeeGwei, Nethereum.Util.UnitConversion.EthUnit.Gwei),
+                        Gas= 280000,
                         MomAvatarId = momAvatarId,
                         DadAvatarId = dadAvatarId
                     };

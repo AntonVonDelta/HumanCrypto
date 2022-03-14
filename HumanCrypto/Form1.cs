@@ -354,8 +354,10 @@ namespace HumanCrypto {
             }
 
             List<Bitmap> parentAvatars = new List<Bitmap> { await cachedImages.GetAvatarById(selectedAvatar.dto.MomId), await cachedImages.GetAvatarById(selectedAvatar.dto.DadId) };
-
             using (Graphics g = pictureBox4.CreateGraphics()) {
+                // Remove background image
+                g.Clear(Color.White);
+
                 for (int i = 0; i < parentAvatars.Count; i++) {
                     Bitmap bmp = parentAvatars[i];
                     Point pos = new Point { X = (i % iconsPerRow) * resizedImageSize.Width, Y = (i / iconsPerRow) * resizedImageSize.Height };

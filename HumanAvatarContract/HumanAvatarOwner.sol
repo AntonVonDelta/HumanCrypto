@@ -101,7 +101,7 @@ contract HumanAvatarOwner {
         avatarIdsOfAddress[msg.sender].push(avatars.length-1);
     }
     function mixDNA(uint256 momGenes, uint256 dadGenes) private returns (uint256){
-        uint8[8] memory genomeGeneStructure=[4, 4, 4, 4, 4, 4, 4, 4 ];
+        uint8[16] memory genomeGeneStructure=[1,3, 1,3, 1,3, 1,3, 1,3, 1,3, 1,3, 1,3 ];
         uint8[] memory newGenomeArray;
         uint8 RANDOM_DNA_THRESHOLD=7;
         uint256 randomSeed=random();
