@@ -87,7 +87,7 @@ contract HumanAvatarOwner {
         require(avatars[momAvatarId].avatarOwner==msg.sender, "You can only breed your own avatars");
         require(avatars[dadAvatarId].avatarOwner==msg.sender, "You can only breed your own avatars");
         require(momAvatarId!=dadAvatarId, "Cannot breed avatars among themselves");
-        
+
         // Calculate new generation numbers as the max between parents +1
         uint256 newGeneration=avatars[momAvatarId].generation;
         if(avatars[dadAvatarId].generation>avatars[momAvatarId].generation){
@@ -98,7 +98,7 @@ contract HumanAvatarOwner {
         avatars.push(Human({
             momId:momAvatarId,
             dadId:dadAvatarId,
-            avatarOwner: owner,
+            avatarOwner: msg.sender,
             generation:newGeneration,
             genome:mixDNA( avatars[momAvatarId].genome, avatars[dadAvatarId].genome   )
         }));

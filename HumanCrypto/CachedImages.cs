@@ -68,15 +68,14 @@ namespace HumanCrypto {
                 if (bmpIndex >= avatarsCount) break;
 
                 BigInteger avatarId = await controller.GetAvatarIdsOfAddressAsync(bmpIndex);
-
                 if (cache.ContainsKey((int)avatarId)) {
                     results.Add(cache[(int)avatarId]);
                     continue;
                 }
 
-                AvatarsOutputDTO avatarResult = await controller.AvatarsQueryAsync(avatarId);
 
                 GenomeProcessing genomeProcessing = new GenomeProcessing();
+                AvatarsOutputDTO avatarResult = await controller.AvatarsQueryAsync(avatarId);
                 genomeProcessing.ParseGenome(avatarResult.Genome.ToByteArray());
 
                 PicassoConstruction picasso = new PicassoConstruction(genomeProcessing);
