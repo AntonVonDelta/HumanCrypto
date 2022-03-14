@@ -104,19 +104,20 @@ namespace HumanCrypto
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(917, 239);
+            this.button1.Location = new System.Drawing.Point(955, 245);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(108, 36);
+            this.button1.Size = new System.Drawing.Size(154, 52);
             this.button1.TabIndex = 1;
-            this.button1.Text = "button1";
+            this.button1.Text = "Generate image locally";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // pictureBox1
             // 
+            this.pictureBox1.BackColor = System.Drawing.Color.Beige;
             this.pictureBox1.Location = new System.Drawing.Point(13, 8);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(860, 572);
+            this.pictureBox1.Size = new System.Drawing.Size(926, 692);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
