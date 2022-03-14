@@ -81,9 +81,13 @@ contract HumanAvatarOwner {
     }
 
     function breedBetween(uint256 momAvatarId,uint256 dadAvatarId) external{
+        require(momAvatarId<avatars.length,"Avatar not found");
+        require(dadAvatarId<avatars.length,"Avatar not found");
+
         require(avatars[momAvatarId].avatarOwner==msg.sender, "You can only breed your own avatars");
         require(avatars[dadAvatarId].avatarOwner==msg.sender, "You can only breed your own avatars");
-
+        require(momAvatarId!=dadAvatarId, "Cannot breed avatars among themselves");
+        
         // Calculate new generation numbers as the max between parents +1
         uint256 newGeneration=avatars[momAvatarId].generation;
         if(avatars[dadAvatarId].generation>avatars[momAvatarId].generation){

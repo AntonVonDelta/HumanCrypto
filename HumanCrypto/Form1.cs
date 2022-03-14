@@ -317,6 +317,10 @@ namespace HumanCrypto {
             makeOfferBtn.Enabled = true;
 
             if (pressedShift && prevSelectedOwnAvatar != null) {
+                if (prevSelectedOwnAvatar.avatarId == selectedOwnAvatar.avatarId) {
+                    notifyControl.ShowBalloonTip(5000, "Breed transaction", "Cannot breed avatar with itself", ToolTipIcon.Error);
+                    return;
+                }
                 try {
                     await controller.BreedBetween(prevSelectedOwnAvatar.avatarId, selectedOwnAvatar.avatarId);
                 }catch(Exception ex) {
