@@ -204,8 +204,7 @@ namespace HumanCrypto {
             AvatarInfo prevSelectedAvatar = selectedAvatar;
             selectedAvatar = new AvatarInfo { dto = avatarInfo, drawRect = new Rectangle(pos, resizedImageSize),hasOffer=false };
 
-            // Set default image for picturebox4 and trigger a redraw for the current selected avatar
-            pictureBox4.Image = Properties.Resources.NoParents;
+            // Ttrigger a redraw for the current selected avatar
             pictureBox4.Invalidate();
 
             // Trigger a redraw for this picturebox in order to show the border
@@ -350,17 +349,17 @@ namespace HumanCrypto {
             Size resizedImageSize = new Size { Width = (pictureBox4.Width - 2 * padding) / iconsPerRow, Height = (pictureBox4.Width - 2 * padding) / iconsPerRow };
             int iconsPerColumn = (pictureBox4.Height - 2 * padding) / resizedImageSize.Height;
 
-            if (selectedAvatar == null) return;
-
-            if (selectedAvatar.dto.Generation == 0) {
+            if (selectedAvatar == null || selectedAvatar.dto.Generation == 0) {
                 // This avatar has no parents
+                noParentsLbl.Visible = true;
+                e.Graphics.Clear(pictureBox4.BackColor);
                 return;
             }
 
             List<Bitmap> parentAvatars = new List<Bitmap> { await cachedImages.GetAvatarById(selectedAvatar.dto.MomId), await cachedImages.GetAvatarById(selectedAvatar.dto.DadId) };
             using (Graphics g = pictureBox4.CreateGraphics()) {
                 // Remove background image
-                g.Clear(Color.White);
+                g.Clear(pictureBox4.BackColor);
 
                 for (int i = 0; i < parentAvatars.Count; i++) {
                     Bitmap bmp = parentAvatars[i];

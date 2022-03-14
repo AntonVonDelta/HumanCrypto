@@ -36,6 +36,13 @@ namespace HumanCrypto
             this.button1 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabAllAvatars = new System.Windows.Forms.TabPage();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.acceptOfferBtn = new System.Windows.Forms.Button();
+            this.priceLbl = new System.Windows.Forms.Label();
+            this.makeOfferBtn = new System.Windows.Forms.Button();
+            this.offerAmountTxt = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.prevOwnAvatarBtn = new System.Windows.Forms.Button();
             this.nextOwnAvatarBtn = new System.Windows.Forms.Button();
             this.prevAvatarBtn = new System.Windows.Forms.Button();
@@ -43,6 +50,8 @@ namespace HumanCrypto
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.tabSettings = new System.Windows.Forms.TabPage();
+            this.label6 = new System.Windows.Forms.Label();
+            this.privateKey2Txt = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.priorityFeeTxt = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -56,24 +65,16 @@ namespace HumanCrypto
             this.label1 = new System.Windows.Forms.Label();
             this.apiKeyTxt = new System.Windows.Forms.TextBox();
             this.notifyControl = new System.Windows.Forms.NotifyIcon(this.components);
-            this.label6 = new System.Windows.Forms.Label();
-            this.privateKey2Txt = new System.Windows.Forms.TextBox();
-            this.makeOfferBtn = new System.Windows.Forms.Button();
-            this.acceptOfferBtn = new System.Windows.Forms.Button();
-            this.offerAmountTxt = new System.Windows.Forms.TextBox();
-            this.priceLbl = new System.Windows.Forms.Label();
-            this.pictureBox4 = new System.Windows.Forms.PictureBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.noParentsLbl = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabGame.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabAllAvatars.SuspendLayout();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.tabSettings.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
-            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -131,6 +132,7 @@ namespace HumanCrypto
             // 
             // tabAllAvatars
             // 
+            this.tabAllAvatars.Controls.Add(this.noParentsLbl);
             this.tabAllAvatars.Controls.Add(this.panel1);
             this.tabAllAvatars.Controls.Add(this.label8);
             this.tabAllAvatars.Controls.Add(this.pictureBox4);
@@ -147,6 +149,76 @@ namespace HumanCrypto
             this.tabAllAvatars.TabIndex = 2;
             this.tabAllAvatars.Text = "All Avatars";
             this.tabAllAvatars.UseVisualStyleBackColor = true;
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.Coral;
+            this.panel1.Controls.Add(this.acceptOfferBtn);
+            this.panel1.Controls.Add(this.priceLbl);
+            this.panel1.Controls.Add(this.makeOfferBtn);
+            this.panel1.Controls.Add(this.offerAmountTxt);
+            this.panel1.Location = new System.Drawing.Point(672, 84);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(267, 109);
+            this.panel1.TabIndex = 12;
+            // 
+            // acceptOfferBtn
+            // 
+            this.acceptOfferBtn.Enabled = false;
+            this.acceptOfferBtn.Location = new System.Drawing.Point(3, 52);
+            this.acceptOfferBtn.Name = "acceptOfferBtn";
+            this.acceptOfferBtn.Size = new System.Drawing.Size(92, 23);
+            this.acceptOfferBtn.TabIndex = 7;
+            this.acceptOfferBtn.Text = "Accept Offer";
+            this.acceptOfferBtn.UseVisualStyleBackColor = true;
+            this.acceptOfferBtn.Click += new System.EventHandler(this.acceptOfferBtn_Click);
+            // 
+            // priceLbl
+            // 
+            this.priceLbl.AutoSize = true;
+            this.priceLbl.Location = new System.Drawing.Point(3, 26);
+            this.priceLbl.Name = "priceLbl";
+            this.priceLbl.Size = new System.Drawing.Size(31, 13);
+            this.priceLbl.TabIndex = 9;
+            this.priceLbl.Text = "Price";
+            // 
+            // makeOfferBtn
+            // 
+            this.makeOfferBtn.Enabled = false;
+            this.makeOfferBtn.Location = new System.Drawing.Point(171, 26);
+            this.makeOfferBtn.Name = "makeOfferBtn";
+            this.makeOfferBtn.Size = new System.Drawing.Size(93, 23);
+            this.makeOfferBtn.TabIndex = 6;
+            this.makeOfferBtn.Text = "Make offer";
+            this.makeOfferBtn.UseVisualStyleBackColor = true;
+            this.makeOfferBtn.Click += new System.EventHandler(this.makeOfferBtn_Click);
+            // 
+            // offerAmountTxt
+            // 
+            this.offerAmountTxt.Location = new System.Drawing.Point(173, 55);
+            this.offerAmountTxt.Name = "offerAmountTxt";
+            this.offerAmountTxt.Size = new System.Drawing.Size(91, 20);
+            this.offerAmountTxt.TabIndex = 8;
+            this.offerAmountTxt.Text = "0";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(669, 303);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(39, 13);
+            this.label8.TabIndex = 11;
+            this.label8.Text = "Parinti:";
+            // 
+            // pictureBox4
+            // 
+            this.pictureBox4.BackColor = System.Drawing.Color.Peru;
+            this.pictureBox4.Location = new System.Drawing.Point(667, 319);
+            this.pictureBox4.Name = "pictureBox4";
+            this.pictureBox4.Size = new System.Drawing.Size(276, 385);
+            this.pictureBox4.TabIndex = 10;
+            this.pictureBox4.TabStop = false;
+            this.pictureBox4.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox4_Paint);
             // 
             // prevOwnAvatarBtn
             // 
@@ -190,6 +262,7 @@ namespace HumanCrypto
             // 
             // pictureBox3
             // 
+            this.pictureBox3.BackColor = System.Drawing.Color.Beige;
             this.pictureBox3.Dock = System.Windows.Forms.DockStyle.Right;
             this.pictureBox3.Location = new System.Drawing.Point(949, 3);
             this.pictureBox3.Name = "pictureBox3";
@@ -201,6 +274,7 @@ namespace HumanCrypto
             // 
             // pictureBox2
             // 
+            this.pictureBox2.BackColor = System.Drawing.Color.Beige;
             this.pictureBox2.Dock = System.Windows.Forms.DockStyle.Left;
             this.pictureBox2.Location = new System.Drawing.Point(3, 3);
             this.pictureBox2.Name = "pictureBox2";
@@ -233,6 +307,23 @@ namespace HumanCrypto
             this.tabSettings.Text = "Settings";
             this.tabSettings.UseVisualStyleBackColor = true;
             this.tabSettings.Enter += new System.EventHandler(this.tabSettings_Enter);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(8, 84);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(103, 13);
+            this.label6.TabIndex = 14;
+            this.label6.Text = "Private Wallet Key 2";
+            // 
+            // privateKey2Txt
+            // 
+            this.privateKey2Txt.Location = new System.Drawing.Point(133, 81);
+            this.privateKey2Txt.Name = "privateKey2Txt";
+            this.privateKey2Txt.PasswordChar = '=';
+            this.privateKey2Txt.Size = new System.Drawing.Size(378, 20);
+            this.privateKey2Txt.TabIndex = 13;
             // 
             // label5
             // 
@@ -343,91 +434,16 @@ namespace HumanCrypto
             this.notifyControl.Text = "Notification";
             this.notifyControl.Visible = true;
             // 
-            // label6
+            // noParentsLbl
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(8, 84);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(103, 13);
-            this.label6.TabIndex = 14;
-            this.label6.Text = "Private Wallet Key 2";
-            // 
-            // privateKey2Txt
-            // 
-            this.privateKey2Txt.Location = new System.Drawing.Point(133, 81);
-            this.privateKey2Txt.Name = "privateKey2Txt";
-            this.privateKey2Txt.PasswordChar = '=';
-            this.privateKey2Txt.Size = new System.Drawing.Size(378, 20);
-            this.privateKey2Txt.TabIndex = 13;
-            // 
-            // makeOfferBtn
-            // 
-            this.makeOfferBtn.Enabled = false;
-            this.makeOfferBtn.Location = new System.Drawing.Point(171, 26);
-            this.makeOfferBtn.Name = "makeOfferBtn";
-            this.makeOfferBtn.Size = new System.Drawing.Size(93, 23);
-            this.makeOfferBtn.TabIndex = 6;
-            this.makeOfferBtn.Text = "Make offer";
-            this.makeOfferBtn.UseVisualStyleBackColor = true;
-            this.makeOfferBtn.Click += new System.EventHandler(this.makeOfferBtn_Click);
-            // 
-            // acceptOfferBtn
-            // 
-            this.acceptOfferBtn.Enabled = false;
-            this.acceptOfferBtn.Location = new System.Drawing.Point(3, 52);
-            this.acceptOfferBtn.Name = "acceptOfferBtn";
-            this.acceptOfferBtn.Size = new System.Drawing.Size(92, 23);
-            this.acceptOfferBtn.TabIndex = 7;
-            this.acceptOfferBtn.Text = "Accept Offer";
-            this.acceptOfferBtn.UseVisualStyleBackColor = true;
-            this.acceptOfferBtn.Click += new System.EventHandler(this.acceptOfferBtn_Click);
-            // 
-            // offerAmountTxt
-            // 
-            this.offerAmountTxt.Location = new System.Drawing.Point(173, 55);
-            this.offerAmountTxt.Name = "offerAmountTxt";
-            this.offerAmountTxt.Size = new System.Drawing.Size(91, 20);
-            this.offerAmountTxt.TabIndex = 8;
-            this.offerAmountTxt.Text = "0";
-            // 
-            // priceLbl
-            // 
-            this.priceLbl.AutoSize = true;
-            this.priceLbl.Location = new System.Drawing.Point(3, 26);
-            this.priceLbl.Name = "priceLbl";
-            this.priceLbl.Size = new System.Drawing.Size(31, 13);
-            this.priceLbl.TabIndex = 9;
-            this.priceLbl.Text = "Price";
-            // 
-            // pictureBox4
-            // 
-            this.pictureBox4.Location = new System.Drawing.Point(667, 319);
-            this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(276, 385);
-            this.pictureBox4.TabIndex = 10;
-            this.pictureBox4.TabStop = false;
-            this.pictureBox4.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox4_Paint);
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(669, 303);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(39, 13);
-            this.label8.TabIndex = 11;
-            this.label8.Text = "Parinti:";
-            // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.Color.Coral;
-            this.panel1.Controls.Add(this.acceptOfferBtn);
-            this.panel1.Controls.Add(this.priceLbl);
-            this.panel1.Controls.Add(this.makeOfferBtn);
-            this.panel1.Controls.Add(this.offerAmountTxt);
-            this.panel1.Location = new System.Drawing.Point(672, 84);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(267, 109);
-            this.panel1.TabIndex = 12;
+            this.noParentsLbl.AutoSize = true;
+            this.noParentsLbl.BackColor = System.Drawing.Color.Peru;
+            this.noParentsLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.noParentsLbl.Location = new System.Drawing.Point(722, 460);
+            this.noParentsLbl.Name = "noParentsLbl";
+            this.noParentsLbl.Size = new System.Drawing.Size(147, 31);
+            this.noParentsLbl.TabIndex = 13;
+            this.noParentsLbl.Text = "No parents";
             // 
             // Form1
             // 
@@ -443,13 +459,13 @@ namespace HumanCrypto
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tabAllAvatars.ResumeLayout(false);
             this.tabAllAvatars.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.tabSettings.ResumeLayout(false);
             this.tabSettings.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -491,6 +507,7 @@ namespace HumanCrypto
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.PictureBox pictureBox4;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label noParentsLbl;
     }
 }
 
