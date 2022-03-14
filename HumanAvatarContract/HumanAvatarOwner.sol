@@ -113,7 +113,7 @@ contract HumanAvatarOwner {
         }
         
         newGenomeArray=new uint8[](dnaBytesCount);
-        uint256 randomDnaValues = uint256(keccak256(abi.encodePacked(randomSeed, dnaBytesCount))) % dnaBytesCount;
+        uint256 randomDnaValues = uint256(keccak256(abi.encodePacked(randomSeed, dnaBytesCount)));
 
 
 
