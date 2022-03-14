@@ -109,6 +109,34 @@ namespace HumanAvatarContract.Contracts.HumanAvatarOwner
             return ContractHandler.QueryDeserializingToObjectAsync<AvatarsFunction, AvatarsOutputDTO>(avatarsFunction, blockParameter);
         }
 
+        public Task<string> BreedBetweenRequestAsync(BreedBetweenFunction breedBetweenFunction)
+        {
+             return ContractHandler.SendRequestAsync(breedBetweenFunction);
+        }
+
+        public Task<TransactionReceipt> BreedBetweenRequestAndWaitForReceiptAsync(BreedBetweenFunction breedBetweenFunction, CancellationTokenSource cancellationToken = null)
+        {
+             return ContractHandler.SendRequestAndWaitForReceiptAsync(breedBetweenFunction, cancellationToken);
+        }
+
+        public Task<string> BreedBetweenRequestAsync(BigInteger momAvatarId, BigInteger dadAvatarId)
+        {
+            var breedBetweenFunction = new BreedBetweenFunction();
+                breedBetweenFunction.MomAvatarId = momAvatarId;
+                breedBetweenFunction.DadAvatarId = dadAvatarId;
+            
+             return ContractHandler.SendRequestAsync(breedBetweenFunction);
+        }
+
+        public Task<TransactionReceipt> BreedBetweenRequestAndWaitForReceiptAsync(BigInteger momAvatarId, BigInteger dadAvatarId, CancellationTokenSource cancellationToken = null)
+        {
+            var breedBetweenFunction = new BreedBetweenFunction();
+                breedBetweenFunction.MomAvatarId = momAvatarId;
+                breedBetweenFunction.DadAvatarId = dadAvatarId;
+            
+             return ContractHandler.SendRequestAndWaitForReceiptAsync(breedBetweenFunction, cancellationToken);
+        }
+
         public Task<string> CancelOfferRequestAsync(CancelOfferFunction cancelOfferFunction)
         {
              return ContractHandler.SendRequestAsync(cancelOfferFunction);

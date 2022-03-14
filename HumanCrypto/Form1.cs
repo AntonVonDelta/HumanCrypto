@@ -313,12 +313,18 @@ namespace HumanCrypto {
             }
 
             OwnAvatarInfo prevSelectedOwnAvatar = selectedOwnAvatar;
-            if (pressedShift && selectedOwnAvatar!=null) {
-
-                Console.WriteLine("asd");
-            }
             selectedOwnAvatar = new OwnAvatarInfo { avatarId = avatarId, offer = offer };
             makeOfferBtn.Enabled = true;
+
+            if (pressedShift && prevSelectedOwnAvatar != null) {
+                try {
+                    await controller.BreedBetween(prevSelectedOwnAvatar.avatarId, selectedOwnAvatar.avatarId);
+                }catch(Exception ex) {
+                    notifyControl.ShowBalloonTip(5000, "Breed transaction", ex.Message, ToolTipIcon.Error);
+                    return;
+                }
+                notifyControl.ShowBalloonTip(5000, "Breed transaction", "Avatars succesfully bred", ToolTipIcon.None);
+            }
         }
         private async void makeOfferBtn_Click(object sender, EventArgs e) {
             makeOfferBtn.Enabled = false;
