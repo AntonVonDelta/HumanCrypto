@@ -125,6 +125,26 @@ namespace HumanCrypto {
             if (receipt == null || receipt.Failed()) throw new Exception(errorMessage);
         }
 
+        public async Task CancelOfferAsync(BigInteger avatarId) {
+            CancellationTokenSource timedSource = new CancellationTokenSource(60000);
+            TransactionReceipt receipt = null;
+            string errorMessage = "Error";
+
+            using (CancellationTokenSource source = CancellationTokenSource.CreateLinkedTokenSource(principalSource.Token, timedSource.Token)) {
+                try {
+                    var transactionFunction = new CancelOfferFunction {
+                        MaxPriorityFeePerGas = Web3.Convert.ToWei(Properties.Secret.Default.PriorityFeeGwei, Nethereum.Util.UnitConversion.EthUnit.Gwei),
+                        AvatarId = avatarId
+                    };
+                    receipt = await wallet.GetService().CancelOfferRequestAndWaitForReceiptAsync(transactionFunction, source);
+                } catch (Exception ex) {
+                    errorMessage = ex.Message;
+                }
+            }
+
+            if (receipt == null || receipt.Failed()) throw new Exception(errorMessage);
+        }
+
         public async Task BreedBetween(BigInteger momAvatarId,BigInteger dadAvatarId) {
             CancellationTokenSource timedSource = new CancellationTokenSource(60000);
             TransactionReceipt receipt = null;

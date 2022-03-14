@@ -67,6 +67,7 @@ namespace HumanCrypto
             this.noParentsLbl = new System.Windows.Forms.Label();
             this.generationLbl = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabGame.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -144,6 +145,7 @@ namespace HumanCrypto
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.Coral;
+            this.panel1.Controls.Add(this.button3);
             this.panel1.Controls.Add(this.acceptOfferBtn);
             this.panel1.Controls.Add(this.priceLbl);
             this.panel1.Controls.Add(this.makeOfferBtn);
@@ -456,6 +458,16 @@ namespace HumanCrypto
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(171, 3);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(92, 23);
+            this.button3.TabIndex = 10;
+            this.button3.Text = "Cancel Offer";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -520,6 +532,7 @@ namespace HumanCrypto
         private System.Windows.Forms.Label noParentsLbl;
         private System.Windows.Forms.Label generationLbl;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
     }
 }
 

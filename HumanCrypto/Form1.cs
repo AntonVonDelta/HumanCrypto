@@ -65,12 +65,12 @@ namespace HumanCrypto {
 
 
             // Tests
-            BigInteger avatarId1 = 10;
-            AvatarsOutputDTO avatar1 =await controller.AvatarsQueryAsync(avatarId1);
-            AvatarsOutputDTO avatarMom= await controller.AvatarsQueryAsync(avatar1.MomId);
-            AvatarsOutputDTO avatarDad = await controller.AvatarsQueryAsync(avatar1.DadId);
+            //BigInteger avatarId1 = 10;
+            //AvatarsOutputDTO avatar1 =await controller.AvatarsQueryAsync(avatarId1);
+            //AvatarsOutputDTO avatarMom= await controller.AvatarsQueryAsync(avatar1.MomId);
+            //AvatarsOutputDTO avatarDad = await controller.AvatarsQueryAsync(avatar1.DadId);
 
-            Console.WriteLine($"{avatar1.Genome}  {avatarMom.Genome}    {avatarDad.Genome}");
+            //Console.WriteLine($"{avatar1.Genome}  {avatarMom.Genome}    {avatarDad.Genome}");
         }
         private void pictureBox1_Paint(object sender, PaintEventArgs e) {
             using (PicassoConstruction picasso = new PicassoConstruction(new GenomeProcessing())) {
@@ -352,7 +352,17 @@ namespace HumanCrypto {
             }
             notifyControl.ShowBalloonTip(5000, "Make Offer transaction", "An offer was just created", ToolTipIcon.None);
         }
+        private async void button3_Click(object sender, EventArgs e) {
+            makeOfferBtn.Enabled = false;
 
+            try {
+                await controller.CancelOfferAsync(selectedOwnAvatar.avatarId);
+            } catch (Exception ex) {
+                notifyControl.ShowBalloonTip(5000, "Cancel Offer transaction", ex.Message, ToolTipIcon.Error);
+                return;
+            }
+            notifyControl.ShowBalloonTip(5000, "Cancel Offer transaction", "The offer was cancelled", ToolTipIcon.None);
+        }
 
 
         private async void pictureBox4_Paint(object sender, PaintEventArgs e) {
@@ -385,8 +395,8 @@ namespace HumanCrypto {
             }
         }
 
-        #endregion
 
+        #endregion
 
     }
 
