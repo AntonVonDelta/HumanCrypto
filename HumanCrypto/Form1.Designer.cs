@@ -454,6 +454,7 @@ namespace HumanCrypto
             this.button2.TabIndex = 15;
             this.button2.Text = "Create Prime Avatar - Owner only";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // Form1
             // 

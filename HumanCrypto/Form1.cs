@@ -59,9 +59,18 @@ namespace HumanCrypto {
 
 
 
-        private void Form1_Load(object sender, EventArgs e) {
+        private async void Form1_Load(object sender, EventArgs e) {
             // Set icon for notification control otherwise it is not displayed
             notifyControl.Icon = this.Icon;
+
+
+            // Tests
+            BigInteger avatarId1 = 10;
+            AvatarsOutputDTO avatar1 =await controller.AvatarsQueryAsync(avatarId1);
+            AvatarsOutputDTO avatarMom= await controller.AvatarsQueryAsync(avatar1.MomId);
+            AvatarsOutputDTO avatarDad = await controller.AvatarsQueryAsync(avatar1.DadId);
+
+            Console.WriteLine($"{avatar1.Genome}  {avatarMom.Genome}    {avatarDad.Genome}");
         }
         private void pictureBox1_Paint(object sender, PaintEventArgs e) {
             using (PicassoConstruction picasso = new PicassoConstruction(new GenomeProcessing())) {

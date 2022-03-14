@@ -107,7 +107,7 @@ contract HumanAvatarOwner {
     function mixDNA(uint256 momGenes, uint256 dadGenes) private returns (uint256){
         uint8[16] memory genomeGeneStructure=[1,3, 1,3, 1,3, 1,3, 1,3, 1,3, 1,3, 1,3 ];
         uint8[] memory newGenomeArray;
-        uint8 RANDOM_DNA_THRESHOLD=7;
+        uint8 RANDOM_DNA_THRESHOLD=6;
         uint256 randomSeed=random();
 
 
@@ -119,10 +119,8 @@ contract HumanAvatarOwner {
         newGenomeArray=new uint8[](dnaBytesCount);
         uint256 randomDnaValues = uint256(keccak256(abi.encodePacked(randomSeed, dnaBytesCount)));
 
-
-
         // Values used for selecting which parent contributes to the final dna
-        uint16 selectParentSeed=uint16(randomSeed % (  2**(genomeGeneStructure.length)  ));
+        uint256 selectParentSeed=uint256(randomSeed % (  2**(genomeGeneStructure.length)  ));
         uint256 mask=1;
 
         uint newGenomeIndex=0;
