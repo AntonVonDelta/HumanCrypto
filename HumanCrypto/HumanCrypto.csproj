@@ -170,4 +170,7 @@
     <None Include="Resources\NoParents.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>XCOPY "$(SolutionDir)HumanParts\" "$(TargetDir)HumanParts\" /s /i /y</PostBuildEvent>
+  </PropertyGroup>
 </Project>
