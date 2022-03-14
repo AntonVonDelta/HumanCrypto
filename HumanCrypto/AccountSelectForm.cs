@@ -30,7 +30,7 @@ namespace HumanCrypto {
             Form1 form = new Form1(wallet);
 
             form.FormClosed += (a, b) => Close();
-            form.Text += " - Account 1";
+            form.Text += " - Account 2";
             form.Show();
         }
     }
