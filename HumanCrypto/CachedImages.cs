@@ -69,8 +69,8 @@ namespace HumanCrypto {
 
                 BigInteger avatarId = await controller.GetAvatarIdsOfAddressAsync(bmpIndex);
 
-                if (cache.ContainsKey(((int)avatarId))) {
-                    results.Add(cache[((int)avatarId)]);
+                if (cache.ContainsKey((int)avatarId)) {
+                    results.Add(cache[(int)avatarId]);
                     continue;
                 }
 
@@ -84,7 +84,7 @@ namespace HumanCrypto {
                 results.Add(generatedBmp);
 
                 // Add new image to cache
-                cache[bmpIndex] = generatedBmp;
+                cache[(int)avatarId] = generatedBmp;
             }
 
             return results;
