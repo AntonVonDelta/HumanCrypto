@@ -182,16 +182,16 @@ namespace HumanCrypto {
                 return;
             }
 
-            AvatarOfferOutputDTO offer = await controller.GetAvatarOfferAsync(absoluteItemIndex);
-            if (!offer.Active) {
-                priceLbl.Text = "Price: No offer";
+            AvatarsOutputDTO avatarInfo = await controller.AvatarsQueryAsync(absoluteItemIndex);
+            if (avatarInfo.AvatarOwner == controller.Address()) {
+                priceLbl.Text = "You own this avatar";
                 acceptOfferBtn.Enabled = false;
                 return;
             }
 
-            AvatarsOutputDTO avatarInfo= await controller.AvatarsQueryAsync(offer.AvatarId);
-            if (avatarInfo.AvatarOwner == controller.Address()) {
-                priceLbl.Text = "Price: You own this avatar";
+            AvatarOfferOutputDTO offer = await controller.GetAvatarOfferAsync(absoluteItemIndex);
+            if (!offer.Active) {
+                priceLbl.Text = "Price: No offer";
                 acceptOfferBtn.Enabled = false;
                 return;
             }

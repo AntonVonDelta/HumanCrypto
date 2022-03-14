@@ -92,6 +92,7 @@ namespace HumanCrypto {
                 try {
                     var transactionFunction = new AcceptOfferFunction {
                         MaxPriorityFeePerGas = Web3.Convert.ToWei(Properties.Secret.Default.PriorityFeeGwei, Nethereum.Util.UnitConversion.EthUnit.Gwei),
+                        AvatarId=avatarId,
                         AmountToSend = amountToSend
                     };
                     receipt = await wallet.GetService().AcceptOfferRequestAndWaitForReceiptAsync(transactionFunction, source);
