@@ -32,7 +32,6 @@ namespace HumanCrypto
             this.components = new System.ComponentModel.Container();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabGame = new System.Windows.Forms.TabPage();
-            this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabAllAvatars = new System.Windows.Forms.TabPage();
@@ -67,6 +66,7 @@ namespace HumanCrypto
             this.notifyControl = new System.Windows.Forms.NotifyIcon(this.components);
             this.noParentsLbl = new System.Windows.Forms.Label();
             this.generationLbl = new System.Windows.Forms.Label();
+            this.button2 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabGame.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -92,7 +92,6 @@ namespace HumanCrypto
             // 
             // tabGame
             // 
-            this.tabGame.Controls.Add(this.button2);
             this.tabGame.Controls.Add(this.button1);
             this.tabGame.Controls.Add(this.pictureBox1);
             this.tabGame.Location = new System.Drawing.Point(4, 22);
@@ -101,16 +100,6 @@ namespace HumanCrypto
             this.tabGame.TabIndex = 0;
             this.tabGame.Text = "Testing";
             this.tabGame.UseVisualStyleBackColor = true;
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(917, 300);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(108, 36);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "Call contract";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button1
             // 
@@ -288,6 +277,7 @@ namespace HumanCrypto
             // 
             // tabSettings
             // 
+            this.tabSettings.Controls.Add(this.button2);
             this.tabSettings.Controls.Add(this.label6);
             this.tabSettings.Controls.Add(this.privateKey2Txt);
             this.tabSettings.Controls.Add(this.label5);
@@ -456,6 +446,15 @@ namespace HumanCrypto
             this.generationLbl.TabIndex = 14;
             this.generationLbl.Text = "Generation: ";
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(133, 247);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(215, 25);
+            this.button2.TabIndex = 15;
+            this.button2.Text = "Create Prime Avatar - Owner only";
+            this.button2.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -495,7 +494,6 @@ namespace HumanCrypto
         private System.Windows.Forms.TextBox networkChainTxt;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TextBox contractKeyTxt;
         private System.Windows.Forms.Button deployContractBtn;
         private System.Windows.Forms.NotifyIcon notifyControl;
@@ -520,6 +518,7 @@ namespace HumanCrypto
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label noParentsLbl;
         private System.Windows.Forms.Label generationLbl;
+        private System.Windows.Forms.Button button2;
     }
 }
 
