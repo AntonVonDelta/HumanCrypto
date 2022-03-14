@@ -207,6 +207,9 @@ namespace HumanCrypto {
             // Ttrigger a redraw for the current selected avatar
             pictureBox4.Invalidate();
 
+            // Show generation
+            generationLbl.Text = $"Generation: {avatarInfo.Generation}";
+
             // Trigger a redraw for this picturebox in order to show the border
             if (prevSelectedAvatar != null) {
                 Rectangle prevRect = prevSelectedAvatar.drawRect;

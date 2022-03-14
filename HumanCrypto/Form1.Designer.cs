@@ -66,6 +66,7 @@ namespace HumanCrypto
             this.apiKeyTxt = new System.Windows.Forms.TextBox();
             this.notifyControl = new System.Windows.Forms.NotifyIcon(this.components);
             this.noParentsLbl = new System.Windows.Forms.Label();
+            this.generationLbl = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabGame.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -132,6 +133,7 @@ namespace HumanCrypto
             // 
             // tabAllAvatars
             // 
+            this.tabAllAvatars.Controls.Add(this.generationLbl);
             this.tabAllAvatars.Controls.Add(this.noParentsLbl);
             this.tabAllAvatars.Controls.Add(this.panel1);
             this.tabAllAvatars.Controls.Add(this.label8);
@@ -445,6 +447,15 @@ namespace HumanCrypto
             this.noParentsLbl.TabIndex = 13;
             this.noParentsLbl.Text = "No parents";
             // 
+            // generationLbl
+            // 
+            this.generationLbl.AutoSize = true;
+            this.generationLbl.Location = new System.Drawing.Point(669, 277);
+            this.generationLbl.Name = "generationLbl";
+            this.generationLbl.Size = new System.Drawing.Size(65, 13);
+            this.generationLbl.TabIndex = 14;
+            this.generationLbl.Text = "Generation: ";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -508,6 +519,7 @@ namespace HumanCrypto
         private System.Windows.Forms.PictureBox pictureBox4;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label noParentsLbl;
+        private System.Windows.Forms.Label generationLbl;
     }
 }
 
