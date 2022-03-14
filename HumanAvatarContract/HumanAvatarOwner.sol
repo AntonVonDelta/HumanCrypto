@@ -8,11 +8,11 @@ contract HumanAvatarOwner {
         uint256 amount;
     }
     struct Human{
-        uint32 momId;
-        uint32 dadId;
+        uint256 momId;
+        uint256 dadId;
 
         address avatarOwner;
-        uint16 generation;
+        uint256 generation;
         uint256 genome;
     }
 
@@ -22,7 +22,6 @@ contract HumanAvatarOwner {
     Human[] public avatars;
     mapping(uint256 => Offer) public avatarOffer;               // Only the owner can post an ofer for the avatar
     mapping(address => uint256[]) public avatarIdsOfAddress;
-    uint8[] genomeGeneStructure=[4, 4, 4, 4, 4, 4, 4, 4 ];
 
     modifier onlyOwner(){
         require(msg.sender == owner);
@@ -79,6 +78,98 @@ contract HumanAvatarOwner {
 
         prevOwner.transfer(avatarOffer[avatarId].amount);
         payable(msg.sender).transfer(refund);
+    }
+
+    function breedBetween(uint256 momAvatarId,uint256 dadAvatarId) external{
+        require(avatars[momAvatarId].avatarOwner==msg.sender, "You can only breed your own avatars");
+        require(avatars[dadAvatarId].avatarOwner==msg.sender, "You can only breed your own avatars");
+
+        // Calculate new generation numbers as the max between parents +1
+        uint256 newGeneration=avatars[momAvatarId].generation;
+        if(avatars[dadAvatarId].generation>avatars[momAvatarId].generation){
+            newGeneration=avatars[dadAvatarId].generation;
+        }
+        newGeneration++;
+
+        avatars.push(Human({
+            momId:momAvatarId,
+            dadId:dadAvatarId,
+            avatarOwner: owner,
+            generation:newGeneration,
+            genome:mixDNA( avatars[momAvatarId].genome, avatars[dadAvatarId].genome   )
+        }));
+        avatarIdsOfAddress[msg.sender].push(avatars.length-1);
+    }
+    function mixDNA(uint256 momGenes, uint256 dadGenes) private returns (uint256){
+        uint8[8] memory genomeGeneStructure=[4, 4, 4, 4, 4, 4, 4, 4 ];
+        uint8[] memory newGenomeArray;
+        uint8 RANDOM_DNA_THRESHOLD=7;
+        uint256 randomSeed=random();
+
+
+        uint256 dnaBytesCount=0;
+        for(uint i=0;i<genomeGeneStructure.length;i++){
+            dnaBytesCount+=genomeGeneStructure[i];
+        }
+        
+        newGenomeArray=new uint8[](dnaBytesCount);
+        uint256 randomDnaValues = uint256(keccak256(abi.encodePacked(randomSeed, dnaBytesCount))) % dnaBytesCount;
+
+
+
+        // Values used for selecting which parent contributes to the final dna
+        uint16 selectParentSeed=uint16(randomSeed % (  2**(genomeGeneStructure.length)  ));
+        uint256 mask=1;
+
+        uint newGenomeIndex=0;
+        for(uint256 i=0;i<genomeGeneStructure.length;i++){
+            uint randomNr=randomSeed%10;
+
+            if(randomNr>RANDOM_DNA_THRESHOLD){
+                // This will be a random gene
+                for(uint8 j=0;j<genomeGeneStructure[i];j++){
+                    newGenomeArray[newGenomeIndex++]=(uint8(randomDnaValues & 0x00FF));
+                    randomDnaValues=randomDnaValues>>8;
+                }
+
+                // Also advance the mom and dad genomes to align all genes
+                momGenes=momGenes >> (genomeGeneStructure[i] * 8);
+                dadGenes=dadGenes >> (genomeGeneStructure[i] * 8);
+            }else{
+                // We must choose whether to pick dad or mom dna
+                if(selectParentSeed & mask!=0){
+                    // Dad
+                    for(uint8 j=0;j<genomeGeneStructure[i];j++){
+                        newGenomeArray[newGenomeIndex++]=(uint8(dadGenes & 0xFF));
+                        dadGenes=dadGenes>>8;
+                    }
+                    momGenes=momGenes>> (genomeGeneStructure[i] * 8);
+                }else{
+                    // Mom
+                    for(uint8 j=0;j<genomeGeneStructure[i];j++){
+                        newGenomeArray[newGenomeIndex++]=(uint8(momGenes & 0xFF));
+                        momGenes=momGenes>>8;
+                    }
+                    dadGenes=dadGenes >> (genomeGeneStructure[i] * 8);
+                }
+
+                // Also advance the artifical dna we created  to align all genes
+                randomDnaValues=randomDnaValues >> (genomeGeneStructure[i] * 8);
+            }
+
+            randomSeed=randomSeed/10;
+            mask=mask<<1;               // Go to next bit
+        }
+
+        assert(newGenomeArray.length==dnaBytesCount);
+
+        // Convert to uint256 genome
+        uint256 newGenome=0;
+        for(uint i=0;i<newGenomeArray.length; i++){
+            newGenome = newGenome + (uint256(newGenomeArray[i])<< (i*8));
+        }
+
+        return newGenome;
     }
 
     function createPrimeAvatar() external onlyOwner{
