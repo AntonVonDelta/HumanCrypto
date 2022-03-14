@@ -70,7 +70,7 @@ namespace HumanCrypto {
                     var transactionFunction = new CreatePrimeAvatarFunction {
                         MaxPriorityFeePerGas = Web3.Convert.ToWei(Properties.Secret.Default.PriorityFeeGwei, Nethereum.Util.UnitConversion.EthUnit.Gwei)
                     };
-                    receipt = await wallet.GetService().CreatePrimeAvatarRequestAndWaitForReceiptAsync();
+                    receipt = await wallet.GetService().CreatePrimeAvatarRequestAndWaitForReceiptAsync(transactionFunction);
                 } catch (Exception ex) {
                     errorMessage = ex.Message;
                 }
@@ -90,11 +90,11 @@ namespace HumanCrypto {
 
             using (CancellationTokenSource source = CancellationTokenSource.CreateLinkedTokenSource(principalSource.Token, timedSource.Token)) {
                 try {
-                    var transactionFunction = new CreatePrimeAvatarFunction {
+                    var transactionFunction = new AcceptOfferFunction {
                         MaxPriorityFeePerGas = Web3.Convert.ToWei(Properties.Secret.Default.PriorityFeeGwei, Nethereum.Util.UnitConversion.EthUnit.Gwei),
                         AmountToSend = amountToSend
                     };
-                    receipt = await wallet.GetService().AcceptOfferRequestAndWaitForReceiptAsync(avatarId, source);
+                    receipt = await wallet.GetService().AcceptOfferRequestAndWaitForReceiptAsync(transactionFunction, source);
                 } catch (Exception ex) {
                     errorMessage = ex.Message;
                 }
@@ -110,10 +110,12 @@ namespace HumanCrypto {
 
             using (CancellationTokenSource source = CancellationTokenSource.CreateLinkedTokenSource(principalSource.Token, timedSource.Token)) {
                 try {
-                    var transactionFunction = new CreatePrimeAvatarFunction {
-                        MaxPriorityFeePerGas = Web3.Convert.ToWei(Properties.Secret.Default.PriorityFeeGwei, Nethereum.Util.UnitConversion.EthUnit.Gwei)
+                    var transactionFunction = new CreateOfferFunction {
+                        MaxPriorityFeePerGas = Web3.Convert.ToWei(Properties.Secret.Default.PriorityFeeGwei, Nethereum.Util.UnitConversion.EthUnit.Gwei),
+                        AvatarId=avatarId,
+                        Amount=amount
                     };
-                    receipt = await wallet.GetService().CreateOfferRequestAndWaitForReceiptAsync(avatarId, amount, source);
+                    receipt = await wallet.GetService().CreateOfferRequestAndWaitForReceiptAsync(transactionFunction, source);
                 } catch (Exception ex) {
                     errorMessage = ex.Message;
                 }
