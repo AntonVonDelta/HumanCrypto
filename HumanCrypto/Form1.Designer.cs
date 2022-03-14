@@ -64,6 +64,7 @@ namespace HumanCrypto
             this.priceLbl = new System.Windows.Forms.Label();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.label8 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.tabControl1.SuspendLayout();
             this.tabGame.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -72,6 +73,7 @@ namespace HumanCrypto
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.tabSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -129,12 +131,9 @@ namespace HumanCrypto
             // 
             // tabAllAvatars
             // 
+            this.tabAllAvatars.Controls.Add(this.panel1);
             this.tabAllAvatars.Controls.Add(this.label8);
             this.tabAllAvatars.Controls.Add(this.pictureBox4);
-            this.tabAllAvatars.Controls.Add(this.priceLbl);
-            this.tabAllAvatars.Controls.Add(this.offerAmountTxt);
-            this.tabAllAvatars.Controls.Add(this.acceptOfferBtn);
-            this.tabAllAvatars.Controls.Add(this.makeOfferBtn);
             this.tabAllAvatars.Controls.Add(this.prevOwnAvatarBtn);
             this.tabAllAvatars.Controls.Add(this.nextOwnAvatarBtn);
             this.tabAllAvatars.Controls.Add(this.prevAvatarBtn);
@@ -364,9 +363,9 @@ namespace HumanCrypto
             // makeOfferBtn
             // 
             this.makeOfferBtn.Enabled = false;
-            this.makeOfferBtn.Location = new System.Drawing.Point(868, 96);
+            this.makeOfferBtn.Location = new System.Drawing.Point(171, 26);
             this.makeOfferBtn.Name = "makeOfferBtn";
-            this.makeOfferBtn.Size = new System.Drawing.Size(75, 23);
+            this.makeOfferBtn.Size = new System.Drawing.Size(93, 23);
             this.makeOfferBtn.TabIndex = 6;
             this.makeOfferBtn.Text = "Make offer";
             this.makeOfferBtn.UseVisualStyleBackColor = true;
@@ -375,9 +374,9 @@ namespace HumanCrypto
             // acceptOfferBtn
             // 
             this.acceptOfferBtn.Enabled = false;
-            this.acceptOfferBtn.Location = new System.Drawing.Point(669, 126);
+            this.acceptOfferBtn.Location = new System.Drawing.Point(3, 52);
             this.acceptOfferBtn.Name = "acceptOfferBtn";
-            this.acceptOfferBtn.Size = new System.Drawing.Size(75, 23);
+            this.acceptOfferBtn.Size = new System.Drawing.Size(92, 23);
             this.acceptOfferBtn.TabIndex = 7;
             this.acceptOfferBtn.Text = "Accept Offer";
             this.acceptOfferBtn.UseVisualStyleBackColor = true;
@@ -385,16 +384,16 @@ namespace HumanCrypto
             // 
             // offerAmountTxt
             // 
-            this.offerAmountTxt.Location = new System.Drawing.Point(870, 125);
+            this.offerAmountTxt.Location = new System.Drawing.Point(173, 55);
             this.offerAmountTxt.Name = "offerAmountTxt";
-            this.offerAmountTxt.Size = new System.Drawing.Size(72, 20);
+            this.offerAmountTxt.Size = new System.Drawing.Size(91, 20);
             this.offerAmountTxt.TabIndex = 8;
             this.offerAmountTxt.Text = "0";
             // 
             // priceLbl
             // 
             this.priceLbl.AutoSize = true;
-            this.priceLbl.Location = new System.Drawing.Point(669, 106);
+            this.priceLbl.Location = new System.Drawing.Point(3, 26);
             this.priceLbl.Name = "priceLbl";
             this.priceLbl.Size = new System.Drawing.Size(31, 13);
             this.priceLbl.TabIndex = 9;
@@ -417,6 +416,18 @@ namespace HumanCrypto
             this.label8.TabIndex = 11;
             this.label8.Text = "Parinti:";
             // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.Coral;
+            this.panel1.Controls.Add(this.acceptOfferBtn);
+            this.panel1.Controls.Add(this.priceLbl);
+            this.panel1.Controls.Add(this.makeOfferBtn);
+            this.panel1.Controls.Add(this.offerAmountTxt);
+            this.panel1.Location = new System.Drawing.Point(672, 84);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(267, 109);
+            this.panel1.TabIndex = 12;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -436,6 +447,8 @@ namespace HumanCrypto
             this.tabSettings.ResumeLayout(false);
             this.tabSettings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -476,6 +489,7 @@ namespace HumanCrypto
         private System.Windows.Forms.Button makeOfferBtn;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.PictureBox pictureBox4;
+        private System.Windows.Forms.Panel panel1;
     }
 }
 

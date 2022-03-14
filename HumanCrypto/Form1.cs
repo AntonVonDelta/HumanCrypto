@@ -189,6 +189,13 @@ namespace HumanCrypto {
                 return;
             }
 
+            AvatarsOutputDTO avatarInfo= await controller.AvatarsQueryAsync(offer.AvatarId);
+            if (avatarInfo.AvatarOwner == controller.Address()) {
+                priceLbl.Text = "Price: You own this avatar";
+                acceptOfferBtn.Enabled = false;
+                return;
+            }
+
             priceLbl.Text = $"Price: {offer.Amount} Wei";
             acceptOfferBtn.Enabled = true;
             selectedAvatarOffer = offer;
