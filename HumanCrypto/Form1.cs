@@ -20,14 +20,20 @@ using System.Numerics;
 
 namespace HumanCrypto {
     public partial class Form1 : Form {
+        class AvatarInfo {
+            public AvatarsOutputDTO dto;
+            public AvatarOfferOutputDTO offer;
+            public Rectangle drawRect;
+            public bool hasOffer;
+        };
+
         Wallet wallet;
         Web3Controller controller;
         int page1 = 0;
         int page2 = 0;
         CachedImages cachedImages;
 
-        AvatarsOutputDTO selectedAvatar;
-        AvatarOfferOutputDTO selectedAvatarOffer;
+        AvatarInfo selectedAvatar;
         BigInteger selectedOwnAvatar;
 
         public Form1(Wallet wallet) {
@@ -38,7 +44,7 @@ namespace HumanCrypto {
             this.cachedImages = new CachedImages(controller);
 
             // Add event to all settings-bound controls
-            List<Control> settingsBoundedControls = new List<Control>() { apiKeyTxt, privateKey1Txt,privateKey2Txt, networkChainTxt, contractKeyTxt, priorityFeeTxt };
+            List<Control> settingsBoundedControls = new List<Control>() { apiKeyTxt, privateKey1Txt, privateKey2Txt, networkChainTxt, contractKeyTxt, priorityFeeTxt };
             foreach (Control control in settingsBoundedControls) {
                 control.TextChanged += genericControl_TextChanged;
             }
@@ -162,6 +168,11 @@ namespace HumanCrypto {
                     pos.Y += padding;
 
                     g.DrawImage(bmp, new Rectangle(pos, resizedImageSize));
+
+                }
+
+                if (selectedAvatar != null) {
+                    g.DrawRectangle(Pens.Black, selectedAvatar.drawRect);
                 }
             }
         }
@@ -171,20 +182,40 @@ namespace HumanCrypto {
             Size resizedImageSize = new Size { Width = (pictureBox2.Width - 2 * padding) / iconsPerRow, Height = (pictureBox2.Width - 2 * padding) / iconsPerRow };
             int iconsPerColumn = (pictureBox2.Height - 2 * padding) / resizedImageSize.Height;
 
-            int itemRow = (e.Y-padding) / resizedImageSize.Height;
+            int itemRow = (e.Y - padding) / resizedImageSize.Height;
             int itemCol = (e.X - padding) / resizedImageSize.Width;
             int itemIndex = itemRow * iconsPerRow + itemCol;
             int absoluteItemIndex = itemIndex + page1 * iconsPerRow * iconsPerColumn;
+            Point pos = new Point(itemCol * resizedImageSize.Width + padding, itemRow * resizedImageSize.Height + padding);
 
             BigInteger avatarsCount = await controller.GetAvatarsCountAsync();
-            if (absoluteItemIndex>= avatarsCount) {
+            if (absoluteItemIndex >= avatarsCount) {
                 priceLbl.Text = "Price: No offer";
                 acceptOfferBtn.Enabled = false;
                 return;
             }
 
+
             AvatarsOutputDTO avatarInfo = await controller.AvatarsQueryAsync(absoluteItemIndex);
-            selectedAvatar = avatarInfo;
+            AvatarInfo prevSelectedAvatar = selectedAvatar;
+            selectedAvatar = new AvatarInfo { dto = avatarInfo, drawRect = new Rectangle(pos, resizedImageSize),hasOffer=false };
+
+            // Set default image for picturebox4 and trigger a redraw for the current selected avatar
+            pictureBox4.Image = Properties.Resources.NoParents;
+            pictureBox4.Invalidate();
+
+            // Trigger a redraw for this picturebox in order to show the border
+            if (prevSelectedAvatar != null) {
+                Rectangle prevRect = prevSelectedAvatar.drawRect;
+                prevRect.Offset(5, 5);
+                prevRect.Inflate(5, 5);
+                pictureBox2.Invalidate(prevRect);
+            }
+            Rectangle currentRect = selectedAvatar.drawRect;
+            currentRect.Offset(5, 5);
+            currentRect.Inflate(5, 5);
+            pictureBox2.Invalidate(currentRect);
+
             if (avatarInfo.AvatarOwner == controller.Address()) {
                 priceLbl.Text = "You own this avatar";
                 acceptOfferBtn.Enabled = false;
@@ -192,6 +223,7 @@ namespace HumanCrypto {
             }
 
             AvatarOfferOutputDTO offer = await controller.GetAvatarOfferAsync(absoluteItemIndex);
+            selectedAvatar.offer = offer;
             if (!offer.Active) {
                 priceLbl.Text = "Price: No offer";
                 acceptOfferBtn.Enabled = false;
@@ -200,16 +232,16 @@ namespace HumanCrypto {
 
             priceLbl.Text = $"Price: {offer.Amount} Wei";
             acceptOfferBtn.Enabled = true;
-            selectedAvatarOffer = offer;
+            selectedAvatar.hasOffer = true;
         }
         private async void acceptOfferBtn_Click(object sender, EventArgs e) {
-            if (selectedAvatarOffer == null) return;
-            
+            if (selectedAvatar == null || !selectedAvatar.hasOffer) return;
+
             acceptOfferBtn.Enabled = false;
 
             try {
-                await controller.AcceptOfferAsync(selectedAvatarOffer.AvatarId, selectedAvatarOffer.Amount);
-            }catch(Exception ex) {
+                await controller.AcceptOfferAsync(selectedAvatar.offer.AvatarId, selectedAvatar.offer.Amount);
+            } catch (Exception ex) {
                 notifyControl.ShowBalloonTip(5000, "Offer transaction", ex.Message, ToolTipIcon.Error);
                 return;
             }
@@ -300,13 +332,12 @@ namespace HumanCrypto {
 
             if (selectedAvatar == null) return;
 
-            if (selectedAvatar.Generation == 0) {
+            if (selectedAvatar.dto.Generation == 0) {
                 // This avatar has no parents
-                pictureBox4.Image = Properties.Resources.NoParents;
                 return;
             }
 
-            List<Bitmap> parentAvatars =new List<Bitmap> { await cachedImages.GetAvatarById(selectedAvatar.MomId), await cachedImages.GetAvatarById(selectedAvatar.DadId) };
+            List<Bitmap> parentAvatars = new List<Bitmap> { await cachedImages.GetAvatarById(selectedAvatar.dto.MomId), await cachedImages.GetAvatarById(selectedAvatar.dto.DadId) };
 
             using (Graphics g = pictureBox4.CreateGraphics()) {
                 for (int i = 0; i < parentAvatars.Count; i++) {
