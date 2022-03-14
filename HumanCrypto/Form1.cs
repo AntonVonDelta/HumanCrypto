@@ -26,6 +26,7 @@ namespace HumanCrypto {
         int page2 = 0;
         CachedImages cachedImages;
 
+        AvatarsOutputDTO selectedAvatar;
         AvatarOfferOutputDTO selectedAvatarOffer;
         BigInteger selectedOwnAvatar;
 
@@ -183,6 +184,7 @@ namespace HumanCrypto {
             }
 
             AvatarsOutputDTO avatarInfo = await controller.AvatarsQueryAsync(absoluteItemIndex);
+            selectedAvatar = avatarInfo;
             if (avatarInfo.AvatarOwner == controller.Address()) {
                 priceLbl.Text = "You own this avatar";
                 acceptOfferBtn.Enabled = false;
@@ -289,6 +291,35 @@ namespace HumanCrypto {
         }
 
 
+
+        private async void pictureBox4_Paint(object sender, PaintEventArgs e) {
+            int iconsPerRow = 2;
+            int padding = 0;
+            Size resizedImageSize = new Size { Width = (pictureBox4.Width - 2 * padding) / iconsPerRow, Height = (pictureBox4.Width - 2 * padding) / iconsPerRow };
+            int iconsPerColumn = (pictureBox4.Height - 2 * padding) / resizedImageSize.Height;
+
+            if (selectedAvatar == null) return;
+
+            if (selectedAvatar.Generation == 0) {
+                // This avatar has no parents
+                pictureBox4.Image = Properties.Resources.NoParents;
+                return;
+            }
+
+            List<Bitmap> parentAvatars =new List<Bitmap> { await cachedImages.GetAvatarById(selectedAvatar.MomId), await cachedImages.GetAvatarById(selectedAvatar.DadId) };
+
+            using (Graphics g = pictureBox4.CreateGraphics()) {
+                for (int i = 0; i < parentAvatars.Count; i++) {
+                    Bitmap bmp = parentAvatars[i];
+                    Point pos = new Point { X = (i % iconsPerRow) * resizedImageSize.Width, Y = (i / iconsPerRow) * resizedImageSize.Height };
+
+                    pos.X += padding;
+                    pos.Y += padding;
+
+                    g.DrawImage(bmp, new Rectangle(pos, resizedImageSize));
+                }
+            }
+        }
 
         #endregion
 

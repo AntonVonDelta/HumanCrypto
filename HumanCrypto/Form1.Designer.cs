@@ -406,6 +406,7 @@ namespace HumanCrypto
             this.pictureBox4.Size = new System.Drawing.Size(276, 385);
             this.pictureBox4.TabIndex = 10;
             this.pictureBox4.TabStop = false;
+            this.pictureBox4.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox4_Paint);
             // 
             // label8
             // 

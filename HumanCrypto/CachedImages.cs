@@ -90,6 +90,22 @@ namespace HumanCrypto {
             return results;
         }
 
+
+        public async Task<Bitmap> GetAvatarById(BigInteger avatarId) {
+            BigInteger avatarsCount = await controller.GetAvatarsCountAsync();
+
+            if (avatarId > avatarsCount) return null;
+
+            // We need to generate the image on the spot
+            AvatarsOutputDTO outputResult = await controller.AvatarsQueryAsync(avatarId);
+
+            GenomeProcessing genomeProcessing = new GenomeProcessing();
+            genomeProcessing.ParseGenome(outputResult.Genome.ToByteArray());
+
+            PicassoConstruction picasso = new PicassoConstruction(genomeProcessing);
+            return  picasso.GetBitmap();
+        }
+
         public void Dispose() {
             for (int i = 0; i < cache.Count; i++) {
                 cache.ElementAt(i).Value.Dispose();
