@@ -23,6 +23,27 @@ The structure is very simple; it's primarily used to define the structure and fu
 
 Every component has a centre position defined as well as the graphics element which is a svg path. 
 
+## Game
+ - `Window 1` contains all avatars created on the network
+ - `Window 2` contains the avatars you bought
+ - `Window 3` will show the parents of selected avatar from `Window 1`
+ 
+ By clicking an avatar from `Window 1` you can see:
+  - if an offer is available and the amount for which you can buy it.
+  - the generation
+  - its parents in `Window 3`
+  - you can also buy the offer if one is available
+
+By clicking an avatar from `Window 3` you can see:
+  - the current offer price
+  - you can also create an offer or cancel one
+  - **you can breed two of your own avatars by clicking one** , wait for it to be selected, and then Shift-clicking another one. Wait for a notification of confimation
+
+**Note:** Most actions do have a notification system. Wait for a notification to inform you of the change or error before reattempting the transaction aka deploy, createPrimeAvatar, make offer, etc. 
+
+![image](https://user-images.githubusercontent.com/25268629/158376750-e57e98d3-d8ff-4032-86a5-8a57fcaaf2a9.png)
+
+
 ## Settings
 In this tab you can change all important settings
 
