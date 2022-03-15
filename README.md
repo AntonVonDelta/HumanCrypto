@@ -34,7 +34,7 @@ Every component has a centre position defined as well as the graphics element wh
   - its parents in `Window 3`
   - you can also buy the offer if one is available
 
-By clicking an avatar from `Window 3` you can see:
+By clicking an avatar from `Window 2` you can see:
   - the current offer price
   - you can also create an offer or cancel one
   - **you can breed two of your own avatars by clicking one** , wait for it to be selected, and then Shift-clicking another one. Wait for a notification of confimation
