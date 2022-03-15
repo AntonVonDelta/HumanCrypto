@@ -45,8 +45,11 @@ By clicking an avatar from `Window 2` you can see:
 
 
 ## Settings
-In this tab you can change all important settings
+In this tab you can change all important settings.
 
 Click save before closing the tab
+
+**Note:** The settings are **not** saved in the local folder but in %APPDATA%\Local. This means you can safely share the project with the compilled executable without leaking private keys or API keys.
+
 
 ![image](https://user-images.githubusercontent.com/25268629/158257005-eb1f0bec-474c-41f4-835f-f830c0fe5486.png)
